@@ -57,6 +57,10 @@ namespace MiniPhotoShop
             this.saveToolStripMenuItem = new ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new ToolStripMenuItem();
             this.toolStripSeparator1 = new ToolStripSeparator();
+            this.cutToolStripMenuItem = new ToolStripMenuItem();
+            this.copyToolStripMenuItem = new ToolStripMenuItem();
+            this.pasteToolStripMenuItem = new ToolStripMenuItem();
+            this.clearToolStripMenuItem = new ToolStripMenuItem();
 
             //
             // menuStrip1
@@ -136,12 +140,14 @@ namespace MiniPhotoShop
             //
             // tabControlCanvas
             //
+
             this.tabControlCanvas.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlCanvas.Location = new System.Drawing.Point(125, 28);
             this.tabControlCanvas.Name = "tabControlCanvas";
             this.tabControlCanvas.SelectedIndex = 0;
             this.tabControlCanvas.Size = new System.Drawing.Size(675, 422);
             this.tabControlCanvas.TabIndex = 2;
+
             //
             // newToolStripMenuItem
             //
@@ -157,6 +163,20 @@ namespace MiniPhotoShop
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new Size(40, 20);
             this.fileToolStripMenuItem.Text = "FILE";
+
+            // editToolStripMenuItem
+            //
+
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cutToolStripMenuItem,
+            this.copyToolStripMenuItem,
+            this.pasteToolStripMenuItem,
+            this.clearToolStripMenuItem
+});
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(54, 24);
+            this.editToolStripMenuItem.Text = "EDIT";
+            
 
             //
             //newToolStripMenuItem
@@ -206,6 +226,55 @@ namespace MiniPhotoShop
             this.saveAsToolStripMenuItem.Text = "Save As...";
             this.saveAsToolStripMenuItem.Click += saveAsToolStripMenuItem_Click;
 
+            // 
+            // cutToolStripMenuItem
+            //
+
+            this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
+            this.cutToolStripMenuItem.Size = new System.Drawing.Size(180, 26); 
+            this.cutToolStripMenuItem.Text = "CUT";
+            this.cutToolStripMenuItem.Click += cutToolStripMenuItem_Click;
+
+            // 
+            // copyToolStripMenuItem
+            // 
+
+            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(180, 26);
+            this.copyToolStripMenuItem.Text = "COPY";
+            this.copyToolStripMenuItem.Click += copyToolStripMenuItem_Click;
+
+            // 
+            // pasteToolStripMenuItem
+            // 
+
+            this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
+            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(180, 26);
+            this.pasteToolStripMenuItem.Text = "PASTE";
+            this.pasteToolStripMenuItem.Click += pasteToolStripMenuItem_Click;
+
+            // 
+            // clearToolStripMenuItem
+            // 
+            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(180, 26);
+            this.clearToolStripMenuItem.Text = "CLEAR";
+            this.clearToolStripMenuItem.Click += clearToolStripMenuItem_Click;
+
+            // 
+            // editToolStripMenuItem
+            // 
+
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+                this.cutToolStripMenuItem,
+                this.copyToolStripMenuItem,
+                this.pasteToolStripMenuItem,
+                this.clearToolStripMenuItem
+            });
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(54, 24);
+            this.editToolStripMenuItem.Text = "EDIT";
+
             //
             // Form1
             //
@@ -245,5 +314,9 @@ namespace MiniPhotoShop
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem;
     }
 }
