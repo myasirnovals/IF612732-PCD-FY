@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36518.9 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniPhotoShop", "MiniPhotoShop.csproj", "{6FE201F0-B879-414A-906C-566229142A8A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6FE201F0-B879-414A-906C-566229142A8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FE201F0-B879-414A-906C-566229142A8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FE201F0-B879-414A-906C-566229142A8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FE201F0-B879-414A-906C-566229142A8A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CDD63323-9192-4332-A86C-CDF54D7CF4A6}
+	EndGlobalSection
+EndGlobal
