@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MiniPhotoShop")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c035c3d1d2e48b6257e39bbe7360cc7d51dcefe5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0920f537166d253937737a9c61dde7a49b861394")]
 [assembly: System.Reflection.AssemblyProductAttribute("MiniPhotoShop")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MiniPhotoShop")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
