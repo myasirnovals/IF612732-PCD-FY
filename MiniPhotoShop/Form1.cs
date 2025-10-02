@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Linq.Expressions;
 using System.Windows.Forms;
 
 
@@ -47,8 +48,26 @@ namespace MiniPhotoShop
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     string filePath = openFileDialog.FileName;
-                    // TODO: Tambahkan logika untuk memuat gambar dari filePath ke canvas
-                    MessageBox.Show($"Membuka file: {filePath}");
+
+                    AddNewTab(Path.GetFileName(filePath));
+                    
+                    if (tabControlCanvas.SelectedTab != null)
+                    {
+                        PictureBox currentCanvas = tabControlCanvas.SelectedTab.Controls[0] as PictureBox;
+
+                        if (currentCanvas != null)
+                        {
+                            try
+                            {
+                                // Image.FromFile akan memuat gambar dari path file yang diberikan
+                                currentCanvas.Image = Image.FromFile(filePath);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show($"Gagal membuka file gambar.\nError: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+                    }
                 }
             }
         }
