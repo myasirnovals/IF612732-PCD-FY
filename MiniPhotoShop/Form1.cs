@@ -59,7 +59,6 @@ namespace MiniPhotoShop
                         {
                             try
                             {
-                                // Image.FromFile akan memuat gambar dari path file yang diberikan
                                 currentCanvas.Image = Image.FromFile(filePath);
                             }
                             catch (Exception ex)
