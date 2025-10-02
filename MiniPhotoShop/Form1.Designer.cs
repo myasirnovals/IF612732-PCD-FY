@@ -159,6 +159,17 @@ namespace MiniPhotoShop
             this.fileToolStripMenuItem.Text = "FILE";
 
             //
+            //newToolStripMenuItem
+            //
+
+            newToolStripMenuItem.Name = "newToolStripMenuItem";
+            newToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.N;
+            newToolStripMenuItem.Size = new Size(195, 22);
+            newToolStripMenuItem.Text = "New";
+            newToolStripMenuItem.Click += newToolStripMenuItem_Click;
+
+
+            //
             // openToolStripMenuItem
             //
 
