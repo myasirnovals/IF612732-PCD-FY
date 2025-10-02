@@ -11,8 +11,10 @@ namespace MiniPhotoShop
         {
             InitializeComponent();
 
-            AddNewTab("Canvas 1");
-            AddNewTab("Canvas 2");
+            if (tabControlCanvas.TabPages.Count > 0)
+            {
+                tabControlCanvas.TabPages.Clear();
+            }
         }
 
         private void AddNewTab(string tabTitle)
@@ -25,12 +27,10 @@ namespace MiniPhotoShop
             newCanvas.BackColor = Color.White;
             newCanvas.BorderStyle = BorderStyle.FixedSingle;
             newCanvas.Dock = DockStyle.Fill;
-            newCanvas.TabStop = false;
+            newCanvas.SizeMode = PictureBoxSizeMode.Zoom;
 
             newTabPage.Controls.Add(newCanvas);
-
             tabControlCanvas.TabPages.Add(newTabPage);
-
             tabControlCanvas.SelectedTab = newTabPage;
         }
 
