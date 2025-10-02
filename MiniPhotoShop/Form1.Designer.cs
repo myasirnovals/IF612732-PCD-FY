@@ -172,8 +172,8 @@ namespace MiniPhotoShop
             // toolStripSeparator1
             //
 
-            this.toolStripMenuItem.Name = "toolStripSeparator1";
-            this.StripSeparator1.Size = new Size(192, 6);
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new Size(192, 6);
 
             //
             // saveToolStripMenuItem
@@ -231,7 +231,7 @@ namespace MiniPhotoShop
         private System.Windows.Forms.PictureBox canvasPictureBox2;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
     }
