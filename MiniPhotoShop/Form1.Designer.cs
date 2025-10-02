@@ -172,7 +172,7 @@ namespace MiniPhotoShop
             // toolStripSeparator1
             //
 
-            this.toolStripMenuItem.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new Size(192, 6);
 
             //
