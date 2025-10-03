@@ -50,7 +50,7 @@ namespace MiniPhotoShop
                     string filePath = openFileDialog.FileName;
 
                     AddNewTab(Path.GetFileName(filePath));
-                    
+
                     if (tabControlCanvas.SelectedTab != null)
                     {
                         PictureBox currentCanvas = tabControlCanvas.SelectedTab.Controls[0] as PictureBox;
@@ -59,12 +59,12 @@ namespace MiniPhotoShop
                         {
                             try
                             {
-                                
                                 currentCanvas.Image = Image.FromFile(filePath);
                             }
                             catch (Exception ex)
                             {
-                                MessageBox.Show($"Gagal membuka file gambar.\nError: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show($"Gagal membuka file gambar.\nError: {ex.Message}", "Error",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
                         }
                     }
@@ -98,12 +98,12 @@ namespace MiniPhotoShop
             {
                 return tabControlCanvas.SelectedTab.Controls[0] as PictureBox;
             }
+
             return null;
         }
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
             MessageBox.Show("Fungsi CUT belum diimplementasikan.");
         }
 
@@ -114,18 +114,20 @@ namespace MiniPhotoShop
             {
                 try
                 {
-                    
                     Clipboard.SetImage(currentCanvas.Image);
-                    MessageBox.Show("Gambar telah disalin ke Clipboard.", "Copy", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Gambar telah disalin ke Clipboard.", "Copy", MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Gagal menyalin gambar: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Gagal menyalin gambar: {ex.Message}", "Error", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
                 }
             }
             else
             {
-                MessageBox.Show("Tidak ada gambar untuk disalin.", "Copy", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Tidak ada gambar untuk disalin.", "Copy", MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
             }
         }
 
@@ -134,13 +136,14 @@ namespace MiniPhotoShop
             PictureBox currentCanvas = GetActiveCanvas();
             if (currentCanvas != null && Clipboard.ContainsImage())
             {
-                
                 currentCanvas.Image = Clipboard.GetImage();
-                MessageBox.Show("Gambar ditempelkan dari Clipboard.", "Paste", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Gambar ditempelkan dari Clipboard.", "Paste", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             }
             else
             {
-                MessageBox.Show("Clipboard tidak berisi gambar atau tidak ada canvas aktif.", "Paste", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Clipboard tidak berisi gambar atau tidak ada canvas aktif.", "Paste",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -149,20 +152,19 @@ namespace MiniPhotoShop
             PictureBox currentCanvas = GetActiveCanvas();
             if (currentCanvas != null && currentCanvas.Image != null)
             {
-                
                 currentCanvas.Image = null;
-                MessageBox.Show("Canvas berhasil dikosongkan.", "Clear", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Canvas berhasil dikosongkan.", "Clear", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             }
             else
             {
-                MessageBox.Show("Tidak ada gambar yang perlu dihapus.", "Clear", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Tidak ada gambar yang perlu dihapus.", "Clear", MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
             }
         }
 
-
         private void Form1_Load(object sender, EventArgs e)
         {
-
         }
     }
 }
