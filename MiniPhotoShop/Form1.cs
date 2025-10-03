@@ -59,7 +59,7 @@ namespace MiniPhotoShop
                         {
                             try
                             {
-                                // Image.FromFile akan memuat gambar dari path file yang diberikan
+                                
                                 currentCanvas.Image = Image.FromFile(filePath);
                             }
                             catch (Exception ex)
@@ -89,6 +89,73 @@ namespace MiniPhotoShop
                     // TODO: Tambahkan logika untuk menyimpan gambar dari canvas ke filePath
                     MessageBox.Show($"Menyimpan file ke: {filePath}");
                 }
+            }
+        }
+
+        private PictureBox GetActiveCanvas()
+        {
+            if (tabControlCanvas.SelectedTab != null && tabControlCanvas.SelectedTab.Controls.Count > 0)
+            {
+                return tabControlCanvas.SelectedTab.Controls[0] as PictureBox;
+            }
+            return null;
+        }
+
+        private void cutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+            MessageBox.Show("Fungsi CUT belum diimplementasikan.");
+        }
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PictureBox currentCanvas = GetActiveCanvas();
+            if (currentCanvas != null && currentCanvas.Image != null)
+            {
+                try
+                {
+                    
+                    Clipboard.SetImage(currentCanvas.Image);
+                    MessageBox.Show("Gambar telah disalin ke Clipboard.", "Copy", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Gagal menyalin gambar: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Tidak ada gambar untuk disalin.", "Copy", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PictureBox currentCanvas = GetActiveCanvas();
+            if (currentCanvas != null && Clipboard.ContainsImage())
+            {
+                
+                currentCanvas.Image = Clipboard.GetImage();
+                MessageBox.Show("Gambar ditempelkan dari Clipboard.", "Paste", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Clipboard tidak berisi gambar atau tidak ada canvas aktif.", "Paste", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void clearToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PictureBox currentCanvas = GetActiveCanvas();
+            if (currentCanvas != null && currentCanvas.Image != null)
+            {
+                
+                currentCanvas.Image = null;
+                MessageBox.Show("Canvas berhasil dikosongkan.", "Clear", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Tidak ada gambar yang perlu dihapus.", "Clear", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
