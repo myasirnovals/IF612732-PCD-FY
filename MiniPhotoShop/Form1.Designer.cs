@@ -221,8 +221,8 @@ namespace MiniPhotoShop
             this.flowLayoutPanelThumbnails.WrapContents = false;
             this.flowLayoutPanelThumbnails.Location = new System.Drawing.Point(0, 28);
             this.flowLayoutPanelThumbnails.Name = "flowLayoutPanelThumbnails";
-            this.flowLayoutPanelThumbnails.Size = new System.Drawing.Size(150, 422);
             this.flowLayoutPanelThumbnails.TabIndex = 3;
+            this.flowLayoutPanelThumbnails.Width = 150;
 
             //
             // tabControlCanvas
