@@ -174,5 +174,10 @@ namespace MiniPhotoShop
         private void Form1_Load(object sender, EventArgs e)
         {
         }
+
+        private void tabControlCanvas_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -30,225 +30,184 @@ namespace MiniPhotoShop
         /// </summary>
         private void InitializeComponent()
         {
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fileToolStripMenuItem.Text = "file";
-            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tabControlCanvas = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.canvasPictureBox1 = new System.Windows.Forms.PictureBox();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.canvasPictureBox2 = new System.Windows.Forms.PictureBox();
-            this.menuStrip1.SuspendLayout();
-            this.tabControlCanvas.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.canvasPictureBox1)).BeginInit();
-            this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.canvasPictureBox2)).BeginInit();
-            this.SuspendLayout();
-            this.saveToolStripMenuItem = new ToolStripMenuItem();
-            this.saveAsToolStripMenuItem = new ToolStripMenuItem();
-            this.cutToolStripMenuItem = new ToolStripMenuItem();
-            this.copyToolStripMenuItem = new ToolStripMenuItem();
-            this.pasteToolStripMenuItem = new ToolStripMenuItem();
-            this.clearToolStripMenuItem = new ToolStripMenuItem();
-            this.flowLayoutPanelThumbnails = new System.Windows.Forms.FlowLayoutPanel();
-            this.SuspendLayout();
-
-            //
+            menuStrip1 = new MenuStrip();
+            fileToolStripMenuItem = new ToolStripMenuItem();
+            saveToolStripMenuItem = new ToolStripMenuItem();
+            saveAsToolStripMenuItem = new ToolStripMenuItem();
+            editToolStripMenuItem = new ToolStripMenuItem();
+            cutToolStripMenuItem = new ToolStripMenuItem();
+            copyToolStripMenuItem = new ToolStripMenuItem();
+            pasteToolStripMenuItem = new ToolStripMenuItem();
+            clearToolStripMenuItem = new ToolStripMenuItem();
+            filterToolStripMenuItem = new ToolStripMenuItem();
+            viewToolStripMenuItem = new ToolStripMenuItem();
+            helpToolStripMenuItem = new ToolStripMenuItem();
+            tabControlCanvas = new TabControl();
+            tabPage1 = new TabPage();
+            canvasPictureBox1 = new PictureBox();
+            tabPage2 = new TabPage();
+            canvasPictureBox2 = new PictureBox();
+            flowLayoutPanelThumbnails = new FlowLayoutPanel();
+            menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)canvasPictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)canvasPictureBox2).BeginInit();
+            SuspendLayout();
+            // 
             // menuStrip1
-            //
-            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[]
-            {
-                this.fileToolStripMenuItem,
-                this.editToolStripMenuItem,
-                this.filterToolStripMenuItem,
-                this.viewToolStripMenuItem,
-                this.helpToolStripMenuItem
-            });
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 28);
-            this.menuStrip1.TabIndex = 0;
-            this.menuStrip1.Text = "menuStrip1";
-
-            //
+            // 
+            menuStrip1.ImageScalingSize = new Size(20, 20);
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, filterToolStripMenuItem, viewToolStripMenuItem, helpToolStripMenuItem });
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(750, 24);
+            menuStrip1.TabIndex = 0;
+            menuStrip1.Text = "menuStrip1";
+            // 
             // fileToolStripMenuItem
-            //
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
-            this.fileToolStripMenuItem.Text = "FILE";
-
-            //
-            // editToolStripMenuItem
-            //
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(54, 24);
-            this.editToolStripMenuItem.Text = "EDIT";
-
-            //
-            // filterToolStripMenuItem
-            //
-            this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
-            this.filterToolStripMenuItem.Size = new System.Drawing.Size(66, 24);
-            this.filterToolStripMenuItem.Text = "FILTER";
-
-            //
-            // viewToolStripMenuItem
-            //
-            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
-            this.viewToolStripMenuItem.Text = "VIEW";
-
-            //
-            // helpToolStripMenuItem
-            //
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(58, 24);
-            this.helpToolStripMenuItem.Text = "HELP";
-
-            //
-            // tabControlCanvas
-            //
-            this.tabControlCanvas.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlCanvas.Location = new System.Drawing.Point(125, 28);
-            this.tabControlCanvas.Name = "tabControlCanvas";
-            this.tabControlCanvas.SelectedIndex = 0;
-            this.tabControlCanvas.Size = new System.Drawing.Size(675, 422);
-            this.tabControlCanvas.TabIndex = 2;
-
-            //
-            // newToolStripMenuItem
-            //
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
-            {
-                this.saveToolStripMenuItem,
-                this.saveAsToolStripMenuItem,
-            });
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new Size(40, 20);
-            this.fileToolStripMenuItem.Text = "FILE";
-
-            // editToolStripMenuItem
-            //
-            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] 
-            {
-                this.cutToolStripMenuItem,
-                this.copyToolStripMenuItem,
-                this.pasteToolStripMenuItem,
-                this.clearToolStripMenuItem
-            });
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(54, 24);
-            this.editToolStripMenuItem.Text = "EDIT";
-            
-            //
+            // 
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { saveToolStripMenuItem, saveAsToolStripMenuItem });
+            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            fileToolStripMenuItem.Size = new Size(40, 20);
+            fileToolStripMenuItem.Text = "FILE";
+            // 
             // saveToolStripMenuItem
-            //
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Shift | Keys.S;
-            this.saveToolStripMenuItem.Size = new Size(195, 22);
-            this.saveToolStripMenuItem.Text = "Save";
-            this.saveToolStripMenuItem.Click += saveToolStripMenuItem_Click;
-
-            //
+            // 
+            saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            saveToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Shift | Keys.S;
+            saveToolStripMenuItem.Size = new Size(195, 22);
+            saveToolStripMenuItem.Text = "Save";
+            saveToolStripMenuItem.Click += saveToolStripMenuItem_Click;
+            // 
             // saveAsToolStripMenuItem
-            //
-            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Shift | Keys.S;
-            this.saveAsToolStripMenuItem.Size = new Size(195, 22);
-            this.saveAsToolStripMenuItem.Text = "Save As...";
-            this.saveAsToolStripMenuItem.Click += saveAsToolStripMenuItem_Click;
-
+            // 
+            saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+            saveAsToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Shift | Keys.S;
+            saveAsToolStripMenuItem.Size = new Size(195, 22);
+            saveAsToolStripMenuItem.Text = "Save As...";
+            saveAsToolStripMenuItem.Click += saveAsToolStripMenuItem_Click;
+            // 
+            // editToolStripMenuItem
+            // 
+            editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { cutToolStripMenuItem, copyToolStripMenuItem, pasteToolStripMenuItem, clearToolStripMenuItem });
+            editToolStripMenuItem.Name = "editToolStripMenuItem";
+            editToolStripMenuItem.Size = new Size(42, 20);
+            editToolStripMenuItem.Text = "EDIT";
             // 
             // cutToolStripMenuItem
-            //
-            this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
-            this.cutToolStripMenuItem.Size = new System.Drawing.Size(180, 26); 
-            this.cutToolStripMenuItem.Text = "CUT";
-            this.cutToolStripMenuItem.Click += cutToolStripMenuItem_Click;
-
+            // 
+            cutToolStripMenuItem.Name = "cutToolStripMenuItem";
+            cutToolStripMenuItem.Size = new Size(109, 22);
+            cutToolStripMenuItem.Text = "CUT";
+            cutToolStripMenuItem.Click += cutToolStripMenuItem_Click;
             // 
             // copyToolStripMenuItem
             // 
-            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(180, 26);
-            this.copyToolStripMenuItem.Text = "COPY";
-            this.copyToolStripMenuItem.Click += copyToolStripMenuItem_Click;
-
+            copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            copyToolStripMenuItem.Size = new Size(109, 22);
+            copyToolStripMenuItem.Text = "COPY";
+            copyToolStripMenuItem.Click += copyToolStripMenuItem_Click;
             // 
             // pasteToolStripMenuItem
             // 
-            this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
-            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(180, 26);
-            this.pasteToolStripMenuItem.Text = "PASTE";
-            this.pasteToolStripMenuItem.Click += pasteToolStripMenuItem_Click;
-
+            pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
+            pasteToolStripMenuItem.Size = new Size(109, 22);
+            pasteToolStripMenuItem.Text = "PASTE";
+            pasteToolStripMenuItem.Click += pasteToolStripMenuItem_Click;
             // 
             // clearToolStripMenuItem
             // 
-            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(180, 26);
-            this.clearToolStripMenuItem.Text = "CLEAR";
-            this.clearToolStripMenuItem.Click += clearToolStripMenuItem_Click;
-
+            clearToolStripMenuItem.Name = "clearToolStripMenuItem";
+            clearToolStripMenuItem.Size = new Size(109, 22);
+            clearToolStripMenuItem.Text = "CLEAR";
+            clearToolStripMenuItem.Click += clearToolStripMenuItem_Click;
             // 
-            // editToolStripMenuItem
+            // filterToolStripMenuItem
             // 
-            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] 
-            {
-                this.cutToolStripMenuItem,
-                this.copyToolStripMenuItem,
-                this.pasteToolStripMenuItem,
-                this.clearToolStripMenuItem
-            });
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(54, 24);
-            this.editToolStripMenuItem.Text = "EDIT";
-
-            //
-            // flowLayoutPanelThumbnails
-            //
-            this.flowLayoutPanelThumbnails.Dock = System.Windows.Forms.DockStyle.Left;
-            this.flowLayoutPanelThumbnails.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.flowLayoutPanelThumbnails.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanelThumbnails.AutoScroll = true;
-            this.flowLayoutPanelThumbnails.WrapContents = false;
-            this.flowLayoutPanelThumbnails.Location = new System.Drawing.Point(0, 28);
-            this.flowLayoutPanelThumbnails.Name = "flowLayoutPanelThumbnails";
-            this.flowLayoutPanelThumbnails.TabIndex = 3;
-            this.flowLayoutPanelThumbnails.Width = 150;
-
-            //
+            filterToolStripMenuItem.Name = "filterToolStripMenuItem";
+            filterToolStripMenuItem.Size = new Size(52, 20);
+            filterToolStripMenuItem.Text = "FILTER";
+            // 
+            // viewToolStripMenuItem
+            // 
+            viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            viewToolStripMenuItem.Size = new Size(46, 20);
+            viewToolStripMenuItem.Text = "VIEW";
+            // 
+            // helpToolStripMenuItem
+            // 
+            helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            helpToolStripMenuItem.Size = new Size(47, 20);
+            helpToolStripMenuItem.Text = "HELP";
+            // 
             // tabControlCanvas
-            //
-            this.tabControlCanvas.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlCanvas.Name = "tabControlCanvas";
-            this.tabControlCanvas.SelectedIndex = 0;
-            this.tabControlCanvas.TabIndex = 2;
-
-            //
+            // 
+            tabControlCanvas.Dock = DockStyle.Fill;
+            tabControlCanvas.Location = new Point(161, 24);
+            tabControlCanvas.Name = "tabControlCanvas";
+            tabControlCanvas.SelectedIndex = 0;
+            tabControlCanvas.Size = new Size(589, 426);
+            tabControlCanvas.TabIndex = 2;
+            tabControlCanvas.SelectedIndexChanged += tabControlCanvas_SelectedIndexChanged;
+            // 
+            // tabPage1
+            // 
+            tabPage1.Location = new Point(0, 0);
+            tabPage1.Name = "tabPage1";
+            tabPage1.Size = new Size(200, 100);
+            tabPage1.TabIndex = 0;
+            // 
+            // canvasPictureBox1
+            // 
+            canvasPictureBox1.Location = new Point(0, 0);
+            canvasPictureBox1.Name = "canvasPictureBox1";
+            canvasPictureBox1.Size = new Size(100, 50);
+            canvasPictureBox1.TabIndex = 0;
+            canvasPictureBox1.TabStop = false;
+            // 
+            // tabPage2
+            // 
+            tabPage2.Location = new Point(0, 0);
+            tabPage2.Name = "tabPage2";
+            tabPage2.Size = new Size(200, 100);
+            tabPage2.TabIndex = 0;
+            // 
+            // canvasPictureBox2
+            // 
+            canvasPictureBox2.Location = new Point(0, 0);
+            canvasPictureBox2.Name = "canvasPictureBox2";
+            canvasPictureBox2.Size = new Size(100, 50);
+            canvasPictureBox2.TabIndex = 0;
+            canvasPictureBox2.TabStop = false;
+            // 
+            // flowLayoutPanelThumbnails
+            // 
+            flowLayoutPanelThumbnails.AutoScroll = true;
+            flowLayoutPanelThumbnails.BorderStyle = BorderStyle.FixedSingle;
+            flowLayoutPanelThumbnails.Dock = DockStyle.Left;
+            flowLayoutPanelThumbnails.FlowDirection = FlowDirection.TopDown;
+            flowLayoutPanelThumbnails.Location = new Point(0, 24);
+            flowLayoutPanelThumbnails.Name = "flowLayoutPanelThumbnails";
+            flowLayoutPanelThumbnails.Size = new Size(161, 426);
+            flowLayoutPanelThumbnails.TabIndex = 3;
+            flowLayoutPanelThumbnails.WrapContents = false;
+            // 
             // Form1
-            //
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.tabControlCanvas);
-            this.Controls.Add(this.menuStrip1);
-            this.MainMenuStrip = this.menuStrip1;
-            this.Name = "Form1";
-            this.Text = "Mini Photoshop";
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-            this.Controls.Add(this.tabControlCanvas);
-            this.Controls.Add(this.flowLayoutPanelThumbnails);
-            this.Controls.Add(this.menuStrip1);
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(750, 450);
+            Controls.Add(tabControlCanvas);
+            Controls.Add(flowLayoutPanelThumbnails);
+            Controls.Add(menuStrip1);
+            MainMenuStrip = menuStrip1;
+            Name = "Form1";
+            Text = "Mini Photoshop";
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)canvasPictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)canvasPictureBox2).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
