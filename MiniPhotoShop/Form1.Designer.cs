@@ -52,11 +52,8 @@ namespace MiniPhotoShop
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.canvasPictureBox2)).BeginInit();
             this.SuspendLayout();
-            this.newToolStripMenuItem = new ToolStripMenuItem();
-            this.openToolStripMenuItem = new ToolStripMenuItem();
             this.saveToolStripMenuItem = new ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new ToolStripMenuItem();
-            this.toolStripSeparator1 = new ToolStripSeparator();
             this.cutToolStripMenuItem = new ToolStripMenuItem();
             this.copyToolStripMenuItem = new ToolStripMenuItem();
             this.pasteToolStripMenuItem = new ToolStripMenuItem();
@@ -152,9 +149,6 @@ namespace MiniPhotoShop
             //
             this.fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
             {
-                this.newToolStripMenuItem,
-                this.openToolStripMenuItem,
-                this.toolStripSeparator1,
                 this.saveToolStripMenuItem,
                 this.saveAsToolStripMenuItem,
             });
@@ -175,31 +169,6 @@ namespace MiniPhotoShop
             this.editToolStripMenuItem.Size = new System.Drawing.Size(54, 24);
             this.editToolStripMenuItem.Text = "EDIT";
             
-
-            //
-            //newToolStripMenuItem
-            //
-            newToolStripMenuItem.Name = "newToolStripMenuItem";
-            newToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.N;
-            newToolStripMenuItem.Size = new Size(195, 22);
-            newToolStripMenuItem.Text = "New";
-            newToolStripMenuItem.Click += newToolStripMenuItem_Click;
-
-
-            //
-            // openToolStripMenuItem
-            //
-            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.S;
-            this.openToolStripMenuItem.Size = new Size(195, 22);
-            this.openToolStripMenuItem.Text = "Open";
-            this.openToolStripMenuItem.Click += openToolStripMenuItem_Click;
-
-            //
-            // toolStripSeparator1
-            //
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new Size(192, 6);
 
             //
             // saveToolStripMenuItem
@@ -299,9 +268,6 @@ namespace MiniPhotoShop
         private System.Windows.Forms.PictureBox canvasPictureBox1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.PictureBox canvasPictureBox2;
-        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;
