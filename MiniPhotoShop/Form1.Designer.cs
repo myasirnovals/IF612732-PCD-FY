@@ -146,7 +146,6 @@ namespace MiniPhotoShop
             this.editToolStripMenuItem.Size = new System.Drawing.Size(54, 24);
             this.editToolStripMenuItem.Text = "EDIT";
             
-
             //
             // saveToolStripMenuItem
             //
@@ -228,13 +227,9 @@ namespace MiniPhotoShop
             // tabControlCanvas
             //
             this.tabControlCanvas.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlCanvas.Location = new System.Drawing.Point(150, 28);
             this.tabControlCanvas.Name = "tabControlCanvas";
             this.tabControlCanvas.SelectedIndex = 0;
-            this.tabControlCanvas.Size = new System.Drawing.Size(650, 422);
             this.tabControlCanvas.TabIndex = 2;
-
-
 
             //
             // Form1

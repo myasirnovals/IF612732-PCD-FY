@@ -16,6 +16,51 @@ namespace MiniPhotoShop
             {
                 tabControlCanvas.TabPages.Clear();
             }
+
+            InitializeThumbnails();
+        }
+
+        private void InitializeThumbnails()
+        {
+            var imageResources = new[]
+            {
+                new { Name = "yuruyuri", Image = Properties.Resources.yuruyuri },
+                new { Name = "aurora", Image = Properties.Resources.aurora },
+                new { Name = "haikyuu", Image = Properties.Resources.haikyuu },
+                new { Name = "ruri", Image = Properties.Resources.ruri },
+            };
+
+            foreach (var resource in imageResources)
+            {
+                PictureBox thumb = new PictureBox();
+                thumb.Image = resource.Image;
+                thumb.Tag = resource.Name;
+                thumb.Size = new Size(120, 100);
+                thumb.SizeMode = PictureBoxSizeMode.Zoom;
+                thumb.BorderStyle = BorderStyle.FixedSingle;
+                thumb.Cursor = Cursors.Hand;
+                thumb.Margin = new Padding(10);
+
+                thumb.Click += Thumbnail_Click;
+
+                flowLayoutPanelThumbnails.Controls.Add(thumb);
+            }
+        }
+
+        public void Thumbnail_Click(object sender, EventArgs e)
+        {
+            PictureBox clickedThumbnail = sender as PictureBox;
+            if (clickedThumbnail == null) return;
+
+            string imageName = clickedThumbnail.Tag.ToString();
+
+            AddNewTab(imageName);
+
+            PictureBox activeCanvas = GetActiveCanvas();
+            if (activeCanvas != null)
+            {
+                activeCanvas.Image = clickedThumbnail.Image;
+            }
         }
 
         private void AddNewTab(string tabTitle)
