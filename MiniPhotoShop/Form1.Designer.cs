@@ -37,15 +37,12 @@ namespace MiniPhotoShop
             this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.panelToolbar = new System.Windows.Forms.Panel();
-            this.labelToolbar = new System.Windows.Forms.Label();
             this.tabControlCanvas = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.canvasPictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.canvasPictureBox2 = new System.Windows.Forms.PictureBox();
             this.menuStrip1.SuspendLayout();
-            this.panelToolbar.SuspendLayout();
             this.tabControlCanvas.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.canvasPictureBox1)).BeginInit();
@@ -58,6 +55,8 @@ namespace MiniPhotoShop
             this.copyToolStripMenuItem = new ToolStripMenuItem();
             this.pasteToolStripMenuItem = new ToolStripMenuItem();
             this.clearToolStripMenuItem = new ToolStripMenuItem();
+            this.flowLayoutPanelThumbnails = new System.Windows.Forms.FlowLayoutPanel();
+            this.SuspendLayout();
 
             //
             // menuStrip1
@@ -111,28 +110,6 @@ namespace MiniPhotoShop
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(58, 24);
             this.helpToolStripMenuItem.Text = "HELP";
-
-            //
-            // panelToolbar
-            //
-            this.panelToolbar.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.panelToolbar.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelToolbar.Controls.Add(this.labelToolbar);
-            this.panelToolbar.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panelToolbar.Location = new System.Drawing.Point(0, 28);
-            this.panelToolbar.Name = "panelToolbar";
-            this.panelToolbar.Size = new System.Drawing.Size(125, 422);
-            this.panelToolbar.TabIndex = 1;
-
-            //
-            //labelToolbar
-            //
-            this.labelToolbar.AutoSize = true;
-            this.labelToolbar.Location = new System.Drawing.Point(23, 15);
-            this.labelToolbar.Name = "labelToolbar";
-            this.labelToolbar.Size = new System.Drawing.Size(77, 20);
-            this.labelToolbar.TabIndex = 0;
-            this.labelToolbar.Text = "TOOL BAR";
 
             //
             // tabControlCanvas
@@ -235,23 +212,48 @@ namespace MiniPhotoShop
             this.editToolStripMenuItem.Text = "EDIT";
 
             //
+            // flowLayoutPanelThumbnails
+            //
+            this.flowLayoutPanelThumbnails.Dock = System.Windows.Forms.DockStyle.Left;
+            this.flowLayoutPanelThumbnails.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.flowLayoutPanelThumbnails.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanelThumbnails.AutoScroll = true;
+            this.flowLayoutPanelThumbnails.WrapContents = false;
+            this.flowLayoutPanelThumbnails.Location = new System.Drawing.Point(0, 28);
+            this.flowLayoutPanelThumbnails.Name = "flowLayoutPanelThumbnails";
+            this.flowLayoutPanelThumbnails.Size = new System.Drawing.Size(150, 422);
+            this.flowLayoutPanelThumbnails.TabIndex = 3;
+
+            //
+            // tabControlCanvas
+            //
+            this.tabControlCanvas.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlCanvas.Location = new System.Drawing.Point(150, 28);
+            this.tabControlCanvas.Name = "tabControlCanvas";
+            this.tabControlCanvas.SelectedIndex = 0;
+            this.tabControlCanvas.Size = new System.Drawing.Size(650, 422);
+            this.tabControlCanvas.TabIndex = 2;
+
+
+
+            //
             // Form1
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.tabControlCanvas);
-            this.Controls.Add(this.panelToolbar);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Mini Photoshop";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.panelToolbar.ResumeLayout(false);
-            this.panelToolbar.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
+            this.Controls.Add(this.tabControlCanvas);
+            this.Controls.Add(this.flowLayoutPanelThumbnails);
+            this.Controls.Add(this.menuStrip1);
         }
 
         #endregion
@@ -261,8 +263,6 @@ namespace MiniPhotoShop
         private System.Windows.Forms.ToolStripMenuItem filterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
-        private System.Windows.Forms.Panel panelToolbar;
-        private System.Windows.Forms.Label labelToolbar;
         private System.Windows.Forms.TabControl tabControlCanvas;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.PictureBox canvasPictureBox1;
@@ -274,5 +274,6 @@ namespace MiniPhotoShop
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelThumbnails;
     }
 }
