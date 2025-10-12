@@ -80,43 +80,6 @@ namespace MiniPhotoShop
             tabControlCanvas.SelectedTab = newTabPage;
         }
 
-        private void newToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            AddNewTab("Untitled");
-        }
-
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
-            {
-                openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    string filePath = openFileDialog.FileName;
-
-                    AddNewTab(Path.GetFileName(filePath));
-
-                    if (tabControlCanvas.SelectedTab != null)
-                    {
-                        PictureBox currentCanvas = tabControlCanvas.SelectedTab.Controls[0] as PictureBox;
-
-                        if (currentCanvas != null)
-                        {
-                            try
-                            {
-                                currentCanvas.Image = Image.FromFile(filePath);
-                            }
-                            catch (Exception ex)
-                            {
-                                MessageBox.Show($"Gagal membuka file gambar.\nError: {ex.Message}", "Error",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // TODO: Tambahkan logika untuk menyimpan. 
