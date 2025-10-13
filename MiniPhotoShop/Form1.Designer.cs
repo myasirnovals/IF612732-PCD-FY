@@ -32,8 +32,6 @@ namespace MiniPhotoShop
         {
             menuStrip1 = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
-            saveAsColorToolStripMenuItem = new ToolStripMenuItem();
-            saveAsGrayscaleToolStripMenuItem = new ToolStripMenuItem();
             editToolStripMenuItem = new ToolStripMenuItem();
             cutToolStripMenuItem = new ToolStripMenuItem();
             copyToolStripMenuItem = new ToolStripMenuItem();
