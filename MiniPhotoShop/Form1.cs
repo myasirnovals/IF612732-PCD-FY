@@ -82,8 +82,55 @@ namespace MiniPhotoShop
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO: Tambahkan logika untuk menyimpan. 
-            MessageBox.Show("Fungsi Save belum diimplementasikan.");
+            PictureBox activeCanvas = GetActiveCanvas();
+
+            if (activeCanvas == null || activeCanvas.Image == null)
+            {
+                MessageBox.Show("Tidak ada gambar aktif untuk disimpan.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Filter = "Text File (*.txt)|*.txt";
+                saveFileDialog.Title = "Simpan Data Pixel Gambar";
+                saveFileDialog.FileName = tabControlCanvas.SelectedTab.Text + "_pixels.txt";
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string filePath = saveFileDialog.FileName;
+
+                    try
+                    {
+                        Bitmap bmp = new Bitmap(activeCanvas.Image);
+
+                        using (System.IO.StreamWriter writer = new System.IO.StreamWriter(filePath))
+                        {
+                            for (int y = 0; y < bmp.Height; y++)
+                            {
+                                for (int x = 0; x < bmp.Width; x++)
+                                {
+                                    Color pixelColor = bmp.GetPixel(x, y);
+
+                                    writer.Write($"({pixelColor.R},{pixelColor.G},{pixelColor.B})");
+
+                                    if (x < bmp.Width - 1)
+                                    {
+                                        writer.Write(" ");
+                                    }
+                                }
+                                writer.WriteLine();
+                            }
+                        }
+
+                        MessageBox.Show("Data pixel berhasil disimpan!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Terjadi kesalahan saat menyimpan file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
