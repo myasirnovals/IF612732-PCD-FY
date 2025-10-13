@@ -72,30 +72,20 @@ namespace MiniPhotoShop
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
-            {
-                saveAsColorToolStripMenuItem, 
-                saveAsGrayscaleToolStripMenuItem
-            });
-            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            fileToolStripMenuItem.Size = new Size(40, 20);
-            fileToolStripMenuItem.Text = "FILE";
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveToolStripMenuItem}); // <-- Ubah baris ini
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
+            this.fileToolStripMenuItem.Text = "FILE";
             // 
             // saveToolStripMenuItem
             // 
-            saveAsColorToolStripMenuItem.Name = "saveAsColorToolStripMenuItem";
-            saveAsColorToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Shift | Keys.S;
-            saveAsColorToolStripMenuItem.Size = new Size(195, 22);
-            saveAsColorToolStripMenuItem.Text = "Save As Color";
-            saveAsColorToolStripMenuItem.Click += saveAsColorToolStripMenuItem_Click;
-            // 
-            // saveAsToolStripMenuItem
-            // 
-            saveAsGrayscaleToolStripMenuItem.Name = "saveAsGrayscaleToolStripMenuItem";
-            saveAsGrayscaleToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Shift | Keys.S;
-            saveAsGrayscaleToolStripMenuItem.Size = new Size(195, 22);
-            saveAsGrayscaleToolStripMenuItem.Text = "Save As Grayscale";
-            saveAsGrayscaleToolStripMenuItem.Click += saveAsGrayscaleToolStripMenuItem_Click;
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // editToolStripMenuItem
             // 
@@ -161,12 +151,7 @@ namespace MiniPhotoShop
             helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             helpToolStripMenuItem.Size = new Size(47, 20);
             helpToolStripMenuItem.Text = "HELP";
-<<<<<<< HEAD
-    
 
-
-=======
->>>>>>> 97d74ba107da8c10b21901375d097dbfb9664126
             // 
             // editToolStripMenuItem
             //
@@ -247,6 +232,7 @@ namespace MiniPhotoShop
             flowLayoutPanelThumbnails.Size = new Size(161, 426);
             flowLayoutPanelThumbnails.TabIndex = 3;
             flowLayoutPanelThumbnails.WrapContents = false;
+
             // 
             // Form1
             // 
@@ -279,13 +265,12 @@ namespace MiniPhotoShop
         private System.Windows.Forms.PictureBox canvasPictureBox1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.PictureBox canvasPictureBox2;
-        private System.Windows.Forms.ToolStripMenuItem saveAsColorToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveAsGrayscaleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelThumbnails;
         private ToolStripMenuItem grayscaleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
     }
 }
