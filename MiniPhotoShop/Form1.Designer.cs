@@ -32,8 +32,8 @@ namespace MiniPhotoShop
         {
             menuStrip1 = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
-            saveToolStripMenuItem = new ToolStripMenuItem();
-            saveAsToolStripMenuItem = new ToolStripMenuItem();
+            saveAsColorToolStripMenuItem = new ToolStripMenuItem();
+            saveAsGrayscaleToolStripMenuItem = new ToolStripMenuItem();
             editToolStripMenuItem = new ToolStripMenuItem();
             cutToolStripMenuItem = new ToolStripMenuItem();
             copyToolStripMenuItem = new ToolStripMenuItem();
@@ -56,7 +56,14 @@ namespace MiniPhotoShop
             // menuStrip1
             // 
             menuStrip1.ImageScalingSize = new Size(20, 20);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, filterToolStripMenuItem, viewToolStripMenuItem, helpToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[]
+            {
+                fileToolStripMenuItem, 
+                editToolStripMenuItem, 
+                filterToolStripMenuItem,
+                viewToolStripMenuItem, 
+                helpToolStripMenuItem
+            });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(750, 24);
@@ -65,26 +72,30 @@ namespace MiniPhotoShop
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { saveToolStripMenuItem, saveAsToolStripMenuItem });
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
+            {
+                saveAsColorToolStripMenuItem, 
+                saveAsGrayscaleToolStripMenuItem
+            });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(40, 20);
             fileToolStripMenuItem.Text = "FILE";
             // 
             // saveToolStripMenuItem
             // 
-            saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            saveToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Shift | Keys.S;
-            saveToolStripMenuItem.Size = new Size(195, 22);
-            saveToolStripMenuItem.Text = "Save";
-            saveToolStripMenuItem.Click += saveToolStripMenuItem_Click;
+            saveAsColorToolStripMenuItem.Name = "saveAsColorToolStripMenuItem";
+            saveAsColorToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Shift | Keys.S;
+            saveAsColorToolStripMenuItem.Size = new Size(195, 22);
+            saveAsColorToolStripMenuItem.Text = "Save As Color";
+            saveAsColorToolStripMenuItem.Click += saveAsColorToolStripMenuItem_Click;
             // 
             // saveAsToolStripMenuItem
             // 
-            saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            saveAsToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Shift | Keys.S;
-            saveAsToolStripMenuItem.Size = new Size(195, 22);
-            saveAsToolStripMenuItem.Text = "Save As...";
-            saveAsToolStripMenuItem.Click += saveAsToolStripMenuItem_Click;
+            saveAsGrayscaleToolStripMenuItem.Name = "saveAsGrayscaleToolStripMenuItem";
+            saveAsGrayscaleToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Shift | Keys.S;
+            saveAsGrayscaleToolStripMenuItem.Size = new Size(195, 22);
+            saveAsGrayscaleToolStripMenuItem.Text = "Save As Grayscale";
+            saveAsGrayscaleToolStripMenuItem.Click += saveAsGrayscaleToolStripMenuItem_Click;
             // 
             // editToolStripMenuItem
             // 
@@ -139,7 +150,8 @@ namespace MiniPhotoShop
             helpToolStripMenuItem.Size = new Size(47, 20);
             helpToolStripMenuItem.Text = "HELP";
             // 
-<<<<<<< HEAD
+            // editToolStripMenuItem
+            //
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] 
             {
                 this.cutToolStripMenuItem,
@@ -150,7 +162,6 @@ namespace MiniPhotoShop
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(54, 24);
             this.editToolStripMenuItem.Text = "EDIT";
-
             //
             // flowLayoutPanelThumbnails
             //
@@ -163,10 +174,7 @@ namespace MiniPhotoShop
             this.flowLayoutPanelThumbnails.Name = "flowLayoutPanelThumbnails";
             this.flowLayoutPanelThumbnails.TabIndex = 3;
             this.flowLayoutPanelThumbnails.Width = 200;
-
             //
-=======
->>>>>>> ff7ee98265269cae122e65096c1808a85e0c9d98
             // tabControlCanvas
             // 
             tabControlCanvas.Dock = DockStyle.Fill;
@@ -250,8 +258,8 @@ namespace MiniPhotoShop
         private System.Windows.Forms.PictureBox canvasPictureBox1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.PictureBox canvasPictureBox2;
-        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAsColorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAsGrayscaleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
