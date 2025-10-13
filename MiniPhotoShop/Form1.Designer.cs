@@ -152,15 +152,12 @@ namespace MiniPhotoShop
             helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             helpToolStripMenuItem.Size = new Size(47, 20);
             helpToolStripMenuItem.Text = "HELP";
-<<<<<<< HEAD
     
 
 
-=======
             // 
             // editToolStripMenuItem
             //
->>>>>>> 38f8077bf00b942d58006641ce4b0b118816d826
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] 
             {
                 this.cutToolStripMenuItem,
