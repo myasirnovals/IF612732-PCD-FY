@@ -120,12 +120,15 @@ namespace MiniPhotoShop
             clearToolStripMenuItem.Size = new Size(109, 22);
             clearToolStripMenuItem.Text = "CLEAR";
             clearToolStripMenuItem.Click += clearToolStripMenuItem_Click;
+
             // 
             // filterToolStripMenuItem
             // 
-            filterToolStripMenuItem.Name = "filterToolStripMenuItem";
-            filterToolStripMenuItem.Size = new Size(52, 20);
-            filterToolStripMenuItem.Text = "FILTER";
+            this.filterToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.grayscaleToolStripMenuItem}); 
+            this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
+            this.filterToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            this.filterToolStripMenuItem.Text = "FILTER";
             // 
             // viewToolStripMenuItem
             // 
@@ -138,8 +141,9 @@ namespace MiniPhotoShop
             helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             helpToolStripMenuItem.Size = new Size(47, 20);
             helpToolStripMenuItem.Text = "HELP";
-            // 
-<<<<<<< HEAD
+    
+
+
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] 
             {
                 this.cutToolStripMenuItem,
@@ -165,17 +169,19 @@ namespace MiniPhotoShop
             this.flowLayoutPanelThumbnails.Width = 200;
 
             //
-=======
->>>>>>> ff7ee98265269cae122e65096c1808a85e0c9d98
             // tabControlCanvas
             // 
-            tabControlCanvas.Dock = DockStyle.Fill;
-            tabControlCanvas.Location = new Point(161, 24);
-            tabControlCanvas.Name = "tabControlCanvas";
-            tabControlCanvas.SelectedIndex = 0;
-            tabControlCanvas.Size = new Size(589, 426);
-            tabControlCanvas.TabIndex = 2;
-            tabControlCanvas.SelectedIndexChanged += tabControlCanvas_SelectedIndexChanged;
+            this.tabControlCanvas.Dock = DockStyle.Fill;
+            this.tabControlCanvas.Location = new Point(161, 24);
+            this.tabControlCanvas.Name = "tabControlCanvas";
+            this.tabControlCanvas.SelectedIndex = 0;
+            this.tabControlCanvas.Size = new Size(589, 426);
+            this.tabControlCanvas.TabIndex = 2;
+            this.tabControlCanvas.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
+            this.tabControlCanvas.SelectedIndexChanged += new System.EventHandler(this.tabControlCanvas_SelectedIndexChanged);
+            this.tabControlCanvas.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tabControlCanvas_DrawItem);
+            this.tabControlCanvas.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tabControlCanvas_MouseClick);
+
             // 
             // tabPage1
             // 
@@ -218,6 +224,16 @@ namespace MiniPhotoShop
             flowLayoutPanelThumbnails.Size = new Size(161, 426);
             flowLayoutPanelThumbnails.TabIndex = 3;
             flowLayoutPanelThumbnails.WrapContents = false;
+
+            // 
+            // grayscaleToolStripMenuItem
+            // 
+            this.grayscaleToolStripMenuItem.Name = "grayscaleToolStripMenuItem";
+            this.grayscaleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.grayscaleToolStripMenuItem.Text = "Grayscale";
+            this.grayscaleToolStripMenuItem.Click += new System.EventHandler(this.grayscaleToolStripMenuItem_Click);
+
+
             // 
             // Form1
             // 
@@ -257,5 +273,6 @@ namespace MiniPhotoShop
         private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelThumbnails;
+        private ToolStripMenuItem grayscaleToolStripMenuItem;
     }
 }
