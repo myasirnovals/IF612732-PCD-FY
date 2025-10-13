@@ -260,6 +260,45 @@ namespace MiniPhotoShop
             }
         }
 
+        private void tabControlCanvas_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            try
+            {
+                var tabPage = this.tabControlCanvas.TabPages[e.Index];
+                var tabRect = this.tabControlCanvas.GetTabRect(e.Index);
+                tabRect.Inflate(-2, -2);
+
+                TextRenderer.DrawText(e.Graphics, tabPage.Text, tabPage.Font, tabRect, tabPage.ForeColor,
+                    TextFormatFlags.Left);
+
+                Rectangle closeButton = new Rectangle(tabRect.Right - 15, tabRect.Top + 4, 12, 12);
+                ControlPaint.DrawCaptionButton(e.Graphics, closeButton, CaptionButton.Close, ButtonState.Normal);
+
+                e.DrawFocusRectangle();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Terjadi kesalahan saat menutup gambar: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void tabControlCanvas_MouseClick(object sender, MouseEventArgs e)
+        {
+            for (int i = 0; i < this.tabControlCanvas.TabPages.Count; i++)
+            {
+                Rectangle tabRect = this.tabControlCanvas.GetTabRect(i);
+                tabRect.Inflate(-2, -2);
+                Rectangle closeButton = new Rectangle(tabRect.Right - 15, tabRect.Top + 4, 12, 12);
+
+                if (closeButton.Contains(e.Location))
+                {
+                    this.tabControlCanvas.TabPages.RemoveAt(i);
+                    break;
+                }
+            }
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
         }
