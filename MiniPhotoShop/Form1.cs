@@ -80,13 +80,12 @@ namespace MiniPhotoShop
             tabControlCanvas.SelectedTab = newTabPage;
         }
 
-        private void saveAsColorToolStripMenuItem_Click(object sender, EventArgs e)
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             PictureBox activeCanvas = GetActiveCanvas();
-
             if (activeCanvas == null || activeCanvas.Image == null)
             {
-                MessageBox.Show("Tidak ada gambar aktif untuk disimpan.", "Info", MessageBoxButtons.OK,
+                MessageBox.Show("Tidak ada gambar aktif untuk disimpan.", "info", MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
                 return;
             }
@@ -94,16 +93,34 @@ namespace MiniPhotoShop
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {
                 saveFileDialog.Filter = "Text File (*.txt)|*.txt";
-                saveFileDialog.Title = "Simpan Data Pixel Gambar";
-                saveFileDialog.FileName = tabControlCanvas.SelectedTab.Text + "_pixels_colors.txt";
+                saveFileDialog.Title = "Simpan Data Pixel";
+                saveFileDialog.FileName = tabControlCanvas.SelectedTab.Text + "_pixels.txt";
 
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     string filePath = saveFileDialog.FileName;
-
                     try
                     {
                         Bitmap bmp = new Bitmap(activeCanvas.Image);
+
+                        bool isGrayScale = true;
+                        for (int y = 0; y < bmp.Height; y++)
+                        {
+                            for (int x = 0; x < bmp.Width; x++)
+                            {
+                                Color c = bmp.GetPixel(x, y);
+                                if (c.R != c.G || c.G != c.B)
+                                {
+                                    isGrayScale = false;
+                                    break;
+                                }
+                            }
+
+                            if (!isGrayScale)
+                            {
+                                break;
+                            }
+                        }
 
                         using (System.IO.StreamWriter writer = new System.IO.StreamWriter(filePath))
                         {
@@ -113,7 +130,14 @@ namespace MiniPhotoShop
                                 {
                                     Color pixelColor = bmp.GetPixel(x, y);
 
-                                    writer.Write($"({pixelColor.R},{pixelColor.G},{pixelColor.B})");
+                                    if (isGrayScale)
+                                    {
+                                        writer.Write(pixelColor.R.ToString());
+                                    }
+                                    else
+                                    {
+                                        writer.Write($"({pixelColor.R}, {pixelColor.G}, {pixelColor.B})");
+                                    }
 
                                     if (x < bmp.Width - 1)
                                     {
@@ -133,20 +157,6 @@ namespace MiniPhotoShop
                         MessageBox.Show($"Terjadi kesalahan saat menyimpan file: {ex.Message}", "Error",
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-                }
-            }
-        }
-
-        private void saveAsGrayscaleToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
-            {
-                saveFileDialog.Filter = "PNG Image|.png|JPEG Image|.jpg|Bitmap Image|*.bmp";
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    string filePath = saveFileDialog.FileName;
-                    // TODO: Tambahkan logika untuk menyimpan gambar dari canvas ke filePath
-                    MessageBox.Show($"Menyimpan file ke: {filePath}");
                 }
             }
         }
