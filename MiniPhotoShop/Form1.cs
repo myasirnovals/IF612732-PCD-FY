@@ -86,7 +86,8 @@ namespace MiniPhotoShop
 
             if (activeCanvas == null || activeCanvas.Image == null)
             {
-                MessageBox.Show("Tidak ada gambar aktif untuk disimpan.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Tidak ada gambar aktif untuk disimpan.", "Info", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
                 return;
             }
 
@@ -119,15 +120,18 @@ namespace MiniPhotoShop
                                         writer.Write(" ");
                                     }
                                 }
+
                                 writer.WriteLine();
                             }
                         }
 
-                        MessageBox.Show("Data pixel berhasil disimpan!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("Data pixel berhasil disimpan!", "Sukses", MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Terjadi kesalahan saat menyimpan file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Terjadi kesalahan saat menyimpan file: {ex.Message}", "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -218,13 +222,89 @@ namespace MiniPhotoShop
             }
         }
 
+        private void grayscaleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PictureBox activeCanvas = GetActiveCanvas();
+            if (activeCanvas == null || activeCanvas.Image == null)
+            {
+                MessageBox.Show("Tidak ada gambar untuk difilter.", "Info", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+
+            try
+            {
+                Bitmap originalBmp = new Bitmap(activeCanvas.Image);
+                Bitmap grayscaleBmp = new Bitmap(originalBmp.Width, originalBmp.Height);
+
+                for (int y = 0; y < originalBmp.Height; y++)
+                {
+                    for (int x = 0; x < originalBmp.Width; x++)
+                    {
+                        Color originalColor = originalBmp.GetPixel(x, y);
+
+                        int grayScale =
+                            (int)((originalColor.R * 0.3) + originalColor.G * 0.59 + originalColor.B * 0.11);
+
+                        Color grayColor = Color.FromArgb(grayScale, grayScale, grayScale);
+
+                        grayscaleBmp.SetPixel(x, y, grayColor);
+                    }
+                }
+
+                activeCanvas.Image = grayscaleBmp;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Terjadi kesalahan saat menerapkan filter: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void tabControlCanvas_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            try
+            {
+                var tabPage = this.tabControlCanvas.TabPages[e.Index];
+                var tabRect = this.tabControlCanvas.GetTabRect(e.Index);
+                tabRect.Inflate(-2, -2);
+
+                TextRenderer.DrawText(e.Graphics, tabPage.Text, tabPage.Font, tabRect, tabPage.ForeColor,
+                    TextFormatFlags.Left);
+
+                Rectangle closeButton = new Rectangle(tabRect.Right - 15, tabRect.Top + 4, 12, 12);
+                ControlPaint.DrawCaptionButton(e.Graphics, closeButton, CaptionButton.Close, ButtonState.Normal);
+
+                e.DrawFocusRectangle();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Terjadi kesalahan saat menutup gambar: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void tabControlCanvas_MouseClick(object sender, MouseEventArgs e)
+        {
+            for (int i = 0; i < this.tabControlCanvas.TabPages.Count; i++)
+            {
+                Rectangle tabRect = this.tabControlCanvas.GetTabRect(i);
+                tabRect.Inflate(-2, -2);
+                Rectangle closeButton = new Rectangle(tabRect.Right - 15, tabRect.Top + 4, 12, 12);
+
+                if (closeButton.Contains(e.Location))
+                {
+                    this.tabControlCanvas.TabPages.RemoveAt(i);
+                    break;
+                }
+            }
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
         }
 
         private void tabControlCanvas_SelectedIndexChanged(object sender, EventArgs e)
         {
-
         }
     }
 }
