@@ -32,8 +32,6 @@ namespace MiniPhotoShop
         {
             menuStrip1 = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
-            saveAsColorToolStripMenuItem = new ToolStripMenuItem();
-            saveAsGrayscaleToolStripMenuItem = new ToolStripMenuItem();
             editToolStripMenuItem = new ToolStripMenuItem();
             cutToolStripMenuItem = new ToolStripMenuItem();
             copyToolStripMenuItem = new ToolStripMenuItem();
@@ -73,7 +71,7 @@ namespace MiniPhotoShop
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.saveToolStripMenuItem}); // <-- Ubah baris ini
+            this.saveToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
             this.fileToolStripMenuItem.Text = "FILE";
