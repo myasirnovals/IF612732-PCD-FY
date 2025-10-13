@@ -131,12 +131,21 @@ namespace MiniPhotoShop
             clearToolStripMenuItem.Size = new Size(109, 22);
             clearToolStripMenuItem.Text = "CLEAR";
             clearToolStripMenuItem.Click += clearToolStripMenuItem_Click;
-
+            // 
+            // grayscaleToolStripMenuItem
+            // 
+            this.grayscaleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.grayscaleToolStripMenuItem.Name = "grayscaleToolStripMenuItem";
+            this.grayscaleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.grayscaleToolStripMenuItem.Text = "Grayscale";
+            this.grayscaleToolStripMenuItem.Click += new System.EventHandler(this.grayscaleToolStripMenuItem_Click);
             // 
             // filterToolStripMenuItem
             // 
-            this.filterToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.grayscaleToolStripMenuItem}); 
+            this.filterToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
+            {
+                this.grayscaleToolStripMenuItem
+            });
             this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
             this.filterToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
             this.filterToolStripMenuItem.Text = "FILTER";
@@ -190,7 +199,6 @@ namespace MiniPhotoShop
             this.tabControlCanvas.SelectedIndexChanged += new System.EventHandler(this.tabControlCanvas_SelectedIndexChanged);
             this.tabControlCanvas.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tabControlCanvas_DrawItem);
             this.tabControlCanvas.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tabControlCanvas_MouseClick);
-
             // 
             // tabPage1
             // 
@@ -233,16 +241,6 @@ namespace MiniPhotoShop
             flowLayoutPanelThumbnails.Size = new Size(161, 426);
             flowLayoutPanelThumbnails.TabIndex = 3;
             flowLayoutPanelThumbnails.WrapContents = false;
-
-            // 
-            // grayscaleToolStripMenuItem
-            // 
-            this.grayscaleToolStripMenuItem.Name = "grayscaleToolStripMenuItem";
-            this.grayscaleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.grayscaleToolStripMenuItem.Text = "Grayscale";
-            this.grayscaleToolStripMenuItem.Click += new System.EventHandler(this.grayscaleToolStripMenuItem_Click);
-
-
             // 
             // Form1
             // 
