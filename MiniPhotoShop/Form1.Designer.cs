@@ -50,6 +50,7 @@ namespace MiniPhotoShop
             ((System.ComponentModel.ISupportInitialize)canvasPictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)canvasPictureBox2).BeginInit();
             SuspendLayout();
+
             // 
             // menuStrip1
             // 
@@ -86,7 +87,7 @@ namespace MiniPhotoShop
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
             this.fileToolStripMenuItem.Text = "FILE";
-       
+     
             // 
             // editToolStripMenuItem
             // 
@@ -94,6 +95,7 @@ namespace MiniPhotoShop
             editToolStripMenuItem.Name = "editToolStripMenuItem";
             editToolStripMenuItem.Size = new Size(42, 20);
             editToolStripMenuItem.Text = "EDIT";
+
             // 
             // cutToolStripMenuItem
             // 
@@ -101,6 +103,7 @@ namespace MiniPhotoShop
             cutToolStripMenuItem.Size = new Size(109, 22);
             cutToolStripMenuItem.Text = "CUT";
             cutToolStripMenuItem.Click += cutToolStripMenuItem_Click;
+
             // 
             // copyToolStripMenuItem
             // 
@@ -108,6 +111,7 @@ namespace MiniPhotoShop
             copyToolStripMenuItem.Size = new Size(109, 22);
             copyToolStripMenuItem.Text = "COPY";
             copyToolStripMenuItem.Click += copyToolStripMenuItem_Click;
+
             // 
             // pasteToolStripMenuItem
             // 
@@ -115,6 +119,7 @@ namespace MiniPhotoShop
             pasteToolStripMenuItem.Size = new Size(109, 22);
             pasteToolStripMenuItem.Text = "PASTE";
             pasteToolStripMenuItem.Click += pasteToolStripMenuItem_Click;
+
             // 
             // clearToolStripMenuItem
             // 
@@ -122,6 +127,7 @@ namespace MiniPhotoShop
             clearToolStripMenuItem.Size = new Size(109, 22);
             clearToolStripMenuItem.Text = "CLEAR";
             clearToolStripMenuItem.Click += clearToolStripMenuItem_Click;
+
             // 
             // grayscaleToolStripMenuItem
             // 
@@ -166,6 +172,7 @@ namespace MiniPhotoShop
             viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             viewToolStripMenuItem.Size = new Size(46, 20);
             viewToolStripMenuItem.Text = "VIEW";
+
             // 
             // helpToolStripMenuItem
             // 
@@ -186,6 +193,7 @@ namespace MiniPhotoShop
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(54, 24);
             this.editToolStripMenuItem.Text = "EDIT";
+
             //
             // flowLayoutPanelThumbnails
             //
@@ -198,6 +206,7 @@ namespace MiniPhotoShop
             this.flowLayoutPanelThumbnails.Name = "flowLayoutPanelThumbnails";
             this.flowLayoutPanelThumbnails.TabIndex = 3;
             this.flowLayoutPanelThumbnails.Width = 200;
+
             //
             // tabControlCanvas
             // 
@@ -211,6 +220,7 @@ namespace MiniPhotoShop
             this.tabControlCanvas.SelectedIndexChanged += new System.EventHandler(this.tabControlCanvas_SelectedIndexChanged);
             this.tabControlCanvas.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tabControlCanvas_DrawItem);
             this.tabControlCanvas.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tabControlCanvas_MouseClick);
+
             // 
             // tabPage1
             // 
@@ -218,6 +228,7 @@ namespace MiniPhotoShop
             tabPage1.Name = "tabPage1";
             tabPage1.Size = new Size(200, 100);
             tabPage1.TabIndex = 0;
+
             // 
             // canvasPictureBox1
             // 
@@ -226,6 +237,7 @@ namespace MiniPhotoShop
             canvasPictureBox1.Size = new Size(100, 50);
             canvasPictureBox1.TabIndex = 0;
             canvasPictureBox1.TabStop = false;
+
             // 
             // tabPage2
             // 
@@ -233,6 +245,7 @@ namespace MiniPhotoShop
             tabPage2.Name = "tabPage2";
             tabPage2.Size = new Size(200, 100);
             tabPage2.TabIndex = 0;
+
             // 
             // canvasPictureBox2
             // 
@@ -241,6 +254,7 @@ namespace MiniPhotoShop
             canvasPictureBox2.Size = new Size(100, 50);
             canvasPictureBox2.TabIndex = 0;
             canvasPictureBox2.TabStop = false;
+
             // 
             // flowLayoutPanelThumbnails
             // 
@@ -257,7 +271,6 @@ namespace MiniPhotoShop
             // 
             // Form1
             // 
-
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(750, 450);
