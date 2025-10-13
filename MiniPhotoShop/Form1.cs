@@ -80,7 +80,7 @@ namespace MiniPhotoShop
             tabControlCanvas.SelectedTab = newTabPage;
         }
 
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        private void saveAsColorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             PictureBox activeCanvas = GetActiveCanvas();
 
@@ -94,7 +94,7 @@ namespace MiniPhotoShop
             {
                 saveFileDialog.Filter = "Text File (*.txt)|*.txt";
                 saveFileDialog.Title = "Simpan Data Pixel Gambar";
-                saveFileDialog.FileName = tabControlCanvas.SelectedTab.Text + "_pixels.txt";
+                saveFileDialog.FileName = tabControlCanvas.SelectedTab.Text + "_pixels_colors.txt";
 
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
@@ -133,7 +133,7 @@ namespace MiniPhotoShop
             }
         }
 
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void saveAsGrayscaleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {
