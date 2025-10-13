@@ -259,6 +259,7 @@ namespace MiniPhotoShop
             {
                 MessageBox.Show("Tidak ada gambar untuk difilter.", "Info", MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
+                return;
             }
 
             try
