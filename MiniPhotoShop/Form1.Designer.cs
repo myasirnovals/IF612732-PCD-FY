@@ -130,16 +130,36 @@ namespace MiniPhotoShop
             this.grayscaleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.grayscaleToolStripMenuItem.Text = "Grayscale";
             this.grayscaleToolStripMenuItem.Click += new System.EventHandler(this.grayscaleToolStripMenuItem_Click);
+
+            // 
+            // restoreToolStripMenuItem
+            // 
+            this.restoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.restoreToolStripMenuItem.Name = "restoreToolStripMenuItem";
+            this.restoreToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.restoreToolStripMenuItem.Text = "Restore Original";
+            this.restoreToolStripMenuItem.Click += new System.EventHandler(this.restoreToolStripMenuItem_Click);
+
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+
             // 
             // filterToolStripMenuItem
             // 
             this.filterToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
             {
-                this.grayscaleToolStripMenuItem
+                this.grayscaleToolStripMenuItem,
+                this.toolStripSeparator1,
+                this.restoreToolStripMenuItem 
             });
             this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
             this.filterToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
             this.filterToolStripMenuItem.Text = "FILTER";
+
             // 
             // viewToolStripMenuItem
             // 
@@ -274,5 +294,7 @@ namespace MiniPhotoShop
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelThumbnails;
         private ToolStripMenuItem grayscaleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private ToolStripMenuItem restoreToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator1;
     }
 }
