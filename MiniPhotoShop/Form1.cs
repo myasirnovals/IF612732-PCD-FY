@@ -60,6 +60,7 @@ namespace MiniPhotoShop
             if (activeCanvas != null)
             {
                 activeCanvas.Image = clickedThumbnail.Image;
+                activeCanvas.Tag = clickedThumbnail.Image.Clone();
             }
         }
 
@@ -228,6 +229,25 @@ namespace MiniPhotoShop
             else
             {
                 MessageBox.Show("Tidak ada gambar yang perlu dihapus.", "Clear", MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+            }
+        }
+
+        private void restoreToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PictureBox activeCanvas = GetActiveCanvas();
+
+            if (activeCanvas != null && activeCanvas.Tag is Image)
+            {
+                activeCanvas.Image = (Image)activeCanvas.Tag;
+
+                MessageBox.Show("Gambar telah dikembalikan ke kondisi semula.", "Restore", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Tidak ada gambar asli untuk dipulihkan atau tidak ada gambar aktif di canvas",
+                    "Restore", MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
             }
         }
