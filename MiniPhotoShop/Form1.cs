@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Linq.Expressions;
 using System.Windows.Forms;
 
-
 namespace MiniPhotoShop
 {
     public partial class Form1 : Form
@@ -54,17 +53,21 @@ namespace MiniPhotoShop
 
             string imageName = clickedThumbnail.Tag.ToString();
 
-            AddNewTab(imageName);
+            TabPage newTab = AddNewTab(imageName);
 
-            PictureBox activeCanvas = GetActiveCanvas();
+            PictureBox activeCanvas = newTab.Controls[0] as PictureBox;
+
             if (activeCanvas != null)
             {
                 activeCanvas.Image = clickedThumbnail.Image;
+
                 activeCanvas.Tag = clickedThumbnail.Image.Clone();
+
+                newTab.Tag = CreatePixelArrayFromImage(clickedThumbnail.Image);
             }
         }
 
-        private void AddNewTab(string tabTitle)
+        private TabPage AddNewTab(string tabTitle)
         {
             TabPage newTabPage = new TabPage(tabTitle);
             newTabPage.Padding = new Padding(3);
@@ -79,12 +82,71 @@ namespace MiniPhotoShop
             newTabPage.Controls.Add(newCanvas);
             tabControlCanvas.TabPages.Add(newTabPage);
             tabControlCanvas.SelectedTab = newTabPage;
+
+            return newTabPage;
         }
+
+        private int[,,] CreatePixelArrayFromImage(Image image)
+        {
+            if (image == null) return null;
+
+            Bitmap bmp = new Bitmap(image);
+            int width = bmp.Width;
+            int height = bmp.Height;
+            int[,,] pixelArray = new int[width, height, 4];
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    Color c = bmp.GetPixel(x, y);
+                    pixelArray[x, y, 0] = c.R;
+                    pixelArray[x, y, 1] = c.G;
+                    pixelArray[x, y, 2] = c.B;
+                    pixelArray[x, y, 3] = (int)((c.R * 0.3) + (c.G * 0.59) + (c.B * 0.11));
+                }
+            }
+            return pixelArray;
+        }
+
+        private void UpdateCanvasFromPixelArray(PictureBox canvas, int[,,] pixelArray, bool useGrayscale = false)
+        {
+            if (canvas == null || pixelArray == null) return;
+
+            int width = pixelArray.GetLength(0);
+            int height = pixelArray.GetLength(1);
+            Bitmap bmp = new Bitmap(width, height);
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    Color c;
+                    if (useGrayscale)
+                    {
+                        int gray = pixelArray[x, y, 3];
+                        c = Color.FromArgb(gray, gray, gray);
+                    }
+                    else
+                    {
+                        int r = pixelArray[x, y, 0];
+                        int g = pixelArray[x, y, 1];
+                        int b = pixelArray[x, y, 2];
+                        c = Color.FromArgb(r, g, b);
+                    }
+                    bmp.SetPixel(x, y, c);
+                }
+            }
+            canvas.Image = bmp;
+        }
+
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             PictureBox activeCanvas = GetActiveCanvas();
-            if (activeCanvas == null || activeCanvas.Image == null)
+            int[,,] pixelArray = GetActivePixelArray();
+
+            if (activeCanvas == null || activeCanvas.Image == null || pixelArray == null)
             {
                 MessageBox.Show("Tidak ada gambar aktif untuk disimpan.", "info", MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
@@ -102,8 +164,10 @@ namespace MiniPhotoShop
                     string filePath = saveFileDialog.FileName;
                     try
                     {
-                        Bitmap bmp = new Bitmap(activeCanvas.Image);
+                        int width = pixelArray.GetLength(0);
+                        int height = pixelArray.GetLength(1);
 
+                        Bitmap bmp = new Bitmap(activeCanvas.Image);
                         bool isGrayScale = true;
                         for (int y = 0; y < bmp.Height; y++)
                         {
@@ -116,36 +180,29 @@ namespace MiniPhotoShop
                                     break;
                                 }
                             }
-
-                            if (!isGrayScale)
-                            {
-                                break;
-                            }
+                            if (!isGrayScale) break;
                         }
 
                         using (System.IO.StreamWriter writer = new System.IO.StreamWriter(filePath))
                         {
-                            for (int y = 0; y < bmp.Height; y++)
+                            for (int y = 0; y < height; y++)
                             {
-                                for (int x = 0; x < bmp.Width; x++)
+                                for (int x = 0; x < width; x++)
                                 {
-                                    Color pixelColor = bmp.GetPixel(x, y);
-
                                     if (isGrayScale)
                                     {
-                                        writer.Write(pixelColor.R.ToString());
+                                        writer.Write(pixelArray[x, y, 3].ToString());
                                     }
                                     else
                                     {
-                                        writer.Write($"({pixelColor.R}, {pixelColor.G}, {pixelColor.B})");
+                                        writer.Write($"({pixelArray[x, y, 0]}, {pixelArray[x, y, 1]}, {pixelArray[x, y, 2]})");
                                     }
 
-                                    if (x < bmp.Width - 1)
+                                    if (x < width - 1)
                                     {
                                         writer.Write(" ");
                                     }
                                 }
-
                                 writer.WriteLine();
                             }
                         }
@@ -168,9 +225,18 @@ namespace MiniPhotoShop
             {
                 return tabControlCanvas.SelectedTab.Controls[0] as PictureBox;
             }
-
             return null;
         }
+
+        private int[,,] GetActivePixelArray()
+        {
+            if (tabControlCanvas.SelectedTab != null)
+            {
+                return tabControlCanvas.SelectedTab.Tag as int[,,];
+            }
+            return null;
+        }
+
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -206,7 +272,14 @@ namespace MiniPhotoShop
             PictureBox currentCanvas = GetActiveCanvas();
             if (currentCanvas != null && Clipboard.ContainsImage())
             {
-                currentCanvas.Image = Clipboard.GetImage();
+                Image pastedImage = Clipboard.GetImage();
+                currentCanvas.Image = pastedImage;
+
+                if (tabControlCanvas.SelectedTab != null)
+                {
+                    tabControlCanvas.SelectedTab.Tag = CreatePixelArrayFromImage(pastedImage);
+                }
+
                 MessageBox.Show("Gambar ditempelkan dari Clipboard.", "Paste", MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
             }
@@ -223,6 +296,12 @@ namespace MiniPhotoShop
             if (currentCanvas != null && currentCanvas.Image != null)
             {
                 currentCanvas.Image = null;
+
+                if (tabControlCanvas.SelectedTab != null)
+                {
+                    tabControlCanvas.SelectedTab.Tag = null;
+                }
+
                 MessageBox.Show("Canvas berhasil dikosongkan.", "Clear", MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
             }
@@ -239,7 +318,14 @@ namespace MiniPhotoShop
 
             if (activeCanvas != null && activeCanvas.Tag is Image)
             {
-                activeCanvas.Image = (Image)activeCanvas.Tag;
+                Image originalImage = (Image)activeCanvas.Tag;
+
+                activeCanvas.Image = originalImage;
+
+                if (tabControlCanvas.SelectedTab != null)
+                {
+                    tabControlCanvas.SelectedTab.Tag = CreatePixelArrayFromImage(originalImage);
+                }
 
                 MessageBox.Show("Gambar telah dikembalikan ke kondisi semula.", "Restore", MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
@@ -255,7 +341,9 @@ namespace MiniPhotoShop
         private void grayscaleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             PictureBox activeCanvas = GetActiveCanvas();
-            if (activeCanvas == null || activeCanvas.Image == null)
+            int[,,] pixelArray = GetActivePixelArray();
+
+            if (activeCanvas == null || activeCanvas.Image == null || pixelArray == null)
             {
                 MessageBox.Show("Tidak ada gambar untuk difilter.", "Info", MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
@@ -264,25 +352,7 @@ namespace MiniPhotoShop
 
             try
             {
-                Bitmap originalBmp = new Bitmap(activeCanvas.Image);
-                Bitmap grayscaleBmp = new Bitmap(originalBmp.Width, originalBmp.Height);
-
-                for (int y = 0; y < originalBmp.Height; y++)
-                {
-                    for (int x = 0; x < originalBmp.Width; x++)
-                    {
-                        Color originalColor = originalBmp.GetPixel(x, y);
-
-                        int grayScale =
-                            (int)((originalColor.R * 0.3) + originalColor.G * 0.59 + originalColor.B * 0.11);
-
-                        Color grayColor = Color.FromArgb(grayScale, grayScale, grayScale);
-
-                        grayscaleBmp.SetPixel(x, y, grayColor);
-                    }
-                }
-
-                activeCanvas.Image = grayscaleBmp;
+                UpdateCanvasFromPixelArray(activeCanvas, pixelArray, useGrayscale: true);
             }
             catch (Exception ex)
             {
@@ -309,8 +379,8 @@ namespace MiniPhotoShop
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Terjadi kesalahan saat menutup gambar: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                 MessageBox.Show($"Terjadi kesalahan saat menutup gambar: {ex.Message}", "Error",
+                   MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -324,6 +394,10 @@ namespace MiniPhotoShop
 
                 if (closeButton.Contains(e.Location))
                 {
+                    if (this.tabControlCanvas.TabPages[i].Tag != null)
+                    {
+                        this.tabControlCanvas.TabPages[i].Tag = null;
+                    }
                     this.tabControlCanvas.TabPages.RemoveAt(i);
                     break;
                 }
