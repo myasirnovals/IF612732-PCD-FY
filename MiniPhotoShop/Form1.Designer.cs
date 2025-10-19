@@ -46,33 +46,55 @@ namespace MiniPhotoShop
             tabPage2 = new TabPage();
             canvasPictureBox2 = new PictureBox();
             flowLayoutPanelThumbnails = new FlowLayoutPanel();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.grayscaleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.restoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.panelHistogram = new System.Windows.Forms.Panel();
+            this.labelGray = new System.Windows.Forms.Label();
+            this.pictureBoxGrayHistogram = new System.Windows.Forms.PictureBox();
+            this.labelBlue = new System.Windows.Forms.Label();
+            this.pictureBoxBlueHistogram = new System.Windows.Forms.PictureBox();
+            this.labelGreen = new System.Windows.Forms.Label();
+            this.pictureBoxGreenHistogram = new System.Windows.Forms.PictureBox();
+            this.labelRed = new System.Windows.Forms.Label();
+            this.pictureBoxRedHistogram = new System.Windows.Forms.PictureBox();
+            this.panelMainArea = new System.Windows.Forms.Panel();
+            this.panelBottomButtons = new System.Windows.Forms.Panel();
+            this.buttonBlue = new System.Windows.Forms.Button();
+            this.buttonGreen = new System.Windows.Forms.Button();
+            this.buttonRed = new System.Windows.Forms.Button();
             menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)canvasPictureBox1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)canvasPictureBox2).BeginInit();
-            SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.canvasPictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.canvasPictureBox2)).BeginInit();
+            this.panelHistogram.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGrayHistogram)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBlueHistogram)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGreenHistogram)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRedHistogram)).BeginInit();
+            this.panelMainArea.SuspendLayout();
+            this.panelBottomButtons.SuspendLayout();
+            this.SuspendLayout();
 
             // 
             // menuStrip1
             // 
-            menuStrip1.ImageScalingSize = new Size(20, 20);
-            menuStrip1.Items.AddRange(new ToolStripItem[]
-            {
-                fileToolStripMenuItem, 
-                editToolStripMenuItem, 
-                filterToolStripMenuItem,
-                viewToolStripMenuItem, 
-                helpToolStripMenuItem
-            });
-            menuStrip1.Location = new Point(0, 0);
-            menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(750, 24);
-            menuStrip1.TabIndex = 0;
-            menuStrip1.Text = "menuStrip1";
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.editToolStripMenuItem,
+            this.filterToolStripMenuItem,
+            this.viewToolStripMenuItem,
+            this.helpToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(750, 24);
+            this.menuStrip1.TabIndex = 0;
+            this.menuStrip1.Text = "menuStrip1";
 
             // 
             // saveToolStripMenuItem
             // 
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
@@ -87,51 +109,54 @@ namespace MiniPhotoShop
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
             this.fileToolStripMenuItem.Text = "FILE";
-     
+
             // 
             // editToolStripMenuItem
             // 
-            editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { cutToolStripMenuItem, copyToolStripMenuItem, pasteToolStripMenuItem, clearToolStripMenuItem });
-            editToolStripMenuItem.Name = "editToolStripMenuItem";
-            editToolStripMenuItem.Size = new Size(42, 20);
-            editToolStripMenuItem.Text = "EDIT";
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cutToolStripMenuItem,
+            this.copyToolStripMenuItem,
+            this.pasteToolStripMenuItem,
+            this.clearToolStripMenuItem});
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(42, 20);
+            this.editToolStripMenuItem.Text = "EDIT";
 
             // 
             // cutToolStripMenuItem
             // 
-            cutToolStripMenuItem.Name = "cutToolStripMenuItem";
-            cutToolStripMenuItem.Size = new Size(109, 22);
-            cutToolStripMenuItem.Text = "CUT";
-            cutToolStripMenuItem.Click += cutToolStripMenuItem_Click;
+            this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
+            this.cutToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.cutToolStripMenuItem.Text = "CUT";
+            this.cutToolStripMenuItem.Click += new System.EventHandler(this.cutToolStripMenuItem_Click);
 
             // 
             // copyToolStripMenuItem
             // 
-            copyToolStripMenuItem.Name = "copyToolStripMenuItem";
-            copyToolStripMenuItem.Size = new Size(109, 22);
-            copyToolStripMenuItem.Text = "COPY";
-            copyToolStripMenuItem.Click += copyToolStripMenuItem_Click;
+            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.copyToolStripMenuItem.Text = "COPY";
+            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
 
             // 
             // pasteToolStripMenuItem
             // 
-            pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
-            pasteToolStripMenuItem.Size = new Size(109, 22);
-            pasteToolStripMenuItem.Text = "PASTE";
-            pasteToolStripMenuItem.Click += pasteToolStripMenuItem_Click;
+            this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
+            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.pasteToolStripMenuItem.Text = "PASTE";
+            this.pasteToolStripMenuItem.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click);
 
             // 
             // clearToolStripMenuItem
             // 
-            clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            clearToolStripMenuItem.Size = new Size(109, 22);
-            clearToolStripMenuItem.Text = "CLEAR";
-            clearToolStripMenuItem.Click += clearToolStripMenuItem_Click;
+            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.clearToolStripMenuItem.Text = "CLEAR";
+            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
 
             // 
             // grayscaleToolStripMenuItem
             // 
-            this.grayscaleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.grayscaleToolStripMenuItem.Name = "grayscaleToolStripMenuItem";
             this.grayscaleToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.grayscaleToolStripMenuItem.Text = "Grayscale";
@@ -140,7 +165,6 @@ namespace MiniPhotoShop
             // 
             // restoreToolStripMenuItem
             // 
-            this.restoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.restoreToolStripMenuItem.Name = "restoreToolStripMenuItem";
             this.restoreToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.restoreToolStripMenuItem.Text = "Restore Original";
@@ -149,19 +173,16 @@ namespace MiniPhotoShop
             // 
             // toolStripSeparator1
             // 
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
 
             // 
             // filterToolStripMenuItem
             // 
-            this.filterToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
-            {
-                this.grayscaleToolStripMenuItem,
-                this.toolStripSeparator1,
-                this.restoreToolStripMenuItem 
-            });
+            this.filterToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.grayscaleToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.restoreToolStripMenuItem});
             this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
             this.filterToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
             this.filterToolStripMenuItem.Text = "FILTER";
@@ -169,52 +190,25 @@ namespace MiniPhotoShop
             // 
             // viewToolStripMenuItem
             // 
-            viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            viewToolStripMenuItem.Size = new Size(46, 20);
-            viewToolStripMenuItem.Text = "VIEW";
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
+            this.viewToolStripMenuItem.Text = "VIEW";
 
             // 
             // helpToolStripMenuItem
             // 
-            helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            helpToolStripMenuItem.Size = new Size(47, 20);
-            helpToolStripMenuItem.Text = "HELP";
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
+            this.helpToolStripMenuItem.Text = "HELP";
 
             // 
-            // editToolStripMenuItem
-            //
-            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] 
-            {
-                this.cutToolStripMenuItem,
-                this.copyToolStripMenuItem,
-                this.pasteToolStripMenuItem,
-                this.clearToolStripMenuItem
-            });
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(54, 24);
-            this.editToolStripMenuItem.Text = "EDIT";
-
-            //
-            // flowLayoutPanelThumbnails
-            //
-            this.flowLayoutPanelThumbnails.Dock = System.Windows.Forms.DockStyle.Left;
-            this.flowLayoutPanelThumbnails.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.flowLayoutPanelThumbnails.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanelThumbnails.AutoScroll = true;
-            this.flowLayoutPanelThumbnails.WrapContents = false;
-            this.flowLayoutPanelThumbnails.Location = new System.Drawing.Point(0, 28);
-            this.flowLayoutPanelThumbnails.Name = "flowLayoutPanelThumbnails";
-            this.flowLayoutPanelThumbnails.TabIndex = 3;
-            this.flowLayoutPanelThumbnails.Width = 200;
-
-            //
             // tabControlCanvas
             // 
-            this.tabControlCanvas.Dock = DockStyle.Fill;
-            this.tabControlCanvas.Location = new Point(161, 24);
+            this.tabControlCanvas.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlCanvas.Location = new System.Drawing.Point(0, 0);
             this.tabControlCanvas.Name = "tabControlCanvas";
             this.tabControlCanvas.SelectedIndex = 0;
-            this.tabControlCanvas.Size = new Size(589, 426);
+            this.tabControlCanvas.Size = new System.Drawing.Size(389, 366);
             this.tabControlCanvas.TabIndex = 2;
             this.tabControlCanvas.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
             this.tabControlCanvas.SelectedIndexChanged += new System.EventHandler(this.tabControlCanvas_SelectedIndexChanged);
@@ -224,68 +218,214 @@ namespace MiniPhotoShop
             // 
             // tabPage1
             // 
-            tabPage1.Location = new Point(0, 0);
-            tabPage1.Name = "tabPage1";
-            tabPage1.Size = new Size(200, 100);
-            tabPage1.TabIndex = 0;
+            this.tabPage1.Location = new System.Drawing.Point(0, 0);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Size = new System.Drawing.Size(200, 100);
+            this.tabPage1.TabIndex = 0;
 
             // 
             // canvasPictureBox1
             // 
-            canvasPictureBox1.Location = new Point(0, 0);
-            canvasPictureBox1.Name = "canvasPictureBox1";
-            canvasPictureBox1.Size = new Size(100, 50);
-            canvasPictureBox1.TabIndex = 0;
-            canvasPictureBox1.TabStop = false;
+            this.canvasPictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.canvasPictureBox1.Name = "canvasPictureBox1";
+            this.canvasPictureBox1.Size = new System.Drawing.Size(100, 50);
+            this.canvasPictureBox1.TabIndex = 0;
+            this.canvasPictureBox1.TabStop = false;
 
             // 
             // tabPage2
             // 
-            tabPage2.Location = new Point(0, 0);
-            tabPage2.Name = "tabPage2";
-            tabPage2.Size = new Size(200, 100);
-            tabPage2.TabIndex = 0;
+            this.tabPage2.Location = new System.Drawing.Point(0, 0);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Size = new System.Drawing.Size(200, 100);
+            this.tabPage2.TabIndex = 0;
 
             // 
             // canvasPictureBox2
             // 
-            canvasPictureBox2.Location = new Point(0, 0);
-            canvasPictureBox2.Name = "canvasPictureBox2";
-            canvasPictureBox2.Size = new Size(100, 50);
-            canvasPictureBox2.TabIndex = 0;
-            canvasPictureBox2.TabStop = false;
+            this.canvasPictureBox2.Location = new System.Drawing.Point(0, 0);
+            this.canvasPictureBox2.Name = "canvasPictureBox2";
+            this.canvasPictureBox2.Size = new System.Drawing.Size(100, 50);
+            this.canvasPictureBox2.TabIndex = 0;
+            this.canvasPictureBox2.TabStop = false;
 
             // 
             // flowLayoutPanelThumbnails
             // 
-            flowLayoutPanelThumbnails.AutoScroll = true;
-            flowLayoutPanelThumbnails.BorderStyle = BorderStyle.FixedSingle;
-            flowLayoutPanelThumbnails.Dock = DockStyle.Left;
-            flowLayoutPanelThumbnails.FlowDirection = FlowDirection.TopDown;
-            flowLayoutPanelThumbnails.Location = new Point(0, 24);
-            flowLayoutPanelThumbnails.Name = "flowLayoutPanelThumbnails";
-            flowLayoutPanelThumbnails.Size = new Size(161, 426);
-            flowLayoutPanelThumbnails.TabIndex = 3;
-            flowLayoutPanelThumbnails.WrapContents = false;
+            this.flowLayoutPanelThumbnails.AutoScroll = true;
+            this.flowLayoutPanelThumbnails.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.flowLayoutPanelThumbnails.Dock = System.Windows.Forms.DockStyle.Left;
+            this.flowLayoutPanelThumbnails.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanelThumbnails.Location = new System.Drawing.Point(0, 24);
+            this.flowLayoutPanelThumbnails.Name = "flowLayoutPanelThumbnails";
+            this.flowLayoutPanelThumbnails.Size = new System.Drawing.Size(161, 426);
+            this.flowLayoutPanelThumbnails.TabIndex = 3;
+            this.flowLayoutPanelThumbnails.WrapContents = false;
 
+            // 
+            // panelHistogram
+            // 
+            this.panelHistogram.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelHistogram.Controls.Add(this.labelGray);
+            this.panelHistogram.Controls.Add(this.pictureBoxGrayHistogram);
+            this.panelHistogram.Controls.Add(this.labelBlue);
+            this.panelHistogram.Controls.Add(this.pictureBoxBlueHistogram);
+            this.panelHistogram.Controls.Add(this.labelGreen);
+            this.panelHistogram.Controls.Add(this.pictureBoxGreenHistogram);
+            this.panelHistogram.Controls.Add(this.labelRed);
+            this.panelHistogram.Controls.Add(this.pictureBoxRedHistogram);
+            this.panelHistogram.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panelHistogram.Location = new System.Drawing.Point(389, 0);
+            this.panelHistogram.Name = "panelHistogram";
+            this.panelHistogram.Size = new System.Drawing.Size(200, 366);
+            this.panelHistogram.TabIndex = 4;
+
+            // 
+            // labelGray
+            // 
+            this.labelGray.AutoSize = true;
+            this.labelGray.Location = new System.Drawing.Point(13, 310);
+            this.labelGray.Name = "labelGray";
+            this.labelGray.Size = new System.Drawing.Size(32, 15);
+            this.labelGray.Text = "Gray";
+            // 
+            // pictureBoxGrayHistogram
+            // 
+            this.pictureBoxGrayHistogram.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBoxGrayHistogram.Location = new System.Drawing.Point(13, 328);
+            this.pictureBoxGrayHistogram.Name = "pictureBoxGrayHistogram";
+            this.pictureBoxGrayHistogram.Size = new System.Drawing.Size(170, 70);
+            this.pictureBoxGrayHistogram.TabIndex = 7;
+            this.pictureBoxGrayHistogram.TabStop = false;
+            // 
+            // labelBlue
+            // 
+            this.labelBlue.AutoSize = true;
+            this.labelBlue.Location = new System.Drawing.Point(13, 210);
+            this.labelBlue.Name = "labelBlue";
+            this.labelBlue.Size = new System.Drawing.Size(30, 15);
+            this.labelBlue.Text = "Blue";
+            // 
+            // pictureBoxBlueHistogram
+            // 
+            this.pictureBoxBlueHistogram.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBoxBlueHistogram.Location = new System.Drawing.Point(13, 228);
+            this.pictureBoxBlueHistogram.Name = "pictureBoxBlueHistogram";
+            this.pictureBoxBlueHistogram.Size = new System.Drawing.Size(170, 70);
+            this.pictureBoxBlueHistogram.TabIndex = 5;
+            this.pictureBoxBlueHistogram.TabStop = false;
+            // 
+            // labelGreen
+            // 
+            this.labelGreen.AutoSize = true;
+            this.labelGreen.Location = new System.Drawing.Point(13, 110);
+            this.labelGreen.Name = "labelGreen";
+            this.labelGreen.Size = new System.Drawing.Size(38, 15);
+            this.labelGreen.Text = "Green";
+            // 
+            // pictureBoxGreenHistogram
+            // 
+            this.pictureBoxGreenHistogram.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBoxGreenHistogram.Location = new System.Drawing.Point(13, 128);
+            this.pictureBoxGreenHistogram.Name = "pictureBoxGreenHistogram";
+            this.pictureBoxGreenHistogram.Size = new System.Drawing.Size(170, 70);
+            this.pictureBoxGreenHistogram.TabIndex = 3;
+            this.pictureBoxGreenHistogram.TabStop = false;
+            // 
+            // labelRed
+            // 
+            this.labelRed.AutoSize = true;
+            this.labelRed.Location = new System.Drawing.Point(13, 10);
+            this.labelRed.Name = "labelRed";
+            this.labelRed.Size = new System.Drawing.Size(27, 15);
+            this.labelRed.Text = "Red";
+            // 
+            // pictureBoxRedHistogram
+            // 
+            this.pictureBoxRedHistogram.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBoxRedHistogram.Location = new System.Drawing.Point(13, 28);
+            this.pictureBoxRedHistogram.Name = "pictureBoxRedHistogram";
+            this.pictureBoxRedHistogram.Size = new System.Drawing.Size(170, 70);
+            this.pictureBoxRedHistogram.TabIndex = 1;
+            this.pictureBoxRedHistogram.TabStop = false;
+
+            // 
+            // panelMainArea
+            // 
+            this.panelMainArea.Controls.Add(this.tabControlCanvas);
+            this.panelMainArea.Controls.Add(this.panelBottomButtons);
+            this.panelMainArea.Controls.Add(this.panelHistogram);
+            this.panelMainArea.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelMainArea.Location = new System.Drawing.Point(161, 24);
+            this.panelMainArea.Name = "panelMainArea";
+            this.panelMainArea.Size = new System.Drawing.Size(589, 426);
+            this.panelMainArea.TabIndex = 4;
+            // 
+            // panelBottomButtons
+            // 
+            this.panelBottomButtons.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelBottomButtons.Controls.Add(this.buttonBlue);
+            this.panelBottomButtons.Controls.Add(this.buttonGreen);
+            this.panelBottomButtons.Controls.Add(this.buttonRed);
+            this.panelBottomButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panelBottomButtons.Location = new System.Drawing.Point(0, 366);
+            this.panelBottomButtons.Name = "panelBottomButtons";
+            this.panelBottomButtons.Size = new System.Drawing.Size(589, 60);
+            this.panelBottomButtons.TabIndex = 5;
+            // 
+            // buttonBlue
+            // 
+            this.buttonBlue.Location = new System.Drawing.Point(342, 18);
+            this.buttonBlue.Name = "buttonBlue";
+            this.buttonBlue.Size = new System.Drawing.Size(75, 23);
+            this.buttonBlue.TabIndex = 2;
+            this.buttonBlue.Text = "Blue";
+            this.buttonBlue.UseVisualStyleBackColor = true;
+            // 
+            // buttonGreen
+            // 
+            this.buttonGreen.Location = new System.Drawing.Point(257, 18);
+            this.buttonGreen.Name = "buttonGreen";
+            this.buttonGreen.Size = new System.Drawing.Size(75, 23);
+            this.buttonGreen.TabIndex = 1;
+            this.buttonGreen.Text = "Green";
+            this.buttonGreen.UseVisualStyleBackColor = true;
+            // 
+            // buttonRed
+            // 
+            this.buttonRed.Location = new System.Drawing.Point(172, 18);
+            this.buttonRed.Name = "buttonRed";
+            this.buttonRed.Size = new System.Drawing.Size(75, 23);
+            this.buttonRed.TabIndex = 0;
+            this.buttonRed.Text = "Red";
+            this.buttonRed.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(750, 450);
-            Controls.Add(tabControlCanvas);
-            Controls.Add(flowLayoutPanelThumbnails);
-            Controls.Add(menuStrip1);
-            MainMenuStrip = menuStrip1;
-            Name = "Form1";
-            Text = "Mini Photoshop";
-            menuStrip1.ResumeLayout(false);
-            menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)canvasPictureBox1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)canvasPictureBox2).EndInit();
-            ResumeLayout(false);
-            PerformLayout();
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(750, 450);
+            this.Controls.Add(this.panelMainArea);
+            this.Controls.Add(this.flowLayoutPanelThumbnails);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
+            this.Name = "Form1";
+            this.Text = "Mini Photoshop";
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.canvasPictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.canvasPictureBox2)).EndInit();
+            this.panelHistogram.ResumeLayout(false);
+            this.panelHistogram.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGrayHistogram)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBlueHistogram)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGreenHistogram)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRedHistogram)).EndInit();
+            this.panelMainArea.ResumeLayout(false);
+            this.panelBottomButtons.ResumeLayout(false);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
         }
 
         #endregion
@@ -309,5 +449,19 @@ namespace MiniPhotoShop
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private ToolStripMenuItem restoreToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;
+        private Panel panelHistogram;
+        private Label labelGray;
+        private PictureBox pictureBoxGrayHistogram;
+        private Label labelBlue;
+        private PictureBox pictureBoxBlueHistogram;
+        private Label labelGreen;
+        private PictureBox pictureBoxGreenHistogram;
+        private Label labelRed;
+        private PictureBox pictureBoxRedHistogram;
+        private Panel panelMainArea;
+        private Panel panelBottomButtons;
+        private Button buttonBlue;
+        private Button buttonGreen;
+        private Button buttonRed;
     }
 }
