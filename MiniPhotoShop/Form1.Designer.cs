@@ -229,6 +229,7 @@ namespace MiniPhotoShop
             flowLayoutPanelThumbnails.Size = new Size(161, 426);
             flowLayoutPanelThumbnails.TabIndex = 3;
             flowLayoutPanelThumbnails.WrapContents = false;
+
             // 
             // panelHistogram
             // 
@@ -352,6 +353,16 @@ namespace MiniPhotoShop
             btnHistogram.Text = "Histogram";
             btnHistogram.UseVisualStyleBackColor = true;
             btnHistogram.Click += BtnHistogramClick;
+            // 
+            // buttonRed
+            // 
+            buttonRed.Location = new Point(65, 18);
+            buttonRed.Name = "buttonRed";
+            buttonRed.Size = new Size(75, 23);
+            buttonRed.TabIndex = 0;
+            buttonRed.Text = "Red";
+            buttonRed.UseVisualStyleBackColor = true;
+            buttonRed.Click += buttonRed_Click;
             // 
             // buttonBlue
             // 

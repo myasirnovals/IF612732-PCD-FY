@@ -7,6 +7,15 @@ namespace MiniPhotoShop
 {
     public partial class Form1 : Form
     {
+        private enum ChannelMode
+        {
+            RGB,
+            Grayscale,
+            Red,
+            Green,
+            Blue
+        }
+
         public Form1()
         {
             InitializeComponent();
@@ -109,7 +118,7 @@ namespace MiniPhotoShop
             return pixelArray;
         }
 
-        private void UpdateCanvasFromPixelArray(PictureBox canvas, int[,,] pixelArray, bool useGrayscale = false)
+        private void UpdateCanvasFromPixelArray(PictureBox canvas, int[,,] pixelArray, ChannelMode mode = ChannelMode.RGB)
         {
             if (canvas == null || pixelArray == null) return;
 
@@ -122,17 +131,29 @@ namespace MiniPhotoShop
                 for (int x = 0; x < width; x++)
                 {
                     Color c;
-                    if (useGrayscale)
+                    int r = pixelArray[x, y, 0];
+                    int g = pixelArray[x, y, 1];
+                    int b = pixelArray[x, y, 2];
+                    int gray = pixelArray[x, y, 3];
+
+                    switch (mode)
                     {
-                        int gray = pixelArray[x, y, 3];
-                        c = Color.FromArgb(gray, gray, gray);
-                    }
-                    else
-                    {
-                        int r = pixelArray[x, y, 0];
-                        int g = pixelArray[x, y, 1];
-                        int b = pixelArray[x, y, 2];
-                        c = Color.FromArgb(r, g, b);
+                        case ChannelMode.Red:
+                            c = Color.FromArgb(r, 0, 0);
+                            break;
+                        case ChannelMode.Green:
+                            c = Color.FromArgb(0, g, 0);
+                            break;
+                        case ChannelMode.Blue:
+                            c = Color.FromArgb(0, 0, b);
+                            break;
+                        case ChannelMode.Grayscale:
+                            c = Color.FromArgb(gray, gray, gray);
+                            break;
+                        case ChannelMode.RGB:
+                        default:
+                            c = Color.FromArgb(r, g, b);
+                            break;
                     }
                     bmp.SetPixel(x, y, c);
                 }
@@ -320,12 +341,13 @@ namespace MiniPhotoShop
             {
                 Image originalImage = (Image)activeCanvas.Tag;
 
-                activeCanvas.Image = originalImage;
-
+                int[,,] newPixelArray = CreatePixelArrayFromImage(originalImage);
                 if (tabControlCanvas.SelectedTab != null)
                 {
-                    tabControlCanvas.SelectedTab.Tag = CreatePixelArrayFromImage(originalImage);
+                    tabControlCanvas.SelectedTab.Tag = newPixelArray;
                 }
+
+                UpdateCanvasFromPixelArray(activeCanvas, newPixelArray, ChannelMode.RGB);
 
                 MessageBox.Show("Gambar telah dikembalikan ke kondisi semula.", "Restore", MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
@@ -352,7 +374,8 @@ namespace MiniPhotoShop
 
             try
             {
-                UpdateCanvasFromPixelArray(activeCanvas, pixelArray, useGrayscale: true);
+
+                UpdateCanvasFromPixelArray(activeCanvas, pixelArray, ChannelMode.Grayscale);
             }
             catch (Exception ex)
             {
@@ -377,10 +400,9 @@ namespace MiniPhotoShop
 
                 e.DrawFocusRectangle();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show($"Terjadi kesalahan saat menutup gambar: {ex.Message}", "Error",
-                  MessageBoxButtons.OK, MessageBoxIcon.Error);
+
             }
         }
 
@@ -412,19 +434,47 @@ namespace MiniPhotoShop
         {
         }
 
+        private void ApplyChannelFilter(ChannelMode mode)
+        {
+            PictureBox activeCanvas = GetActiveCanvas();
+            int[,,] pixelArray = GetActivePixelArray();
+
+            if (activeCanvas == null || activeCanvas.Image == null || pixelArray == null)
+            {
+                MessageBox.Show("Tidak ada gambar untuk difilter.", "Info", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return;
+            }
+
+            try
+            {
+                UpdateCanvasFromPixelArray(activeCanvas, pixelArray, mode);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Terjadi kesalahan saat menerapkan filter: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void buttonRed_Click(object sender, EventArgs e)
+        {
+            ApplyChannelFilter(ChannelMode.Red);
+        }
+
         private void buttonGreen_Click(object sender, EventArgs e)
         {
-
+            ApplyChannelFilter(ChannelMode.Green);
         }
 
         private void buttonBlue_Click(object sender, EventArgs e)
         {
-
+            ApplyChannelFilter(ChannelMode.Blue);
         }
 
         private void BtnHistogramClick(object sender, EventArgs e)
         {
-
+            MessageBox.Show("Fungsi HISTOGRAM belum diimplementasikan.");
         }
     }
 }
