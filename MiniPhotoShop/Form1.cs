@@ -379,8 +379,8 @@ namespace MiniPhotoShop
             }
             catch (Exception ex)
             {
-                 MessageBox.Show($"Terjadi kesalahan saat menutup gambar: {ex.Message}", "Error",
-                   MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Terjadi kesalahan saat menutup gambar: {ex.Message}", "Error",
+                  MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -410,6 +410,21 @@ namespace MiniPhotoShop
 
         private void tabControlCanvas_SelectedIndexChanged(object sender, EventArgs e)
         {
+        }
+
+        private void buttonGreen_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonBlue_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BtnHistogramClick(object sender, EventArgs e)
+        {
+
         }
     }
 }
