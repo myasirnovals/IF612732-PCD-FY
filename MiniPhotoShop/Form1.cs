@@ -597,11 +597,8 @@ namespace MiniPhotoShop
             ClearHistogram();
         }
 
-        private void tableDataToolStripMenuItem_Click (object sender, EventArgs e)
+        private void tableDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
         }
-
-
     }
 }

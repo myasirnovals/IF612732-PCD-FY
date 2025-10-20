@@ -45,7 +45,7 @@ namespace MiniPhotoShop
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.restoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tabelDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tableDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControlCanvas = new System.Windows.Forms.TabControl();
             this.flowLayoutPanelThumbnails = new System.Windows.Forms.FlowLayoutPanel();
@@ -237,17 +237,17 @@ namespace MiniPhotoShop
             // viewToolStripMenuItem
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tabelDataToolStripMenuItem});
+            this.tableDataToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
             this.viewToolStripMenuItem.Text = "VIEW";
             // 
             // tabelDataToolStripMenuItem
             // 
-            this.tabelDataToolStripMenuItem.Name = "tabelDataToolStripMenuItem";
-            this.tabelDataToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
-            this.tabelDataToolStripMenuItem.Text = "Tabel Data";
-            this.tabelDataToolStripMenuItem.Click += new System.EventHandler(this.tableDataToolStripMenuItem_Click);
+            this.tableDataToolStripMenuItem.Name = "tableDataToolStripMenuItem";
+            this.tableDataToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+            this.tableDataToolStripMenuItem.Text = "Tabel Data";
+            this.tableDataToolStripMenuItem.Click += new System.EventHandler(this.tableDataToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -515,7 +515,7 @@ namespace MiniPhotoShop
         private Button buttonGreen;
         private Button buttonRed;
         private Button btnHistogram;
-        private ToolStripMenuItem tabelDataToolStripMenuItem;
+        private ToolStripMenuItem tableDataToolStripMenuItem;
         private ToolStripMenuItem openToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator2;
     }
