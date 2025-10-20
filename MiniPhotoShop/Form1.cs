@@ -514,5 +514,17 @@ namespace MiniPhotoShop
         private void tabControlCanvas_SelectedIndexChanged(object sender, EventArgs e)
         {
         }
+
+        private void DisplayHistogram()
+        {
+
+        }
+
+        private void tabelDataToolStripMenuItem_Click (object sender, EventArgs e)
+        {
+
+        }
+
+
     }
 }
