@@ -503,6 +503,8 @@ namespace MiniPhotoShop
             DisplayHistogram();
         }
 
+
+
         private void DisplayHistogram()
         {
             int[,,] pixelArray = GetActivePixelArray();
@@ -597,9 +599,70 @@ namespace MiniPhotoShop
             ClearHistogram();
         }
 
-        private void tableDataToolStripMenuItem_Click (object sender, EventArgs e)
+        private void tableDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            int[,,] pixelArray = GetActivePixelArray();
+            if (pixelArray == null)
+            {
+                MessageBox.Show("Tidak ada data gambar untuk diekspor.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
 
+            using (SaveFileDialog sfd = new SaveFileDialog())
+            {
+                sfd.Filter = "Text File (*.txt)|*.txt";
+                sfd.Title = "Simpan Tabel Data Pixel";
+                sfd.FileName = (tabControlCanvas.SelectedTab?.Text ?? "Gambar") + "_tabel_data.txt";
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        int[] redCounts = new int[256];
+                        int[] greenCounts = new int[256];
+                        int[] blueCounts = new int[256];
+                        int[] grayCounts = new int[256];
+
+                        int width = pixelArray.GetLength(0);
+                        int height = pixelArray.GetLength(1);
+
+                        for (int y = 0; y < height; y++)
+                        {
+                            for (int x = 0; x < width; x++)
+                            {
+                                redCounts[pixelArray[x, y, 0]]++;
+                                greenCounts[pixelArray[x, y, 1]]++;
+                                blueCounts[pixelArray[x, y, 2]]++;
+                                grayCounts[pixelArray[x, y, 3]]++;
+                            }
+                        }
+
+                        using (System.IO.StreamWriter writer = new System.IO.StreamWriter(sfd.FileName))
+                        {
+                            // Header
+                            writer.WriteLine("Tabel Data Histogram");
+                            writer.WriteLine("===============================================================");
+                            writer.WriteLine(String.Format("| {0,-3} | {1,-10} | {2,-10} | {3,-10} | {4,-10} |", "I", "Red", "Green", "Blue", "Gray"));
+                            writer.WriteLine("|-----|------------|------------|------------|------------|");
+
+                            // Data
+                            for (int i = 0; i < 256; i++)
+                            {
+                                string line = String.Format("| {0,-3} | {1,-10} | {2,-10} | {3,-10} | {4,-10} |",
+                                    i, redCounts[i], greenCounts[i], blueCounts[i], grayCounts[i]);
+                                writer.WriteLine(line);
+                            }
+                            writer.WriteLine("===============================================================");
+                        }
+
+                        MessageBox.Show("Tabel data berhasil disimpan!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Gagal menyimpan tabel data: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
         }
 
 
