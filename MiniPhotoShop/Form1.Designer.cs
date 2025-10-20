@@ -98,7 +98,7 @@ namespace MiniPhotoShop
             // 
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             saveToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.S;
-            saveToolStripMenuItem.Size = new Size(180, 22);
+            saveToolStripMenuItem.Size = new Size(138, 22);
             saveToolStripMenuItem.Text = "Save";
             saveToolStripMenuItem.Click += saveToolStripMenuItem_Click;
             // 
@@ -113,28 +113,28 @@ namespace MiniPhotoShop
             // 
             cutToolStripMenuItem.Name = "cutToolStripMenuItem";
             cutToolStripMenuItem.Size = new Size(180, 22);
-            cutToolStripMenuItem.Text = "CUT";
+            cutToolStripMenuItem.Text = "Cut";
             cutToolStripMenuItem.Click += cutToolStripMenuItem_Click;
             // 
             // copyToolStripMenuItem
             // 
             copyToolStripMenuItem.Name = "copyToolStripMenuItem";
             copyToolStripMenuItem.Size = new Size(180, 22);
-            copyToolStripMenuItem.Text = "COPY";
+            copyToolStripMenuItem.Text = "Copy";
             copyToolStripMenuItem.Click += copyToolStripMenuItem_Click;
             // 
             // pasteToolStripMenuItem
             // 
             pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
             pasteToolStripMenuItem.Size = new Size(180, 22);
-            pasteToolStripMenuItem.Text = "PASTE";
+            pasteToolStripMenuItem.Text = "Paste";
             pasteToolStripMenuItem.Click += pasteToolStripMenuItem_Click;
             // 
             // clearToolStripMenuItem
             // 
             clearToolStripMenuItem.Name = "clearToolStripMenuItem";
             clearToolStripMenuItem.Size = new Size(180, 22);
-            clearToolStripMenuItem.Text = "CLEAR";
+            clearToolStripMenuItem.Text = "Clear";
             clearToolStripMenuItem.Click += clearToolStripMenuItem_Click;
             // 
             // filterToolStripMenuItem
@@ -147,19 +147,19 @@ namespace MiniPhotoShop
             // grayscaleToolStripMenuItem
             // 
             grayscaleToolStripMenuItem.Name = "grayscaleToolStripMenuItem";
-            grayscaleToolStripMenuItem.Size = new Size(180, 22);
+            grayscaleToolStripMenuItem.Size = new Size(158, 22);
             grayscaleToolStripMenuItem.Text = "Grayscale";
             grayscaleToolStripMenuItem.Click += grayscaleToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(177, 6);
+            toolStripSeparator1.Size = new Size(155, 6);
             // 
             // restoreToolStripMenuItem
             // 
             restoreToolStripMenuItem.Name = "restoreToolStripMenuItem";
-            restoreToolStripMenuItem.Size = new Size(180, 22);
+            restoreToolStripMenuItem.Size = new Size(158, 22);
             restoreToolStripMenuItem.Text = "Restore Original";
             restoreToolStripMenuItem.Click += restoreToolStripMenuItem_Click;
             // 
@@ -229,7 +229,6 @@ namespace MiniPhotoShop
             flowLayoutPanelThumbnails.Size = new Size(161, 426);
             flowLayoutPanelThumbnails.TabIndex = 3;
             flowLayoutPanelThumbnails.WrapContents = false;
-
             // 
             // panelHistogram
             // 
@@ -354,16 +353,6 @@ namespace MiniPhotoShop
             btnHistogram.UseVisualStyleBackColor = true;
             btnHistogram.Click += BtnHistogramClick;
             // 
-            // buttonRed
-            // 
-            buttonRed.Location = new Point(65, 18);
-            buttonRed.Name = "buttonRed";
-            buttonRed.Size = new Size(75, 23);
-            buttonRed.TabIndex = 0;
-            buttonRed.Text = "Red";
-            buttonRed.UseVisualStyleBackColor = true;
-            buttonRed.Click += buttonRed_Click;
-            // 
             // buttonBlue
             // 
             buttonBlue.Location = new Point(369, 18);
@@ -392,6 +381,7 @@ namespace MiniPhotoShop
             buttonRed.TabIndex = 0;
             buttonRed.Text = "Red";
             buttonRed.UseVisualStyleBackColor = true;
+            buttonRed.Click += buttonRed_Click;
             // 
             // Form1
             // 

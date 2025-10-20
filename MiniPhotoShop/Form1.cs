@@ -115,10 +115,12 @@ namespace MiniPhotoShop
                     pixelArray[x, y, 3] = (int)((c.R * 0.3) + (c.G * 0.59) + (c.B * 0.11));
                 }
             }
+
             return pixelArray;
         }
 
-        private void UpdateCanvasFromPixelArray(PictureBox canvas, int[,,] pixelArray, ChannelMode mode = ChannelMode.RGB)
+        private void UpdateCanvasFromPixelArray(PictureBox canvas, int[,,] pixelArray,
+            ChannelMode mode = ChannelMode.RGB)
         {
             if (canvas == null || pixelArray == null) return;
 
@@ -155,9 +157,11 @@ namespace MiniPhotoShop
                             c = Color.FromArgb(r, g, b);
                             break;
                     }
+
                     bmp.SetPixel(x, y, c);
                 }
             }
+
             canvas.Image = bmp;
         }
 
@@ -201,6 +205,7 @@ namespace MiniPhotoShop
                                     break;
                                 }
                             }
+
                             if (!isGrayScale) break;
                         }
 
@@ -216,7 +221,8 @@ namespace MiniPhotoShop
                                     }
                                     else
                                     {
-                                        writer.Write($"({pixelArray[x, y, 0]}, {pixelArray[x, y, 1]}, {pixelArray[x, y, 2]})");
+                                        writer.Write(
+                                            $"({pixelArray[x, y, 0]}, {pixelArray[x, y, 1]}, {pixelArray[x, y, 2]})");
                                     }
 
                                     if (x < width - 1)
@@ -224,6 +230,7 @@ namespace MiniPhotoShop
                                         writer.Write(" ");
                                     }
                                 }
+
                                 writer.WriteLine();
                             }
                         }
@@ -246,6 +253,7 @@ namespace MiniPhotoShop
             {
                 return tabControlCanvas.SelectedTab.Controls[0] as PictureBox;
             }
+
             return null;
         }
 
@@ -255,6 +263,7 @@ namespace MiniPhotoShop
             {
                 return tabControlCanvas.SelectedTab.Tag as int[,,];
             }
+
             return null;
         }
 
@@ -374,7 +383,6 @@ namespace MiniPhotoShop
 
             try
             {
-
                 UpdateCanvasFromPixelArray(activeCanvas, pixelArray, ChannelMode.Grayscale);
             }
             catch (Exception ex)
@@ -402,7 +410,6 @@ namespace MiniPhotoShop
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -420,18 +427,11 @@ namespace MiniPhotoShop
                     {
                         this.tabControlCanvas.TabPages[i].Tag = null;
                     }
+
                     this.tabControlCanvas.TabPages.RemoveAt(i);
                     break;
                 }
             }
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-        }
-
-        private void tabControlCanvas_SelectedIndexChanged(object sender, EventArgs e)
-        {
         }
 
         private void ApplyChannelFilter(ChannelMode mode)
@@ -475,6 +475,14 @@ namespace MiniPhotoShop
         private void BtnHistogramClick(object sender, EventArgs e)
         {
             MessageBox.Show("Fungsi HISTOGRAM belum diimplementasikan.");
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+        }
+
+        private void tabControlCanvas_SelectedIndexChanged(object sender, EventArgs e)
+        {
         }
     }
 }
