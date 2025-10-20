@@ -247,7 +247,7 @@ namespace MiniPhotoShop
             this.tabelDataToolStripMenuItem.Name = "tabelDataToolStripMenuItem";
             this.tabelDataToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.tabelDataToolStripMenuItem.Text = "Tabel Data";
-            this.tabelDataToolStripMenuItem.Click += new System.EventHandler(this.tabelDataToolStripMenuItem_Click);
+            this.tabelDataToolStripMenuItem.Click += new System.EventHandler(this.tableDataToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
