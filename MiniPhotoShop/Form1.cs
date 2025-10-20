@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Linq.Expressions;
 using System.Windows.Forms;
+using System.IO;
 
 namespace MiniPhotoShop
 {
@@ -60,20 +61,7 @@ namespace MiniPhotoShop
             PictureBox clickedThumbnail = sender as PictureBox;
             if (clickedThumbnail == null) return;
 
-            string imageName = clickedThumbnail.Tag.ToString();
-
-            TabPage newTab = AddNewTab(imageName);
-
-            PictureBox activeCanvas = newTab.Controls[0] as PictureBox;
-
-            if (activeCanvas != null)
-            {
-                activeCanvas.Image = clickedThumbnail.Image;
-
-                activeCanvas.Tag = clickedThumbnail.Image.Clone();
-
-                newTab.Tag = CreatePixelArrayFromImage(clickedThumbnail.Image);
-            }
+            ProcessAndDisplayImage(clickedThumbnail.Image, clickedThumbnail.Tag.ToString());
         }
 
         private TabPage AddNewTab(string tabTitle)
@@ -237,6 +225,48 @@ namespace MiniPhotoShop
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
+            }
+        }
+
+        private void openToolStripMenuItem_Click(object sender , EventArgs e)
+        {
+            using(OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Title = "Buka Gambar";
+                ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        Image loadedImage = Image.FromFile(ofd.FileName);
+                        string fileName = Path.GetFileNameWithoutExtension(ofd.FileName);
+
+                        ProcessAndDisplayImage(loadedImage, fileName);
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show($"Failed to open image: {ex.Message}", "Error", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void ProcessAndDisplayImage(Image image, string imageName)
+        {
+            if (image == null) return;
+
+            TabPage newTab = AddNewTab(imageName);
+            PictureBox activeCanvas = newTab.Controls[0] as PictureBox;
+
+            if (activeCanvas != null)
+            {
+                activeCanvas.Image = image;
+                activeCanvas.Tag = image.Clone();
+                newTab.Tag = CreatePixelArrayFromImage(image);
+
+                DisplayHistogram();
             }
         }
 
