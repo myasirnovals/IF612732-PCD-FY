@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Linq.Expressions;
 using System.Windows.Forms;
+using System.IO;
 
 namespace MiniPhotoShop
 {
@@ -60,20 +61,7 @@ namespace MiniPhotoShop
             PictureBox clickedThumbnail = sender as PictureBox;
             if (clickedThumbnail == null) return;
 
-            string imageName = clickedThumbnail.Tag.ToString();
-
-            TabPage newTab = AddNewTab(imageName);
-
-            PictureBox activeCanvas = newTab.Controls[0] as PictureBox;
-
-            if (activeCanvas != null)
-            {
-                activeCanvas.Image = clickedThumbnail.Image;
-
-                activeCanvas.Tag = clickedThumbnail.Image.Clone();
-
-                newTab.Tag = CreatePixelArrayFromImage(clickedThumbnail.Image);
-            }
+            ProcessAndDisplayImage(clickedThumbnail.Image, clickedThumbnail.Tag.ToString());
         }
 
         private TabPage AddNewTab(string tabTitle)
@@ -165,7 +153,6 @@ namespace MiniPhotoShop
             canvas.Image = bmp;
         }
 
-
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             PictureBox activeCanvas = GetActiveCanvas();
@@ -244,6 +231,45 @@ namespace MiniPhotoShop
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
+            }
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Title = "Buka Gambar";
+                ofd.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        Image loadedImage = Image.FromFile(ofd.FileName);
+                        string fileName = Path.GetFileNameWithoutExtension(ofd.FileName);
+                        ProcessAndDisplayImage(loadedImage, fileName);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Gagal membuka file gambar: {ex.Message}", "Error", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void ProcessAndDisplayImage(Image image, string imageName)
+        {
+            if (image == null) return;
+
+            TabPage newTab = AddNewTab(imageName);
+            PictureBox activeCanvas = newTab.Controls[0] as PictureBox;
+
+            if (activeCanvas != null)
+            {
+                activeCanvas.Image = image;
+                activeCanvas.Tag = image.Clone();
+                newTab.Tag = CreatePixelArrayFromImage(image);
             }
         }
 
@@ -474,7 +500,92 @@ namespace MiniPhotoShop
 
         private void BtnHistogramClick(object sender, EventArgs e)
         {
-            MessageBox.Show("Fungsi HISTOGRAM belum diimplementasikan.");
+            DisplayHistogram();
+        }
+
+        private void DisplayHistogram()
+        {
+            int[,,] pixelArray = GetActivePixelArray();
+            if (pixelArray == null)
+            {
+                ClearHistogram();
+                return;
+            }
+
+            try
+            {
+                int[] redCounts = new int[256];
+                int[] greenCounts = new int[256];
+                int[] blueCounts = new int[256];
+                int[] grayCounts = new int[256];
+
+                int width = pixelArray.GetLength(0);
+                int height = pixelArray.GetLength(1);
+
+                for (int y = 0; y < height; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        redCounts[pixelArray[x, y, 0]]++;
+                        greenCounts[pixelArray[x, y, 1]]++;
+                        blueCounts[pixelArray[x, y, 2]]++;
+                        grayCounts[pixelArray[x, y, 3]]++;
+                    }
+                }
+
+                int maxCount = 0;
+                for (int i = 0; i < 256; i++)
+                {
+                    if (redCounts[i] > maxCount) maxCount = redCounts[i];
+                    if (greenCounts[i] > maxCount) maxCount = greenCounts[i];
+                    if (blueCounts[i] > maxCount) maxCount = blueCounts[i];
+                    if (grayCounts[i] > maxCount) maxCount = grayCounts[i];
+                }
+
+                if (maxCount == 0) maxCount = 1;
+
+                pictureBoxRedHistogram.Image = DrawHistogram(pictureBoxRedHistogram.Width,
+                    pictureBoxRedHistogram.Height, redCounts, maxCount, Color.Red);
+                pictureBoxGreenHistogram.Image = DrawHistogram(pictureBoxGreenHistogram.Width,
+                    pictureBoxGreenHistogram.Height, greenCounts, maxCount, Color.Green);
+                pictureBoxBlueHistogram.Image = DrawHistogram(pictureBoxBlueHistogram.Width,
+                    pictureBoxBlueHistogram.Height, blueCounts, maxCount, Color.Blue);
+                pictureBoxGrayHistogram.Image = DrawHistogram(pictureBoxGrayHistogram.Width,
+                    pictureBoxGrayHistogram.Height, grayCounts, maxCount, Color.Gray);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Terjadi kesalahan saat membuat histogram: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private Bitmap DrawHistogram(int width, int height, int[] counts, int maxCount, Color barColor)
+        {
+            Bitmap bmp = new Bitmap(width, height);
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                g.Clear(Color.White);
+                Pen pen = new Pen(barColor);
+                float barWidth = (float)width / 256;
+
+                for (int i = 0; i < 256; i++)
+                {
+                    float barHeight = ((float)counts[i] / maxCount) * height;
+                    float xPos = i * barWidth;
+                    g.DrawLine(pen, xPos, height, xPos, height - barHeight);
+                }
+            }
+
+            return bmp;
+        }
+
+        private void ClearHistogram()
+        {
+            pictureBoxRedHistogram.Image = null;
+            pictureBoxGreenHistogram.Image = null;
+            pictureBoxBlueHistogram.Image = null;
+            pictureBoxGrayHistogram.Image = null;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -483,6 +594,7 @@ namespace MiniPhotoShop
 
         private void tabControlCanvas_SelectedIndexChanged(object sender, EventArgs e)
         {
+            ClearHistogram();
         }
     }
 }
