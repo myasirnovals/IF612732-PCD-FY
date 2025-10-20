@@ -119,6 +119,11 @@ namespace MiniPhotoShop
             this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            saveToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.S;
+            saveToolStripMenuItem.Size = new Size(138, 22);
+            saveToolStripMenuItem.Text = "Save";
+            saveToolStripMenuItem.Click += saveToolStripMenuItem_Click;
             // 
             // editToolStripMenuItem
             // 
@@ -158,6 +163,31 @@ namespace MiniPhotoShop
             this.clearToolStripMenuItem.Size = new System.Drawing.Size(102, 22);
             this.clearToolStripMenuItem.Text = "Clear";
             this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
+            cutToolStripMenuItem.Name = "cutToolStripMenuItem";
+            cutToolStripMenuItem.Size = new Size(180, 22);
+            cutToolStripMenuItem.Text = "Cut";
+            cutToolStripMenuItem.Click += cutToolStripMenuItem_Click;
+            // 
+            // copyToolStripMenuItem
+            // 
+            copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            copyToolStripMenuItem.Size = new Size(180, 22);
+            copyToolStripMenuItem.Text = "Copy";
+            copyToolStripMenuItem.Click += copyToolStripMenuItem_Click;
+            // 
+            // pasteToolStripMenuItem
+            // 
+            pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
+            pasteToolStripMenuItem.Size = new Size(180, 22);
+            pasteToolStripMenuItem.Text = "Paste";
+            pasteToolStripMenuItem.Click += pasteToolStripMenuItem_Click;
+            // 
+            // clearToolStripMenuItem
+            // 
+            clearToolStripMenuItem.Name = "clearToolStripMenuItem";
+            clearToolStripMenuItem.Size = new Size(180, 22);
+            clearToolStripMenuItem.Text = "Clear";
+            clearToolStripMenuItem.Click += clearToolStripMenuItem_Click;
             // 
             // filterToolStripMenuItem
             // 
@@ -187,6 +217,22 @@ namespace MiniPhotoShop
             this.restoreToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
             this.restoreToolStripMenuItem.Text = "Restore Original";
             this.restoreToolStripMenuItem.Click += new System.EventHandler(this.restoreToolStripMenuItem_Click);
+            grayscaleToolStripMenuItem.Name = "grayscaleToolStripMenuItem";
+            grayscaleToolStripMenuItem.Size = new Size(158, 22);
+            grayscaleToolStripMenuItem.Text = "Grayscale";
+            grayscaleToolStripMenuItem.Click += grayscaleToolStripMenuItem_Click;
+            // 
+            // toolStripSeparator1
+            // 
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new Size(155, 6);
+            // 
+            // restoreToolStripMenuItem
+            // 
+            restoreToolStripMenuItem.Name = "restoreToolStripMenuItem";
+            restoreToolStripMenuItem.Size = new Size(158, 22);
+            restoreToolStripMenuItem.Text = "Restore Original";
+            restoreToolStripMenuItem.Click += restoreToolStripMenuItem_Click;
             // 
             // viewToolStripMenuItem
             // 
@@ -233,6 +279,15 @@ namespace MiniPhotoShop
             this.flowLayoutPanelThumbnails.Size = new System.Drawing.Size(161, 426);
             this.flowLayoutPanelThumbnails.TabIndex = 3;
             this.flowLayoutPanelThumbnails.WrapContents = false;
+            flowLayoutPanelThumbnails.AutoScroll = true;
+            flowLayoutPanelThumbnails.BorderStyle = BorderStyle.FixedSingle;
+            flowLayoutPanelThumbnails.Dock = DockStyle.Left;
+            flowLayoutPanelThumbnails.FlowDirection = FlowDirection.TopDown;
+            flowLayoutPanelThumbnails.Location = new Point(0, 24);
+            flowLayoutPanelThumbnails.Name = "flowLayoutPanelThumbnails";
+            flowLayoutPanelThumbnails.Size = new Size(161, 426);
+            flowLayoutPanelThumbnails.TabIndex = 3;
+            flowLayoutPanelThumbnails.WrapContents = false;
             // 
             // panelHistogram
             // 
@@ -356,6 +411,13 @@ namespace MiniPhotoShop
             this.btnHistogram.Text = "Histogram";
             this.btnHistogram.UseVisualStyleBackColor = true;
             this.btnHistogram.Click += new System.EventHandler(this.BtnHistogramClick);
+            btnHistogram.Location = new Point(505, 18);
+            btnHistogram.Name = "btnHistogram";
+            btnHistogram.Size = new Size(75, 23);
+            btnHistogram.TabIndex = 3;
+            btnHistogram.Text = "Histogram";
+            btnHistogram.UseVisualStyleBackColor = true;
+            btnHistogram.Click += BtnHistogramClick;
             // 
             // buttonBlue
             // 
@@ -386,6 +448,13 @@ namespace MiniPhotoShop
             this.buttonRed.Text = "Red";
             this.buttonRed.UseVisualStyleBackColor = true;
             this.buttonRed.Click += new System.EventHandler(this.buttonRed_Click);
+            buttonRed.Location = new Point(65, 18);
+            buttonRed.Name = "buttonRed";
+            buttonRed.Size = new Size(75, 23);
+            buttonRed.TabIndex = 0;
+            buttonRed.Text = "Red";
+            buttonRed.UseVisualStyleBackColor = true;
+            buttonRed.Click += buttonRed_Click;
             // 
             // Form1
             // 
