@@ -13,9 +13,9 @@ namespace MiniPhotoShop
         private readonly IImageProcessingService _imageProcessor;
         private readonly IImageFileService _imageFileService;
         private readonly IDataExportService _dataExportService;
-        
+
         private readonly Dictionary<TabPage, ImageDocument> _openDocuments = new Dictionary<TabPage, ImageDocument>();
-        
+
         private readonly IImageFilter _rgbFilter = new RgbFilter();
         private readonly IImageFilter _grayFilter = new GrayscaleFilter();
         private readonly IImageFilter _redFilter = new RedChannelFilter();
@@ -86,13 +86,13 @@ namespace MiniPhotoShop
         private void ProcessAndDisplayImage(Bitmap image, string imageName)
         {
             if (image == null) return;
-            
+
             var newDocument = new ImageDocument(image, imageName, _imageProcessor);
-            
+
             TabPage newTab = AddNewTab(imageName);
-            
+
             _openDocuments.Add(newTab, newDocument);
-            
+
             UpdateCanvas(newTab, newDocument.CurrentBitmap);
         }
 
@@ -116,12 +116,12 @@ namespace MiniPhotoShop
 
             return newTabPage;
         }
-        
+
         private TabPage GetActiveTab()
         {
             return tabControlCanvas.SelectedTab;
         }
-        
+
         private PictureBox GetActiveCanvas()
         {
             TabPage activeTab = GetActiveTab();
@@ -132,7 +132,7 @@ namespace MiniPhotoShop
 
             return null;
         }
-        
+
         private ImageDocument GetActiveDocument()
         {
             TabPage activeTab = GetActiveTab();
@@ -143,7 +143,7 @@ namespace MiniPhotoShop
 
             return null;
         }
-        
+
         private void UpdateCanvas(TabPage tab, Image newImage)
         {
             if (tab?.Controls[0] is PictureBox canvas)
@@ -161,7 +161,7 @@ namespace MiniPhotoShop
                     MessageBoxIcon.Information);
                 return;
             }
-            
+
             _dataExportService.SavePixelData(doc.Name, doc.PixelArray, doc.IsGrayscale);
         }
 
@@ -212,7 +212,7 @@ namespace MiniPhotoShop
                     MessageBoxIcon.Warning);
                 return;
             }
-            
+
             doc.Restore();
             UpdateCanvas(GetActiveTab(), doc.CurrentBitmap);
 
@@ -239,7 +239,7 @@ namespace MiniPhotoShop
         {
             ApplyChannelFilter(_blueFilter);
         }
-        
+
         private void ApplyChannelFilter(IImageFilter filter)
         {
             ImageDocument doc = GetActiveDocument();
@@ -324,7 +324,7 @@ namespace MiniPhotoShop
                     MessageBoxIcon.Information);
                 return;
             }
-            
+
             _dataExportService.SaveHistogramData(doc.Name, doc.Histogram);
         }
 
@@ -347,17 +347,17 @@ namespace MiniPhotoShop
         private void CloseTab(TabPage tab)
         {
             if (tab == null) return;
-            
+
             if (_openDocuments.ContainsKey(tab))
             {
                 _openDocuments[tab].CurrentBitmap?.Dispose();
                 _openDocuments[tab].OriginalBitmap?.Dispose();
                 _openDocuments.Remove(tab);
             }
-            
+
             tabControlCanvas.TabPages.Remove(tab);
             tab.Dispose();
-            
+
             DisplayHistogram();
         }
 
@@ -389,6 +389,11 @@ namespace MiniPhotoShop
 
         private void Form1_Load(object sender, EventArgs e)
         {
+        }
+
+        private void lblBrightnessValue_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
