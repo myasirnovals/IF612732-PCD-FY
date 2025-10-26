@@ -88,7 +88,7 @@ namespace MiniPhotoShop
             menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, filterToolStripMenuItem, viewToolStripMenuItem, helpToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1920, 24);
+            menuStrip1.Size = new Size(1000, 24);
             menuStrip1.TabIndex = 0;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -124,7 +124,7 @@ namespace MiniPhotoShop
             // 
             editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { cutToolStripMenuItem, copyToolStripMenuItem, pasteToolStripMenuItem, clearToolStripMenuItem });
             editToolStripMenuItem.Name = "editToolStripMenuItem";
-            editToolStripMenuItem.Size = new Size(42, 20);
+            editToolStripMenuItem.Size = new Size(43, 20);
             editToolStripMenuItem.Text = "EDIT";
             // 
             // cutToolStripMenuItem
@@ -155,19 +155,22 @@ namespace MiniPhotoShop
             clearToolStripMenuItem.Text = "Clear";
             clearToolStripMenuItem.Click += clearToolStripMenuItem_Click;
             // 
-            // filterToolStripMenuItem
-            // 
-            filterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { grayscaleToolStripMenuItem, toolStripSeparator1, restoreToolStripMenuItem });
-            filterToolStripMenuItem.Name = "filterToolStripMenuItem";
-            filterToolStripMenuItem.Size = new Size(52, 20);
-            filterToolStripMenuItem.Text = "FILTER";
-            // 
             // grayscaleToolStripMenuItem
             // 
             grayscaleToolStripMenuItem.Name = "grayscaleToolStripMenuItem";
             grayscaleToolStripMenuItem.Size = new Size(158, 22);
             grayscaleToolStripMenuItem.Text = "Grayscale";
             grayscaleToolStripMenuItem.Click += grayscaleToolStripMenuItem_Click;
+
+            //
+            // negationToolStripMenuItem
+            //  
+            negationToolStripMenuItem = new ToolStripMenuItem();
+            negationToolStripMenuItem.Name = "negationToolStripMenuItem";
+            negationToolStripMenuItem.Size = new Size(158, 22);
+            negationToolStripMenuItem.Text = "Negation";
+            negationToolStripMenuItem.Click += negationToolStripMenuItem_Click;
+
             // 
             // toolStripSeparator1
             // 
@@ -180,6 +183,14 @@ namespace MiniPhotoShop
             restoreToolStripMenuItem.Size = new Size(158, 22);
             restoreToolStripMenuItem.Text = "Restore Original";
             restoreToolStripMenuItem.Click += restoreToolStripMenuItem_Click;
+
+            // 
+            // filterToolStripMenuItem
+            // 
+            filterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { grayscaleToolStripMenuItem, negationToolStripMenuItem, toolStripSeparator1, restoreToolStripMenuItem });
+            filterToolStripMenuItem.Name = "filterToolStripMenuItem";
+            filterToolStripMenuItem.Size = new Size(53, 20);
+            filterToolStripMenuItem.Text = "FILTER";
             // 
             // viewToolStripMenuItem
             // 
@@ -191,7 +202,7 @@ namespace MiniPhotoShop
             // tableDataToolStripMenuItem
             // 
             tableDataToolStripMenuItem.Name = "tableDataToolStripMenuItem";
-            tableDataToolStripMenuItem.Size = new Size(128, 22);
+            tableDataToolStripMenuItem.Size = new Size(129, 22);
             tableDataToolStripMenuItem.Text = "Tabel Data";
             tableDataToolStripMenuItem.Click += tableDataToolStripMenuItem_Click;
             // 
@@ -208,7 +219,7 @@ namespace MiniPhotoShop
             tabControlCanvas.Location = new Point(0, 0);
             tabControlCanvas.Name = "tabControlCanvas";
             tabControlCanvas.SelectedIndex = 0;
-            tabControlCanvas.Size = new Size(1559, 977);
+            tabControlCanvas.Size = new Size(639, 516);
             tabControlCanvas.TabIndex = 2;
             tabControlCanvas.DrawItem += tabControlCanvas_DrawItem;
             tabControlCanvas.SelectedIndexChanged += tabControlCanvas_SelectedIndexChanged;
@@ -222,7 +233,7 @@ namespace MiniPhotoShop
             flowLayoutPanelThumbnails.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanelThumbnails.Location = new Point(0, 24);
             flowLayoutPanelThumbnails.Name = "flowLayoutPanelThumbnails";
-            flowLayoutPanelThumbnails.Size = new Size(161, 1037);
+            flowLayoutPanelThumbnails.Size = new Size(161, 576);
             flowLayoutPanelThumbnails.TabIndex = 3;
             flowLayoutPanelThumbnails.WrapContents = false;
             // 
@@ -238,9 +249,9 @@ namespace MiniPhotoShop
             panelHistogram.Controls.Add(labelRed);
             panelHistogram.Controls.Add(pictureBoxRedHistogram);
             panelHistogram.Dock = DockStyle.Right;
-            panelHistogram.Location = new Point(1559, 0);
+            panelHistogram.Location = new Point(639, 0);
             panelHistogram.Name = "panelHistogram";
-            panelHistogram.Size = new Size(200, 1037);
+            panelHistogram.Size = new Size(200, 576);
             panelHistogram.TabIndex = 4;
             // 
             // labelGray
@@ -323,7 +334,7 @@ namespace MiniPhotoShop
             panelMainArea.Dock = DockStyle.Fill;
             panelMainArea.Location = new Point(161, 24);
             panelMainArea.Name = "panelMainArea";
-            panelMainArea.Size = new Size(1759, 1037);
+            panelMainArea.Size = new Size(839, 576);
             panelMainArea.TabIndex = 4;
             // 
             // panelBottomButtons
@@ -340,16 +351,16 @@ namespace MiniPhotoShop
             panelBottomButtons.Controls.Add(buttonGreen);
             panelBottomButtons.Controls.Add(buttonRed);
             panelBottomButtons.Dock = DockStyle.Bottom;
-            panelBottomButtons.Location = new Point(0, 977);
+            panelBottomButtons.Location = new Point(0, 516);
             panelBottomButtons.Name = "panelBottomButtons";
-            panelBottomButtons.Size = new Size(1559, 60);
+            panelBottomButtons.Size = new Size(639, 60);
             panelBottomButtons.TabIndex = 5;
             // 
             // lblBrightnessValue
             // 
-            this.lblBrightnessValue.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            this.lblBrightnessValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            lblBrightnessValue.Location = new Point(1089, 19);
+            lblBrightnessValue.Anchor = AnchorStyles.Top;
+            lblBrightnessValue.BorderStyle = BorderStyle.FixedSingle;
+            lblBrightnessValue.Location = new Point(603, 10);
             lblBrightnessValue.Name = "lblBrightnessValue";
             lblBrightnessValue.Size = new Size(35, 20);
             lblBrightnessValue.TabIndex = 9;
@@ -359,32 +370,32 @@ namespace MiniPhotoShop
             // 
             // trackBarBrightness
             // 
-            this.trackBarBrightness.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            trackBarBrightness.Location = new Point(963, 15);
+            trackBarBrightness.Anchor = AnchorStyles.Top;
+            trackBarBrightness.Location = new Point(525, 10);
             trackBarBrightness.Maximum = 255;
             trackBarBrightness.Minimum = -255;
             trackBarBrightness.Name = "trackBarBrightness";
-            trackBarBrightness.Size = new Size(120, 45);
+            trackBarBrightness.Size = new Size(88, 45);
             trackBarBrightness.TabIndex = 8;
             trackBarBrightness.TickFrequency = 32;
-            // trackBarBrightness.Scroll += this.trackBarBrightness_Scroll;
+            trackBarBrightness.Scroll += new System.EventHandler(this.trackBarBrightness_Scroll);
+            trackBarBrightness.MouseUp += new System.Windows.Forms.MouseEventHandler(this.trackBarBrightness_MouseUp);
             // 
             // labelBrightness
             // 
-            this.labelBrightness.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            labelBrightness.Anchor = AnchorStyles.Top;
             labelBrightness.AutoSize = true;
-            labelBrightness.Location = new Point(892, 22);
+            labelBrightness.Location = new Point(478, 15);
             labelBrightness.Name = "labelBrightness";
             labelBrightness.Size = new Size(65, 15);
             labelBrightness.TabIndex = 7;
             labelBrightness.Text = "Brightness:";
-            // labelBrightness.Click += this.labelBrightness_Click;
             // 
             // lblThresholdValue
             // 
-            this.lblThresholdValue.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            this.lblThresholdValue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            lblThresholdValue.Location = new Point(810, 19);
+            lblThresholdValue.Anchor = AnchorStyles.Top;
+            lblThresholdValue.BorderStyle = BorderStyle.FixedSingle;
+            lblThresholdValue.Location = new Point(446, 16);
             lblThresholdValue.Name = "lblThresholdValue";
             lblThresholdValue.Size = new Size(35, 20);
             lblThresholdValue.TabIndex = 6;
@@ -393,28 +404,29 @@ namespace MiniPhotoShop
             // 
             // trackBarThreshold
             // 
-            this.trackBarThreshold.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            trackBarThreshold.Location = new Point(684, 15);
+            trackBarThreshold.Anchor = AnchorStyles.Top;
+            trackBarThreshold.Location = new Point(368, 14);
             trackBarThreshold.Maximum = 255;
             trackBarThreshold.Name = "trackBarThreshold";
-            trackBarThreshold.Size = new Size(120, 45);
+            trackBarThreshold.Size = new Size(87, 45);
             trackBarThreshold.TabIndex = 5;
             trackBarThreshold.TickFrequency = 16;
             trackBarThreshold.Value = 128;
             // 
             // labelThreshold
             // 
-            this.labelThreshold.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            labelThreshold.Anchor = AnchorStyles.Top;
             labelThreshold.AutoSize = true;
-            labelThreshold.Location = new Point(645, 22);
+            labelThreshold.Location = new Point(340, 16);
             labelThreshold.Name = "labelThreshold";
             labelThreshold.Size = new Size(33, 15);
             labelThreshold.TabIndex = 4;
             labelThreshold.Text = "B/W:";
+            labelThreshold.Click += labelThreshold_Click;
             // 
             // btnHistogram
             // 
-            btnHistogram.Location = new Point(505, 18);
+            btnHistogram.Location = new Point(259, 19);
             btnHistogram.Name = "btnHistogram";
             btnHistogram.Size = new Size(75, 23);
             btnHistogram.TabIndex = 3;
@@ -424,7 +436,7 @@ namespace MiniPhotoShop
             // 
             // buttonBlue
             // 
-            buttonBlue.Location = new Point(369, 18);
+            buttonBlue.Location = new Point(178, 19);
             buttonBlue.Name = "buttonBlue";
             buttonBlue.Size = new Size(75, 23);
             buttonBlue.TabIndex = 2;
@@ -434,7 +446,7 @@ namespace MiniPhotoShop
             // 
             // buttonGreen
             // 
-            buttonGreen.Location = new Point(225, 18);
+            buttonGreen.Location = new Point(86, 19);
             buttonGreen.Name = "buttonGreen";
             buttonGreen.Size = new Size(75, 23);
             buttonGreen.TabIndex = 1;
@@ -444,7 +456,7 @@ namespace MiniPhotoShop
             // 
             // buttonRed
             // 
-            buttonRed.Location = new Point(65, 18);
+            buttonRed.Location = new Point(5, 18);
             buttonRed.Name = "buttonRed";
             buttonRed.Size = new Size(75, 23);
             buttonRed.TabIndex = 0;
@@ -523,5 +535,6 @@ namespace MiniPhotoShop
         private Label labelBrightness;
         private TrackBar trackBarBrightness;
         private Label lblBrightnessValue;
+        private ToolStripMenuItem negationToolStripMenuItem;
     }
 }

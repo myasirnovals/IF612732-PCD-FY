@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using MiniPhotoShop.Filters;
 using MiniPhotoShop.Models;
@@ -21,6 +22,8 @@ namespace MiniPhotoShop
         private readonly IImageFilter _redFilter = new RedChannelFilter();
         private readonly IImageFilter _greenFilter = new GreenChannelFilter();
         private readonly IImageFilter _blueFilter = new BlueChannelFilter();
+        private readonly IImageFilter _negationFilter = new NegationFilter();
+        private ContextMenuStrip _thumbnailContextMenu;
 
 
         public Form1()
@@ -37,6 +40,7 @@ namespace MiniPhotoShop
             }
 
             InitializeThumbnails();
+            InitializeThumbnailContextMenu();
         }
 
         private void InitializeThumbnails()
@@ -62,7 +66,41 @@ namespace MiniPhotoShop
                     Margin = new Padding(10)
                 };
                 thumb.Click += Thumbnail_Click;
+                thumb.ContextMenuStrip = _thumbnailContextMenu;
                 flowLayoutPanelThumbnails.Controls.Add(thumb);
+            }
+        }
+
+        private void InitializeThumbnailContextMenu()
+        {
+            _thumbnailContextMenu = new ContextMenuStrip();
+            ToolStripMenuItem deleteItem = new ToolStripMenuItem("Hapus");
+            deleteItem.Click += DeleteThumbnail_Click;
+            _thumbnailContextMenu.Items.Add(deleteItem);
+        }
+
+        private void DeleteThumbnail_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ToolStripMenuItem menuItem = sender as ToolStripMenuItem;
+                if (menuItem == null) return;
+
+                ContextMenuStrip contextMenu = menuItem.Owner as ContextMenuStrip;
+                if (contextMenu == null) return;
+
+                Control sourceControl = contextMenu.SourceControl;
+                if (sourceControl != null)
+                {
+                    flowLayoutPanelThumbnails.Controls.Remove(sourceControl);
+
+                    (sourceControl as PictureBox)?.Image?.Dispose();
+                    sourceControl.Dispose();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Gagal menghapus thumbnail: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -80,6 +118,21 @@ namespace MiniPhotoShop
             if (loadedImage != null)
             {
                 ProcessAndDisplayImage(loadedImage, fileName);
+
+                PictureBox thumb = new PictureBox
+                {
+                    Image = loadedImage, 
+                    Tag = fileName,      
+                    Size = new Size(120, 100),
+                    SizeMode = PictureBoxSizeMode.Zoom,
+                    BorderStyle = BorderStyle.FixedSingle,
+                    Cursor = Cursors.Hand,
+                    Margin = new Padding(10)
+                };
+
+                thumb.Click += Thumbnail_Click;
+                thumb.ContextMenuStrip = _thumbnailContextMenu;
+                flowLayoutPanelThumbnails.Controls.Add(thumb);
             }
         }
 
@@ -162,7 +215,41 @@ namespace MiniPhotoShop
                 return;
             }
 
-            _dataExportService.SavePixelData(doc.Name, doc.PixelArray, doc.IsGrayscale);
+            using (SaveFileDialog sfd = new SaveFileDialog())
+            {
+                sfd.Title = "Simpan Gambar";
+                sfd.FileName = doc.Name;
+                sfd.Filter = "PNG Image|*.png|JPEG Image|*.jpg;*.jpeg|Bitmap Image|*.bmp";
+                sfd.DefaultExt = "png";
+                sfd.AddExtension = true;
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        System.Drawing.Imaging.ImageFormat format = System.Drawing.Imaging.ImageFormat.Png;
+                        string ext = System.IO.Path.GetExtension(sfd.FileName).ToLower();
+
+                        switch (ext)
+                        {
+                            case ".jpg":
+                            case ".jpeg":
+                                format = System.Drawing.Imaging.ImageFormat.Jpeg;
+                                break;
+                            case ".bmp":
+                                format = System.Drawing.Imaging.ImageFormat.Bmp;
+                                break;
+                        }
+
+                        doc.CurrentBitmap.Save(sfd.FileName, format);
+                        MessageBox.Show("Gambar berhasil disimpan!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Terjadi kesalahan saat menyimpan gambar: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
         }
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
@@ -215,6 +302,10 @@ namespace MiniPhotoShop
 
             doc.Restore();
             UpdateCanvas(GetActiveTab(), doc.CurrentBitmap);
+            DisplayHistogram();
+
+            trackBarBrightness.Value = 0;
+            lblBrightnessValue.Text = "0";
 
             MessageBox.Show("Gambar telah dikembalikan ke kondisi semula.", "Restore", MessageBoxButtons.OK,
                 MessageBoxIcon.Information);
@@ -223,6 +314,11 @@ namespace MiniPhotoShop
         private void grayscaleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ApplyChannelFilter(_grayFilter);
+        }
+
+        private void negationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ApplyChannelFilter(_negationFilter);
         }
 
         private void buttonRed_Click(object sender, EventArgs e)
@@ -252,8 +348,13 @@ namespace MiniPhotoShop
 
             try
             {
+                trackBarBrightness.Value = 0;
+                lblBrightnessValue.Text = "0";
+                doc.Restore();
+
                 doc.ApplyFilter(filter);
                 UpdateCanvas(GetActiveTab(), doc.CurrentBitmap);
+                DisplayHistogram();
             }
             catch (Exception ex)
             {
@@ -270,7 +371,7 @@ namespace MiniPhotoShop
         private void DisplayHistogram()
         {
             ImageDocument doc = GetActiveDocument();
-            if (doc == null)
+            if (doc == null || doc.CurrentBitmap == null)
             {
                 ClearHistogram();
                 return;
@@ -278,17 +379,42 @@ namespace MiniPhotoShop
 
             try
             {
-                HistogramData histo = doc.Histogram;
-                int max = histo.MaxCount;
+                bool isCurrentlyGrayscale = doc.IsGrayscale;
 
-                pictureBoxRedHistogram.Image = _imageProcessor.DrawHistogram(pictureBoxRedHistogram.Width,
-                    pictureBoxRedHistogram.Height, histo.RedCounts, max, Color.Red);
-                pictureBoxGreenHistogram.Image = _imageProcessor.DrawHistogram(pictureBoxGreenHistogram.Width,
-                    pictureBoxGreenHistogram.Height, histo.GreenCounts, max, Color.Green);
-                pictureBoxBlueHistogram.Image = _imageProcessor.DrawHistogram(pictureBoxBlueHistogram.Width,
-                    pictureBoxBlueHistogram.Height, histo.BlueCounts, max, Color.Blue);
+                int[,,] currentPixelArray = _imageProcessor.CreatePixelArray(doc.CurrentBitmap);
+                HistogramData histo = _imageProcessor.CalculateHistogram(currentPixelArray);
+
+                if (!isCurrentlyGrayscale)
+                {
+                    int maxRed = histo.RedCounts.Max();
+                    if (maxRed == 0) maxRed = 1;
+                    pictureBoxRedHistogram.Image = _imageProcessor.DrawHistogram(pictureBoxRedHistogram.Width,
+                        pictureBoxRedHistogram.Height, histo.RedCounts, maxRed, Color.Red);
+
+                    int maxGreen = histo.GreenCounts.Max();
+                    if (maxGreen == 0) maxGreen = 1;
+                    pictureBoxGreenHistogram.Image = _imageProcessor.DrawHistogram(pictureBoxGreenHistogram.Width,
+                        pictureBoxGreenHistogram.Height, histo.GreenCounts, maxGreen, Color.Green);
+
+                    int maxBlue = histo.BlueCounts.Max();
+                    if (maxBlue == 0) maxBlue = 1;
+                    pictureBoxBlueHistogram.Image = _imageProcessor.DrawHistogram(pictureBoxBlueHistogram.Width,
+                        pictureBoxBlueHistogram.Height, histo.BlueCounts, maxBlue, Color.Blue);
+                }
+                else 
+                {
+                    pictureBoxRedHistogram.Image?.Dispose();
+                    pictureBoxGreenHistogram.Image?.Dispose();
+                    pictureBoxBlueHistogram.Image?.Dispose();
+                    pictureBoxRedHistogram.Image = null;
+                    pictureBoxGreenHistogram.Image = null;
+                    pictureBoxBlueHistogram.Image = null;
+                }
+
+                int maxGray = histo.GrayCounts.Max();
+                if (maxGray == 0) maxGray = 1;
                 pictureBoxGrayHistogram.Image = _imageProcessor.DrawHistogram(pictureBoxGrayHistogram.Width,
-                    pictureBoxGrayHistogram.Height, histo.GrayCounts, max, Color.Gray);
+                    pictureBoxGrayHistogram.Height, histo.GrayCounts, maxGray, Color.Gray);
             }
             catch (Exception ex)
             {
@@ -324,8 +450,11 @@ namespace MiniPhotoShop
                     MessageBoxIcon.Information);
                 return;
             }
+            int[,,] currentPixelArray = _imageProcessor.CreatePixelArray(doc.CurrentBitmap);
 
-            _dataExportService.SaveHistogramData(doc.Name, doc.Histogram);
+            HistogramData currentHistogram = _imageProcessor.CalculateHistogram(currentPixelArray);
+
+            _dataExportService.SaveHistogramData(doc.Name, currentHistogram);
         }
 
         private void tabControlCanvas_MouseClick(object sender, MouseEventArgs e)
@@ -394,6 +523,49 @@ namespace MiniPhotoShop
         private void lblBrightnessValue_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void labelThreshold_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void trackBarBrightness_Scroll(object sender, EventArgs e)
+        {
+            lblBrightnessValue.Text = trackBarBrightness.Value.ToString();
+        }
+
+        private void trackBarBrightness_MouseUp(object sender, MouseEventArgs e)
+        {
+            ApplyBrightnessFilter();
+        }
+
+        private void ApplyBrightnessFilter()
+        {
+            ImageDocument doc = GetActiveDocument();
+            if (doc == null) return;
+
+            try
+            {
+                int brightness = trackBarBrightness.Value;
+
+                IImageFilter brightnessFilter = new BrightnessFilter(brightness);
+
+                doc.Restore();
+
+                if (brightness != 0)
+                {
+                    doc.ApplyFilter(brightnessFilter);
+                }
+
+                UpdateCanvas(GetActiveTab(), doc.CurrentBitmap);
+                DisplayHistogram();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Terjadi kesalahan saat menerapkan brightness: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
