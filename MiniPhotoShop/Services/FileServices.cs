@@ -24,15 +24,17 @@ namespace MiniPhotoShop.Services
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Gagal membuka file gambar: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Gagal membuka file gambar: {ex.Message}", "Error", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
                         return null;
                     }
                 }
+
                 return null;
             }
         }
     }
-    
+
     public class DataExportService : IDataExportService
     {
         public void SavePixelData(string fileName, int[,,] pixelArray, bool isGrayscale)
@@ -62,18 +64,24 @@ namespace MiniPhotoShop.Services
                                     }
                                     else
                                     {
-                                        writer.Write($"({pixelArray[x, y, 0]}, {pixelArray[x, y, 1]}, {pixelArray[x, y, 2]})");
+                                        writer.Write(
+                                            $"({pixelArray[x, y, 0]}, {pixelArray[x, y, 1]}, {pixelArray[x, y, 2]})");
                                     }
+
                                     if (x < width - 1) writer.Write(" ");
                                 }
+
                                 writer.WriteLine();
                             }
                         }
-                        MessageBox.Show("Data pixel berhasil disimpan!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        MessageBox.Show("Data pixel berhasil disimpan!", "Sukses", MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Terjadi kesalahan saat menyimpan file: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Terjadi kesalahan saat menyimpan file: {ex.Message}", "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -95,21 +103,27 @@ namespace MiniPhotoShop.Services
                         {
                             writer.WriteLine("Tabel Data Histogram");
                             writer.WriteLine("===============================================================");
-                            writer.WriteLine($"| {"I",-3} | {"Red",-10} | {"Green",-10} | {"Blue",-10} | {"Gray",-10} |");
+                            writer.WriteLine(
+                                $"| {"I",-3} | {"Red",-10} | {"Green",-10} | {"Blue",-10} | {"Gray",-10} |");
                             writer.WriteLine("|-----|------------|------------|------------|------------|");
 
                             for (int i = 0; i < 256; i++)
                             {
-                                string line = $"| {i,-3} | {histogram.RedCounts[i],-10} | {histogram.GreenCounts[i],-10} | {histogram.BlueCounts[i],-10} | {histogram.GrayCounts[i],-10} |";
+                                string line =
+                                    $"| {i,-3} | {histogram.RedCounts[i],-10} | {histogram.GreenCounts[i],-10} | {histogram.BlueCounts[i],-10} | {histogram.GrayCounts[i],-10} |";
                                 writer.WriteLine(line);
                             }
+
                             writer.WriteLine("===============================================================");
                         }
-                        MessageBox.Show("Tabel data berhasil disimpan!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        MessageBox.Show("Tabel data berhasil disimpan!", "Sukses", MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Gagal menyimpan tabel data: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Gagal menyimpan tabel data: {ex.Message}", "Error", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
                     }
                 }
             }

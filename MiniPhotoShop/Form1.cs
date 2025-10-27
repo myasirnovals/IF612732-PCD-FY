@@ -718,7 +718,7 @@ namespace MiniPhotoShop
                 doc.CurrentBitmap = filteredBitmap;
                 doc.PixelArray = _imageProcessor.CreatePixelArray(doc.CurrentBitmap);
                 doc.Histogram = _imageProcessor.CalculateHistogram(doc.PixelArray);
-                
+
                 UpdateCanvas(GetActiveTab(), doc.CurrentBitmap);
             }
 

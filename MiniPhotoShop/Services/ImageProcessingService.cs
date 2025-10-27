@@ -89,21 +89,21 @@ namespace MiniPhotoShop.Services
 
             int width = sourcedBitmap.Width;
             int height = sourcedBitmap.Height;
-            
+
             Bitmap resultBmp = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-            
+
             BitmapData sourceData = sourcedBitmap.LockBits(new Rectangle(0, 0, width, height),
                 ImageLockMode.ReadOnly, sourcedBitmap.PixelFormat);
-            
+
             BitmapData resultData = resultBmp.LockBits(new Rectangle(0, 0, width, height),
                 ImageLockMode.WriteOnly, resultBmp.PixelFormat);
-            
+
             int srcBytesPerPixel = Image.GetPixelFormatSize(sourcedBitmap.PixelFormat) / 8;
             int resBytesPerPixel = 4;
-            
+
             int srcStride = sourceData.Stride;
             int resStride = resultData.Stride;
-            
+
             byte* pSrcFirst = (byte*)sourceData.Scan0;
             byte* pResFirst = (byte*)resultData.Scan0;
 
@@ -111,7 +111,7 @@ namespace MiniPhotoShop.Services
             {
                 byte* pSrcRow = pSrcFirst + (y * srcStride);
                 byte* pResRow = pResFirst + (y * resStride);
-                
+
                 for (int x = 0; x < width; x++)
                 {
                     int src_x_offset = x * srcBytesPerPixel;
@@ -129,7 +129,7 @@ namespace MiniPhotoShop.Services
                     pResRow[res_x_offset + 3] = 255;
                 }
             }
-            
+
             sourcedBitmap.UnlockBits(sourceData);
             resultBmp.UnlockBits(resultData);
 

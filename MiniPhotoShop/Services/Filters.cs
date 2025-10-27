@@ -54,7 +54,7 @@ namespace MiniPhotoShop.Filters
             {
                 return Color.FromArgb(r, g, b);
             }
-            
+
             return Color.White;
         }
     }
