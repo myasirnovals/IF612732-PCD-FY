@@ -44,6 +44,7 @@ namespace MiniPhotoShop
             grayscaleToolStripMenuItem = new ToolStripMenuItem();
             negationToolStripMenuItem = new ToolStripMenuItem();
             bwToolStripMenuItem = new ToolStripMenuItem();
+            imageSelectionToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             restoreToolStripMenuItem = new ToolStripMenuItem();
             viewToolStripMenuItem = new ToolStripMenuItem();
@@ -98,7 +99,7 @@ namespace MiniPhotoShop
             // 
             fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openToolStripMenuItem, toolStripSeparator2, saveToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            fileToolStripMenuItem.Size = new Size(40, 20);
+            fileToolStripMenuItem.Size = new Size(40, 23);
             fileToolStripMenuItem.Text = "FILE";
             // 
             // openToolStripMenuItem
@@ -126,7 +127,7 @@ namespace MiniPhotoShop
             // 
             editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { cutToolStripMenuItem, copyToolStripMenuItem, pasteToolStripMenuItem, clearToolStripMenuItem });
             editToolStripMenuItem.Name = "editToolStripMenuItem";
-            editToolStripMenuItem.Size = new Size(42, 20);
+            editToolStripMenuItem.Size = new Size(42, 23);
             editToolStripMenuItem.Text = "EDIT";
             // 
             // cutToolStripMenuItem
@@ -159,9 +160,9 @@ namespace MiniPhotoShop
             // 
             // filterToolStripMenuItem
             // 
-            filterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { grayscaleToolStripMenuItem, negationToolStripMenuItem, bwToolStripMenuItem, toolStripSeparator1, restoreToolStripMenuItem });
+            filterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { grayscaleToolStripMenuItem, negationToolStripMenuItem, bwToolStripMenuItem, imageSelectionToolStripMenuItem, toolStripSeparator1, restoreToolStripMenuItem });
             filterToolStripMenuItem.Name = "filterToolStripMenuItem";
-            filterToolStripMenuItem.Size = new Size(52, 20);
+            filterToolStripMenuItem.Size = new Size(52, 23);
             filterToolStripMenuItem.Text = "FILTER";
             // 
             // grayscaleToolStripMenuItem
@@ -179,11 +180,18 @@ namespace MiniPhotoShop
             negationToolStripMenuItem.Click += negationToolStripMenuItem_Click;
             // 
             // bwToolStripMenuItem
-            //
+            // 
             bwToolStripMenuItem.Name = "bwToolStripMenuItem";
             bwToolStripMenuItem.Size = new Size(158, 22);
             bwToolStripMenuItem.Text = "Black/White";
             bwToolStripMenuItem.Click += bwToolStripMenuItem_Click;
+            // 
+            // imageSelectionToolStripMenuItem
+            // 
+            imageSelectionToolStripMenuItem.Name = "imageSelectionToolStripMenuItem";
+            imageSelectionToolStripMenuItem.Size = new Size(158, 22);
+            imageSelectionToolStripMenuItem.Text = "Seleksi Gambar";
+            imageSelectionToolStripMenuItem.Click += imageSelectionToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
@@ -201,7 +209,7 @@ namespace MiniPhotoShop
             // 
             viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { tableDataToolStripMenuItem });
             viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            viewToolStripMenuItem.Size = new Size(46, 20);
+            viewToolStripMenuItem.Size = new Size(46, 23);
             viewToolStripMenuItem.Text = "VIEW";
             // 
             // tableDataToolStripMenuItem
@@ -214,7 +222,7 @@ namespace MiniPhotoShop
             // helpToolStripMenuItem
             // 
             helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            helpToolStripMenuItem.Size = new Size(47, 20);
+            helpToolStripMenuItem.Size = new Size(47, 23);
             helpToolStripMenuItem.Text = "HELP";
             // 
             // tabControlCanvas
@@ -544,5 +552,6 @@ namespace MiniPhotoShop
         private Label lblBrightnessValue;
         private ToolStripMenuItem negationToolStripMenuItem;
         private ToolStripMenuItem bwToolStripMenuItem;
+        private ToolStripMenuItem imageSelectionToolStripMenuItem;
     }
 }
