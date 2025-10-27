@@ -9,11 +9,13 @@ namespace MiniPhotoShop.Models
 
         public string Name { get; private set; }
         public Bitmap OriginalBitmap { get; private set; }
-        public Bitmap CurrentBitmap { get; private set; }
+        public Bitmap CurrentBitmap { get; set; }
         public int[,,] PixelArray { get; private set; }
         public HistogramData Histogram { get; private set; }
         public bool IsGrayscale { get; private set; }
         public bool IsBlackAndWhite { get; set; }
+        public bool IsInSelectionMode { get; set; }
+        public Filters.ColorRanges SelectedColorRange { get; set; }
 
         public ImageDocument(Bitmap originalImage, string name, IImageProcessingService processor)
         {
@@ -39,6 +41,8 @@ namespace MiniPhotoShop.Models
             Histogram = _processor.CalculateHistogram(PixelArray);
             IsGrayscale = false;
             IsBlackAndWhite = false;
+            IsInSelectionMode = false;
+            SelectedColorRange = Filters.ColorRanges.None;
         }
     }
 

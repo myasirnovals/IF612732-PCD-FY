@@ -3,6 +3,62 @@ using MiniPhotoShop;
 
 namespace MiniPhotoShop.Filters
 {
+    public enum ColorRanges
+    {
+        None,
+        Red,
+        Orange,
+        Yellow,
+        Green,
+        Cyan,
+        Blue,
+        Purple,
+        Gray
+    }
+
+    public static class ColorClassifier
+    {
+        public static ColorRanges GetColorRange(int r, int g, int b)
+        {
+            float hue = Color.FromArgb(r, g, b).GetHue();
+            float saturation = Color.FromArgb(r, g, b).GetSaturation();
+            float brightness = Color.FromArgb(r, g, b).GetBrightness();
+
+            if (saturation < 0.1 || brightness < 0.1 || brightness > 0.59)
+            {
+                return ColorRanges.Gray;
+            }
+
+            if (hue < 15 || hue >= 345) return ColorRanges.Red;
+            if (hue < 45) return ColorRanges.Orange;
+            if (hue < 75) return ColorRanges.Yellow;
+            if (hue < 150) return ColorRanges.Green;
+            if (hue < 210) return ColorRanges.Cyan;
+            if (hue < 270) return ColorRanges.Blue;
+            return ColorRanges.Purple;
+        }
+    }
+
+    public class ColorRangeFilter : IImageFilter
+    {
+        private readonly ColorRanges _targetRange;
+
+        public ColorRangeFilter(ColorRanges targetRange)
+        {
+            _targetRange = targetRange;
+        }
+
+        public Color ProcessPixel(int r, int g, int b, int gray)
+        {
+            if (ColorClassifier.GetColorRange(r, g, b) == _targetRange)
+            {
+                return Color.FromArgb(r, g, b);
+            }
+            
+            return Color.White;
+        }
+    }
+
     public class RgbFilter : IImageFilter
     {
         public Color ProcessPixel(int r, int g, int b, int gray) => Color.FromArgb(r, g, b);

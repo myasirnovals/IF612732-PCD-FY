@@ -51,7 +51,31 @@ namespace MiniPhotoShop.Services
             }
             return bmp;
         }
-        
+
+        public Bitmap CreateBitmapFromPixelArray(Bitmap sourcedBitmap, IImageFilter filter)
+        {
+            if (sourcedBitmap == null || filter == null) return null;
+            
+            int width = sourcedBitmap.Width;
+            int height = sourcedBitmap.Height;
+            Bitmap resultBmp = new Bitmap(width, height);
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    Color c = sourcedBitmap.GetPixel(x, y);
+                    int gray = (int)((c.R * 0.3) + (c.G * 0.59) + (c.B * 0.11));
+                    
+                    Color newColor = filter.ProcessPixel(c.R, c.G, c.B, gray);
+                    
+                    resultBmp.SetPixel(x, y, newColor);
+                }
+            }
+
+            return resultBmp;
+        }
+
         public HistogramData CalculateHistogram(int[,,] pixelArray)
         {
             var data = new HistogramData();

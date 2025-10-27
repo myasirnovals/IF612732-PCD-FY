@@ -81,6 +81,7 @@ namespace MiniPhotoShop
 
         private void DeleteThumbnail_Click(object sender, EventArgs e)
         {
+            if (IsSelectionModeActive()) return;
             try
             {
                 ToolStripMenuItem menuItem = sender as ToolStripMenuItem;
@@ -107,6 +108,7 @@ namespace MiniPhotoShop
 
         public void Thumbnail_Click(object sender, EventArgs e)
         {
+            if (IsSelectionModeActive()) return;
             var clickedThumbnail = sender as PictureBox;
             if (clickedThumbnail?.Image == null) return;
 
@@ -115,6 +117,7 @@ namespace MiniPhotoShop
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (IsSelectionModeActive()) return;
             Bitmap loadedImage = _imageFileService.OpenImage(out string fileName);
             if (loadedImage != null)
             {
@@ -164,6 +167,8 @@ namespace MiniPhotoShop
                 SizeMode = PictureBoxSizeMode.Zoom
             };
 
+            newCanvas.Click += Canvas_Click;
+
             newTabPage.Controls.Add(newCanvas);
             tabControlCanvas.TabPages.Add(newTabPage);
             tabControlCanvas.SelectedTab = newTabPage;
@@ -208,6 +213,7 @@ namespace MiniPhotoShop
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (IsSelectionModeActive()) return;
             ImageDocument doc = GetActiveDocument();
             if (doc == null)
             {
@@ -257,6 +263,7 @@ namespace MiniPhotoShop
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (IsSelectionModeActive()) return;
             ImageDocument doc = GetActiveDocument();
             if (doc?.CurrentBitmap != null)
             {
@@ -273,6 +280,7 @@ namespace MiniPhotoShop
 
         private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (IsSelectionModeActive()) return;
             if (!Clipboard.ContainsImage())
             {
                 MessageBox.Show("Clipboard tidak berisi gambar.", "Paste", MessageBoxButtons.OK,
@@ -286,6 +294,7 @@ namespace MiniPhotoShop
 
         private void clearToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (IsSelectionModeActive()) return;
             TabPage activeTab = GetActiveTab();
             if (activeTab != null)
             {
@@ -319,26 +328,31 @@ namespace MiniPhotoShop
 
         private void grayscaleToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (IsSelectionModeActive()) return;
             ApplyChannelFilter(_grayFilter);
         }
 
         private void negationToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (IsSelectionModeActive()) return;
             ApplyChannelFilter(_negationFilter);
         }
 
         private void buttonRed_Click(object sender, EventArgs e)
         {
+            if (IsSelectionModeActive()) return;
             ApplyChannelFilter(_redFilter);
         }
 
         private void buttonGreen_Click(object sender, EventArgs e)
         {
+            if (IsSelectionModeActive()) return;
             ApplyChannelFilter(_greenFilter);
         }
 
         private void buttonBlue_Click(object sender, EventArgs e)
         {
+            if (IsSelectionModeActive()) return;
             ApplyChannelFilter(_blueFilter);
         }
 
@@ -449,6 +463,7 @@ namespace MiniPhotoShop
 
         private void tableDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (IsSelectionModeActive()) return;
             ImageDocument doc = GetActiveDocument();
             if (doc == null)
             {
@@ -499,6 +514,7 @@ namespace MiniPhotoShop
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (IsSelectionModeActive()) return;
             MessageBox.Show("Fungsi CUT belum diimplementasikan.");
         }
 
@@ -543,6 +559,7 @@ namespace MiniPhotoShop
 
         private void ApplyBrightnessFilter()
         {
+            if (IsSelectionModeActive()) return;
             ImageDocument doc = GetActiveDocument();
             if (doc == null) return;
 
@@ -575,6 +592,7 @@ namespace MiniPhotoShop
 
         private void bwToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (IsSelectionModeActive()) return;
             ImageDocument doc = GetActiveDocument();
             if (doc == null)
             {
@@ -616,6 +634,7 @@ namespace MiniPhotoShop
 
         private void PerformThresholdApply()
         {
+            if (IsSelectionModeActive()) return;
             ImageDocument doc = GetActiveDocument();
             if (doc == null)
             {
@@ -639,6 +658,105 @@ namespace MiniPhotoShop
             {
                 MessageBox.Show($"Terjadi kesalahan saat menerapkan threshold: {ex.Message}", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private bool IsSelectionModeActive()
+        {
+            ImageDocument doc = GetActiveDocument();
+            if (doc != null && doc.IsInSelectionMode)
+            {
+                MessageBox.Show(
+                    "Fitur lain tidak dapat digunakan saat dalam mode Seleksi Gambar.\nKlik 'Restore Original' untuk keluar.",
+                    "Mode Seleksi Aktif",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return true;
+            }
+
+            return false;
+        }
+
+        private void imageSelectionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ImageDocument doc = GetActiveDocument();
+            if (doc == null) return;
+
+            doc.IsInSelectionMode = true;
+            MessageBox.Show("Mode Seleksi Gambar diaktifkan.\nKlik pada sebuah warna di gambar untuk menyeleksinya.",
+                "Mode Seleksi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void Canvas_Click(object sender, EventArgs e)
+        {
+            ImageDocument doc = GetActiveDocument();
+            PictureBox canvas = sender as PictureBox;
+            MouseEventArgs mouse = e as MouseEventArgs;
+
+            if (doc == null || canvas == null || mouse == null || !doc.IsInSelectionMode)
+            {
+                return;
+            }
+
+            Point? imagePoint = ConvertCoordinates(canvas, mouse.Location);
+            if (!imagePoint.HasValue) return;
+
+            Color clickedColor = doc.OriginalBitmap.GetPixel(imagePoint.Value.X, imagePoint.Value.Y);
+            ColorRanges clickedRange = ColorClassifier.GetColorRange(clickedColor.R, clickedColor.G, clickedColor.B);
+
+            if (clickedRange == doc.SelectedColorRange)
+            {
+                doc.Restore();
+                UpdateCanvas(GetActiveTab(), doc.CurrentBitmap);
+            }
+            else
+            {
+                doc.SelectedColorRange = clickedRange;
+
+                IImageFilter colorFilter = new ColorRangeFilter(clickedRange);
+                Bitmap filteredBitmap = _imageProcessor.CreateBitmapFromPixelArray(doc.OriginalBitmap, colorFilter);
+
+                doc.CurrentBitmap = filteredBitmap;
+                UpdateCanvas(GetActiveTab(), doc.CurrentBitmap);
+            }
+
+            DisplayHistogram();
+        }
+
+        private Point? ConvertCoordinates(PictureBox pb, Point mousePos)
+        {
+            if (pb.Image == null) return null;
+
+            int w_i = pb.Image.Width;
+            int h_i = pb.Image.Height;
+            int w_c = pb.ClientSize.Width;
+            int h_c = pb.ClientSize.Height;
+
+            float ratio_i = (float)w_i / h_i;
+            float ratio_c = (float)w_c / h_c;
+
+            if (ratio_i > ratio_c)
+            {
+                float h_d = w_c / ratio_i;
+                float y_offset = (h_c - h_d) / 2;
+
+                if (mousePos.Y < y_offset || mousePos.Y > y_offset + h_d) return null;
+
+                float scale = (float)w_i / w_c;
+                int x = (int)(mousePos.X * scale);
+                int y = (int)((mousePos.Y - y_offset) * scale);
+                return new Point(x, y);
+            }
+            else
+            {
+                float w_d = h_c * ratio_i;
+                float x_offset = (w_c - w_d) / 2;
+                if (mousePos.X < x_offset || mousePos.X > x_offset + w_d) return null;
+
+                float scale = (float)h_i / h_c;
+                int x = (int)((mousePos.X - x_offset) * scale);
+                int y = (int)(mousePos.Y * scale);
+                return new Point(x, y);
             }
         }
     }
