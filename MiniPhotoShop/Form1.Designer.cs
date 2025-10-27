@@ -409,6 +409,8 @@ namespace MiniPhotoShop
             trackBarThreshold.TabIndex = 5;
             trackBarThreshold.TickFrequency = 16;
             trackBarThreshold.Value = 128;
+            trackBarThreshold.Scroll += trackBarThreshold_Scroll;
+            trackBarThreshold.MouseUp += trackBarThreshold_MouseUp;
             // 
             // labelThreshold
             // 

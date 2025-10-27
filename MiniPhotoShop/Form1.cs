@@ -100,7 +100,8 @@ namespace MiniPhotoShop
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Gagal menghapus thumbnail: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Gagal menghapus thumbnail: {ex.Message}", "Error", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
 
@@ -121,8 +122,8 @@ namespace MiniPhotoShop
 
                 PictureBox thumb = new PictureBox
                 {
-                    Image = loadedImage, 
-                    Tag = fileName,      
+                    Image = loadedImage,
+                    Tag = fileName,
                     Size = new Size(120, 100),
                     SizeMode = PictureBoxSizeMode.Zoom,
                     BorderStyle = BorderStyle.FixedSingle,
@@ -242,11 +243,13 @@ namespace MiniPhotoShop
                         }
 
                         doc.CurrentBitmap.Save(sfd.FileName, format);
-                        MessageBox.Show("Gambar berhasil disimpan!", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("Gambar berhasil disimpan!", "Sukses", MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Terjadi kesalahan saat menyimpan gambar: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Terjadi kesalahan saat menyimpan gambar: {ex.Message}", "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -306,6 +309,9 @@ namespace MiniPhotoShop
 
             trackBarBrightness.Value = 0;
             lblBrightnessValue.Text = "0";
+
+            trackBarThreshold.Value = 128;
+            lblThresholdValue.Text = "128";
 
             MessageBox.Show("Gambar telah dikembalikan ke kondisi semula.", "Restore", MessageBoxButtons.OK,
                 MessageBoxIcon.Information);
@@ -401,7 +407,7 @@ namespace MiniPhotoShop
                     pictureBoxBlueHistogram.Image = _imageProcessor.DrawHistogram(pictureBoxBlueHistogram.Width,
                         pictureBoxBlueHistogram.Height, histo.BlueCounts, maxBlue, Color.Blue);
                 }
-                else 
+                else
                 {
                     pictureBoxRedHistogram.Image?.Dispose();
                     pictureBoxGreenHistogram.Image?.Dispose();
@@ -450,6 +456,7 @@ namespace MiniPhotoShop
                     MessageBoxIcon.Information);
                 return;
             }
+
             int[,,] currentPixelArray = _imageProcessor.CreatePixelArray(doc.CurrentBitmap);
 
             HistogramData currentHistogram = _imageProcessor.CalculateHistogram(currentPixelArray);
@@ -522,12 +529,6 @@ namespace MiniPhotoShop
 
         private void lblBrightnessValue_Click(object sender, EventArgs e)
         {
-
-        }
-
-        private void labelThreshold_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void trackBarBrightness_Scroll(object sender, EventArgs e)
@@ -564,6 +565,51 @@ namespace MiniPhotoShop
             catch (Exception ex)
             {
                 MessageBox.Show($"Terjadi kesalahan saat menerapkan brightness: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void labelThreshold_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void trackBarThreshold_Scroll(object sender, EventArgs e)
+        {
+            lblThresholdValue.Text = trackBarThreshold.Value.ToString();
+        }
+
+        private void trackBarThreshold_MouseUp(object sender, MouseEventArgs e)
+        {
+            ApplyThresholdFilter();
+        }
+
+        private void ApplyThresholdFilter()
+        {
+            ImageDocument doc = GetActiveDocument();
+            if (doc == null)
+            {
+                return;
+            }
+
+            try
+            {
+                int threshold = trackBarThreshold.Value;
+
+                IImageFilter thresholdFilter = new ThresholdFilter(threshold);
+                
+                doc.Restore();
+
+                if (threshold != 128)
+                {
+                    doc.ApplyFilter(thresholdFilter);
+                }
+                
+                UpdateCanvas(GetActiveTab(), doc.CurrentBitmap);
+                DisplayHistogram();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Terjadi kesalahan saat menerapkan threshold: {ex.Message}", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
