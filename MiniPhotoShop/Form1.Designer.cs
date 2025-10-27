@@ -43,6 +43,7 @@ namespace MiniPhotoShop
             filterToolStripMenuItem = new ToolStripMenuItem();
             grayscaleToolStripMenuItem = new ToolStripMenuItem();
             negationToolStripMenuItem = new ToolStripMenuItem();
+            bwToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             restoreToolStripMenuItem = new ToolStripMenuItem();
             viewToolStripMenuItem = new ToolStripMenuItem();
@@ -158,7 +159,7 @@ namespace MiniPhotoShop
             // 
             // filterToolStripMenuItem
             // 
-            filterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { grayscaleToolStripMenuItem, negationToolStripMenuItem, toolStripSeparator1, restoreToolStripMenuItem });
+            filterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { grayscaleToolStripMenuItem, negationToolStripMenuItem, bwToolStripMenuItem, toolStripSeparator1, restoreToolStripMenuItem });
             filterToolStripMenuItem.Name = "filterToolStripMenuItem";
             filterToolStripMenuItem.Size = new Size(52, 20);
             filterToolStripMenuItem.Text = "FILTER";
@@ -176,6 +177,13 @@ namespace MiniPhotoShop
             negationToolStripMenuItem.Size = new Size(158, 22);
             negationToolStripMenuItem.Text = "Negation";
             negationToolStripMenuItem.Click += negationToolStripMenuItem_Click;
+            // 
+            // bwToolStripMenuItem
+            //
+            bwToolStripMenuItem.Name = "bwToolStripMenuItem";
+            bwToolStripMenuItem.Size = new Size(158, 22);
+            bwToolStripMenuItem.Text = "Black/White";
+            bwToolStripMenuItem.Click += bwToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
@@ -535,5 +543,6 @@ namespace MiniPhotoShop
         private TrackBar trackBarBrightness;
         private Label lblBrightnessValue;
         private ToolStripMenuItem negationToolStripMenuItem;
+        private ToolStripMenuItem bwToolStripMenuItem;
     }
 }

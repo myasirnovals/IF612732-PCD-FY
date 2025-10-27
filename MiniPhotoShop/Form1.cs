@@ -573,6 +573,22 @@ namespace MiniPhotoShop
         {
         }
 
+        private void bwToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ImageDocument doc = GetActiveDocument();
+            if (doc == null)
+            {
+                MessageBox.Show("Tidak ada gambar untuk difilter.", "Info", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return;
+            }
+
+            trackBarThreshold.Value = 128;
+            lblThresholdValue.Text = "128";
+
+            PerformThresholdApply();
+        }
+
         private void trackBarThreshold_Scroll(object sender, EventArgs e)
         {
             lblThresholdValue.Text = trackBarThreshold.Value.ToString();
@@ -580,10 +596,25 @@ namespace MiniPhotoShop
 
         private void trackBarThreshold_MouseUp(object sender, MouseEventArgs e)
         {
-            ApplyThresholdFilter();
+            ImageDocument doc = GetActiveDocument();
+
+            if (doc == null) return;
+
+            if (!doc.IsBlackAndWhite)
+            {
+                MessageBox.Show("Anda harus menerapkan filter Black/White dari menu FILTER terlebih dahulu.",
+                    "Peringatan",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                trackBarThreshold.Value = 128;
+                lblThresholdValue.Text = "128";
+                return;
+            }
+
+            PerformThresholdApply();
         }
 
-        private void ApplyThresholdFilter()
+        private void PerformThresholdApply()
         {
             ImageDocument doc = GetActiveDocument();
             if (doc == null)
@@ -596,14 +627,11 @@ namespace MiniPhotoShop
                 int threshold = trackBarThreshold.Value;
 
                 IImageFilter thresholdFilter = new ThresholdFilter(threshold);
-                
+
                 doc.Restore();
 
-                if (threshold != 128)
-                {
-                    doc.ApplyFilter(thresholdFilter);
-                }
-                
+                doc.ApplyFilter(thresholdFilter);
+
                 UpdateCanvas(GetActiveTab(), doc.CurrentBitmap);
                 DisplayHistogram();
             }
