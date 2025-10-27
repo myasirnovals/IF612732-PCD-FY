@@ -401,8 +401,7 @@ namespace MiniPhotoShop
             {
                 bool isCurrentlyGrayscale = doc.IsGrayscale;
 
-                int[,,] currentPixelArray = _imageProcessor.CreatePixelArray(doc.CurrentBitmap);
-                HistogramData histo = _imageProcessor.CalculateHistogram(currentPixelArray);
+                HistogramData histo = doc.Histogram;
 
                 if (!isCurrentlyGrayscale)
                 {
@@ -717,6 +716,9 @@ namespace MiniPhotoShop
                 Bitmap filteredBitmap = _imageProcessor.CreateBitmapFromPixelArray(doc.OriginalBitmap, colorFilter);
 
                 doc.CurrentBitmap = filteredBitmap;
+                doc.PixelArray = _imageProcessor.CreatePixelArray(doc.CurrentBitmap);
+                doc.Histogram = _imageProcessor.CalculateHistogram(doc.PixelArray);
+                
                 UpdateCanvas(GetActiveTab(), doc.CurrentBitmap);
             }
 

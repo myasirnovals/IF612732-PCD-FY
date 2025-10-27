@@ -10,8 +10,8 @@ namespace MiniPhotoShop.Models
         public string Name { get; private set; }
         public Bitmap OriginalBitmap { get; private set; }
         public Bitmap CurrentBitmap { get; set; }
-        public int[,,] PixelArray { get; private set; }
-        public HistogramData Histogram { get; private set; }
+        public int[,,] PixelArray { get; set; }
+        public HistogramData Histogram { get; set; }
         public bool IsGrayscale { get; private set; }
         public bool IsBlackAndWhite { get; set; }
         public bool IsInSelectionMode { get; set; }
@@ -29,7 +29,8 @@ namespace MiniPhotoShop.Models
         public void ApplyFilter(IImageFilter filter)
         {
             CurrentBitmap = _processor.CreateBitmapFromPixelArray(PixelArray, filter);
-
+            PixelArray = _processor.CreatePixelArray(CurrentBitmap);
+            Histogram = _processor.CalculateHistogram(PixelArray);
             IsGrayscale = filter is GrayscaleFilter;
             IsBlackAndWhite = filter is ThresholdFilter;
         }

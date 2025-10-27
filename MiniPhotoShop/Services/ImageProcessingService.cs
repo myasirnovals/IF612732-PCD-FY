@@ -1,9 +1,10 @@
 ﻿using System.Drawing;
+using System.Drawing.Imaging;
 using MiniPhotoShop.Models;
 
 namespace MiniPhotoShop.Services
 {
-    public class ImageProcessingService : IImageProcessingService
+    public unsafe class ImageProcessingService : IImageProcessingService
     {
         public int[,,] CreatePixelArray(Bitmap bmp)
         {
@@ -13,65 +14,124 @@ namespace MiniPhotoShop.Services
             int height = bmp.Height;
             int[,,] pixelArray = new int[width, height, 4];
 
+            BitmapData bmpData =
+                bmp.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, bmp.PixelFormat);
+
+            int bytesPerPixel = Image.GetPixelFormatSize(bmp.PixelFormat) / 8;
+            int stride = bmpData.Stride;
+            byte* PtrFirstPixel = (byte*)bmpData.Scan0;
+
             for (int y = 0; y < height; y++)
             {
+                byte* pCurrentRow = PtrFirstPixel + (y * stride);
                 for (int x = 0; x < width; x++)
                 {
-                    Color c = bmp.GetPixel(x, y);
-                    pixelArray[x, y, 0] = c.R;
-                    pixelArray[x, y, 1] = c.G;
-                    pixelArray[x, y, 2] = c.B;
-                    pixelArray[x, y, 3] = (int)((c.R * 0.3) + (c.G * 0.59) + (c.B * 0.11));
+                    int x_offset = x * bytesPerPixel;
+
+                    int b = pCurrentRow[x_offset];
+                    int g = pCurrentRow[x_offset + 1];
+                    int r = pCurrentRow[x_offset + 2];
+
+                    pixelArray[x, y, 0] = r;
+                    pixelArray[x, y, 1] = g;
+                    pixelArray[x, y, 2] = b;
+                    pixelArray[x, y, 3] = (int)((r * 0.3) + (g * 0.59) + (b * 0.11));
                 }
             }
+
+            bmp.UnlockBits(bmpData);
             return pixelArray;
         }
-        
+
         public Bitmap CreateBitmapFromPixelArray(int[,,] pixelArray, IImageFilter filter)
         {
             if (pixelArray == null || filter == null) return null;
 
             int width = pixelArray.GetLength(0);
             int height = pixelArray.GetLength(1);
-            Bitmap bmp = new Bitmap(width, height);
+
+            Bitmap bmp = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+
+            BitmapData bmpData = bmp.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.WriteOnly,
+                bmp.PixelFormat);
+
+            int bytesPerPixel = 4;
+            int stride = bmpData.Stride;
+            byte* PtrFirstPixel = (byte*)bmpData.Scan0;
 
             for (int y = 0; y < height; y++)
             {
+                byte* pCurrentRow = PtrFirstPixel + (y * stride);
                 for (int x = 0; x < width; x++)
                 {
                     int r = pixelArray[x, y, 0];
                     int g = pixelArray[x, y, 1];
                     int b = pixelArray[x, y, 2];
                     int gray = pixelArray[x, y, 3];
-                    
+
                     Color c = filter.ProcessPixel(r, g, b, gray);
-                    
-                    bmp.SetPixel(x, y, c);
+
+                    int x_offset = x * bytesPerPixel;
+                    pCurrentRow[x_offset] = c.B;
+                    pCurrentRow[x_offset + 1] = c.G;
+                    pCurrentRow[x_offset + 2] = c.R;
+                    pCurrentRow[x_offset + 3] = 255;
                 }
             }
+
+            bmp.UnlockBits(bmpData);
             return bmp;
         }
 
         public Bitmap CreateBitmapFromPixelArray(Bitmap sourcedBitmap, IImageFilter filter)
         {
             if (sourcedBitmap == null || filter == null) return null;
-            
+
             int width = sourcedBitmap.Width;
             int height = sourcedBitmap.Height;
-            Bitmap resultBmp = new Bitmap(width, height);
+            
+            Bitmap resultBmp = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+            
+            BitmapData sourceData = sourcedBitmap.LockBits(new Rectangle(0, 0, width, height),
+                ImageLockMode.ReadOnly, sourcedBitmap.PixelFormat);
+            
+            BitmapData resultData = resultBmp.LockBits(new Rectangle(0, 0, width, height),
+                ImageLockMode.WriteOnly, resultBmp.PixelFormat);
+            
+            int srcBytesPerPixel = Image.GetPixelFormatSize(sourcedBitmap.PixelFormat) / 8;
+            int resBytesPerPixel = 4;
+            
+            int srcStride = sourceData.Stride;
+            int resStride = resultData.Stride;
+            
+            byte* pSrcFirst = (byte*)sourceData.Scan0;
+            byte* pResFirst = (byte*)resultData.Scan0;
 
             for (int y = 0; y < height; y++)
             {
+                byte* pSrcRow = pSrcFirst + (y * srcStride);
+                byte* pResRow = pResFirst + (y * resStride);
+                
                 for (int x = 0; x < width; x++)
                 {
-                    Color c = sourcedBitmap.GetPixel(x, y);
-                    int gray = (int)((c.R * 0.3) + (c.G * 0.59) + (c.B * 0.11));
-                    
-                    Color newColor = filter.ProcessPixel(c.R, c.G, c.B, gray);
-                    
-                    resultBmp.SetPixel(x, y, newColor);
+                    int src_x_offset = x * srcBytesPerPixel;
+                    int b = pSrcRow[src_x_offset];
+                    int g = pSrcRow[src_x_offset + 1];
+                    int r = pSrcRow[src_x_offset + 2];
+                    int gray = (int)((r * 0.3) + (g * 0.59) + (b * 0.11));
+
+                    Color newColor = filter.ProcessPixel(r, g, b, gray);
+
+                    int res_x_offset = x * resBytesPerPixel;
+                    pResRow[res_x_offset] = newColor.B;
+                    pResRow[res_x_offset + 1] = newColor.G;
+                    pResRow[res_x_offset + 2] = newColor.R;
+                    pResRow[res_x_offset + 3] = 255;
                 }
             }
+            
+            sourcedBitmap.UnlockBits(sourceData);
+            resultBmp.UnlockBits(resultData);
 
             return resultBmp;
         }
@@ -103,8 +163,9 @@ namespace MiniPhotoShop.Services
                 if (data.BlueCounts[i] > maxCount) maxCount = data.BlueCounts[i];
                 if (data.GrayCounts[i] > maxCount) maxCount = data.GrayCounts[i];
             }
+
             data.MaxCount = (maxCount == 0) ? 1 : maxCount;
-            
+
             return data;
         }
 
@@ -124,6 +185,7 @@ namespace MiniPhotoShop.Services
                     g.DrawLine(pen, xPos, height, xPos, height - barHeight);
                 }
             }
+
             return bmp;
         }
     }
