@@ -42,6 +42,9 @@ namespace MiniPhotoShop
             clearToolStripMenuItem = new ToolStripMenuItem();
             filterToolStripMenuItem = new ToolStripMenuItem();
             grayscaleToolStripMenuItem = new ToolStripMenuItem();
+            negationToolStripMenuItem = new ToolStripMenuItem();
+            bwToolStripMenuItem = new ToolStripMenuItem();
+            imageSelectionToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             restoreToolStripMenuItem = new ToolStripMenuItem();
             viewToolStripMenuItem = new ToolStripMenuItem();
@@ -96,7 +99,7 @@ namespace MiniPhotoShop
             // 
             fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openToolStripMenuItem, toolStripSeparator2, saveToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            fileToolStripMenuItem.Size = new Size(40, 20);
+            fileToolStripMenuItem.Size = new Size(40, 23);
             fileToolStripMenuItem.Text = "FILE";
             // 
             // openToolStripMenuItem
@@ -124,7 +127,7 @@ namespace MiniPhotoShop
             // 
             editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { cutToolStripMenuItem, copyToolStripMenuItem, pasteToolStripMenuItem, clearToolStripMenuItem });
             editToolStripMenuItem.Name = "editToolStripMenuItem";
-            editToolStripMenuItem.Size = new Size(43, 20);
+            editToolStripMenuItem.Size = new Size(42, 23);
             editToolStripMenuItem.Text = "EDIT";
             // 
             // cutToolStripMenuItem
@@ -155,22 +158,40 @@ namespace MiniPhotoShop
             clearToolStripMenuItem.Text = "Clear";
             clearToolStripMenuItem.Click += clearToolStripMenuItem_Click;
             // 
+            // filterToolStripMenuItem
+            // 
+            filterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { grayscaleToolStripMenuItem, negationToolStripMenuItem, bwToolStripMenuItem, imageSelectionToolStripMenuItem, toolStripSeparator1, restoreToolStripMenuItem });
+            filterToolStripMenuItem.Name = "filterToolStripMenuItem";
+            filterToolStripMenuItem.Size = new Size(52, 23);
+            filterToolStripMenuItem.Text = "FILTER";
+            // 
             // grayscaleToolStripMenuItem
             // 
             grayscaleToolStripMenuItem.Name = "grayscaleToolStripMenuItem";
             grayscaleToolStripMenuItem.Size = new Size(158, 22);
             grayscaleToolStripMenuItem.Text = "Grayscale";
             grayscaleToolStripMenuItem.Click += grayscaleToolStripMenuItem_Click;
-
-            //
+            // 
             // negationToolStripMenuItem
-            //  
-            negationToolStripMenuItem = new ToolStripMenuItem();
+            // 
             negationToolStripMenuItem.Name = "negationToolStripMenuItem";
             negationToolStripMenuItem.Size = new Size(158, 22);
             negationToolStripMenuItem.Text = "Negation";
             negationToolStripMenuItem.Click += negationToolStripMenuItem_Click;
-
+            // 
+            // bwToolStripMenuItem
+            // 
+            bwToolStripMenuItem.Name = "bwToolStripMenuItem";
+            bwToolStripMenuItem.Size = new Size(158, 22);
+            bwToolStripMenuItem.Text = "Black/White";
+            bwToolStripMenuItem.Click += bwToolStripMenuItem_Click;
+            // 
+            // imageSelectionToolStripMenuItem
+            // 
+            imageSelectionToolStripMenuItem.Name = "imageSelectionToolStripMenuItem";
+            imageSelectionToolStripMenuItem.Size = new Size(158, 22);
+            imageSelectionToolStripMenuItem.Text = "Seleksi Gambar";
+            imageSelectionToolStripMenuItem.Click += imageSelectionToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
@@ -183,33 +204,25 @@ namespace MiniPhotoShop
             restoreToolStripMenuItem.Size = new Size(158, 22);
             restoreToolStripMenuItem.Text = "Restore Original";
             restoreToolStripMenuItem.Click += restoreToolStripMenuItem_Click;
-
-            // 
-            // filterToolStripMenuItem
-            // 
-            filterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { grayscaleToolStripMenuItem, negationToolStripMenuItem, toolStripSeparator1, restoreToolStripMenuItem });
-            filterToolStripMenuItem.Name = "filterToolStripMenuItem";
-            filterToolStripMenuItem.Size = new Size(53, 20);
-            filterToolStripMenuItem.Text = "FILTER";
             // 
             // viewToolStripMenuItem
             // 
             viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { tableDataToolStripMenuItem });
             viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            viewToolStripMenuItem.Size = new Size(46, 20);
+            viewToolStripMenuItem.Size = new Size(46, 23);
             viewToolStripMenuItem.Text = "VIEW";
             // 
             // tableDataToolStripMenuItem
             // 
             tableDataToolStripMenuItem.Name = "tableDataToolStripMenuItem";
-            tableDataToolStripMenuItem.Size = new Size(129, 22);
+            tableDataToolStripMenuItem.Size = new Size(128, 22);
             tableDataToolStripMenuItem.Text = "Tabel Data";
             tableDataToolStripMenuItem.Click += tableDataToolStripMenuItem_Click;
             // 
             // helpToolStripMenuItem
             // 
             helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            helpToolStripMenuItem.Size = new Size(47, 20);
+            helpToolStripMenuItem.Size = new Size(47, 23);
             helpToolStripMenuItem.Text = "HELP";
             // 
             // tabControlCanvas
@@ -360,7 +373,7 @@ namespace MiniPhotoShop
             // 
             lblBrightnessValue.Anchor = AnchorStyles.Top;
             lblBrightnessValue.BorderStyle = BorderStyle.FixedSingle;
-            lblBrightnessValue.Location = new Point(603, 10);
+            lblBrightnessValue.Location = new Point(644, 20);
             lblBrightnessValue.Name = "lblBrightnessValue";
             lblBrightnessValue.Size = new Size(35, 20);
             lblBrightnessValue.TabIndex = 9;
@@ -371,21 +384,21 @@ namespace MiniPhotoShop
             // trackBarBrightness
             // 
             trackBarBrightness.Anchor = AnchorStyles.Top;
-            trackBarBrightness.Location = new Point(525, 10);
+            trackBarBrightness.Location = new Point(566, 20);
             trackBarBrightness.Maximum = 255;
             trackBarBrightness.Minimum = -255;
             trackBarBrightness.Name = "trackBarBrightness";
             trackBarBrightness.Size = new Size(88, 45);
             trackBarBrightness.TabIndex = 8;
             trackBarBrightness.TickFrequency = 32;
-            trackBarBrightness.Scroll += new System.EventHandler(this.trackBarBrightness_Scroll);
-            trackBarBrightness.MouseUp += new System.Windows.Forms.MouseEventHandler(this.trackBarBrightness_MouseUp);
+            trackBarBrightness.Scroll += trackBarBrightness_Scroll;
+            trackBarBrightness.MouseUp += trackBarBrightness_MouseUp;
             // 
             // labelBrightness
             // 
             labelBrightness.Anchor = AnchorStyles.Top;
             labelBrightness.AutoSize = true;
-            labelBrightness.Location = new Point(478, 15);
+            labelBrightness.Location = new Point(505, 23);
             labelBrightness.Name = "labelBrightness";
             labelBrightness.Size = new Size(65, 15);
             labelBrightness.TabIndex = 7;
@@ -395,7 +408,7 @@ namespace MiniPhotoShop
             // 
             lblThresholdValue.Anchor = AnchorStyles.Top;
             lblThresholdValue.BorderStyle = BorderStyle.FixedSingle;
-            lblThresholdValue.Location = new Point(446, 16);
+            lblThresholdValue.Location = new Point(449, 21);
             lblThresholdValue.Name = "lblThresholdValue";
             lblThresholdValue.Size = new Size(35, 20);
             lblThresholdValue.TabIndex = 6;
@@ -405,19 +418,21 @@ namespace MiniPhotoShop
             // trackBarThreshold
             // 
             trackBarThreshold.Anchor = AnchorStyles.Top;
-            trackBarThreshold.Location = new Point(368, 14);
+            trackBarThreshold.Location = new Point(371, 19);
             trackBarThreshold.Maximum = 255;
             trackBarThreshold.Name = "trackBarThreshold";
             trackBarThreshold.Size = new Size(87, 45);
             trackBarThreshold.TabIndex = 5;
             trackBarThreshold.TickFrequency = 16;
             trackBarThreshold.Value = 128;
+            trackBarThreshold.Scroll += trackBarThreshold_Scroll;
+            trackBarThreshold.MouseUp += trackBarThreshold_MouseUp;
             // 
             // labelThreshold
             // 
             labelThreshold.Anchor = AnchorStyles.Top;
             labelThreshold.AutoSize = true;
-            labelThreshold.Location = new Point(340, 16);
+            labelThreshold.Location = new Point(343, 23);
             labelThreshold.Name = "labelThreshold";
             labelThreshold.Size = new Size(33, 15);
             labelThreshold.TabIndex = 4;
@@ -536,5 +551,7 @@ namespace MiniPhotoShop
         private TrackBar trackBarBrightness;
         private Label lblBrightnessValue;
         private ToolStripMenuItem negationToolStripMenuItem;
+        private ToolStripMenuItem bwToolStripMenuItem;
+        private ToolStripMenuItem imageSelectionToolStripMenuItem;
     }
 }
