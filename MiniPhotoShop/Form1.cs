@@ -117,12 +117,12 @@ namespace MiniPhotoShop
             Bitmap loadedImage = _imageFileService.OpenImage(out string fileName);
             if (loadedImage != null)
             {
-                ProcessAndDisplayImage(loadedImage, fileName);
+                ProcessAndDisplayImage(new Bitmap(loadedImage), fileName);
 
                 PictureBox thumb = new PictureBox
                 {
-                    Image = loadedImage, 
-                    Tag = fileName,      
+                    Image = loadedImage,
+                    Tag = fileName,
                     Size = new Size(120, 100),
                     SizeMode = PictureBoxSizeMode.Zoom,
                     BorderStyle = BorderStyle.FixedSingle,
