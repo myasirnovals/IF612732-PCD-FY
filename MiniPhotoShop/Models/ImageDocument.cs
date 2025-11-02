@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using MiniPhotoShop.Filters;
+using MiniPhotoShop.Services;
 
 namespace MiniPhotoShop.Models
 {
@@ -28,7 +29,7 @@ namespace MiniPhotoShop.Models
 
         public void ApplyFilter(IImageFilter filter)
         {
-            CurrentBitmap = _processor.CreateBitmapFromPixelArray(PixelArray, filter);
+            CurrentBitmap = _processor.CreateBitmapFromPixelArray(OriginalBitmap, filter);
             PixelArray = _processor.CreatePixelArray(CurrentBitmap);
             Histogram = _processor.CalculateHistogram(PixelArray);
             IsGrayscale = filter is GrayscaleFilter;

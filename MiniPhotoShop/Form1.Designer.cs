@@ -4,15 +4,7 @@ namespace MiniPhotoShop
 {
     partial class Form1
     {
-        /// <summary>
-        ///  Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
-
-        /// <summary>
-        ///  Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -24,10 +16,6 @@ namespace MiniPhotoShop
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        ///  Required method for Designer support - do not modify
-        ///  the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
             menuStrip1 = new MenuStrip();
@@ -43,12 +31,18 @@ namespace MiniPhotoShop
             filterToolStripMenuItem = new ToolStripMenuItem();
             grayscaleToolStripMenuItem = new ToolStripMenuItem();
             negationToolStripMenuItem = new ToolStripMenuItem();
+            redToolStripMenuItem = new ToolStripMenuItem();
+            greenToolStripMenuItem = new ToolStripMenuItem();
+            blueToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator3 = new ToolStripSeparator();
             bwToolStripMenuItem = new ToolStripMenuItem();
+            brightnessToolStripMenuItem = new ToolStripMenuItem();
             imageSelectionToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             restoreToolStripMenuItem = new ToolStripMenuItem();
             viewToolStripMenuItem = new ToolStripMenuItem();
             tableDataToolStripMenuItem = new ToolStripMenuItem();
+            histogramToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
             tabControlCanvas = new TabControl();
             flowLayoutPanelThumbnails = new FlowLayoutPanel();
@@ -62,17 +56,6 @@ namespace MiniPhotoShop
             labelRed = new Label();
             pictureBoxRedHistogram = new PictureBox();
             panelMainArea = new Panel();
-            panelBottomButtons = new Panel();
-            lblBrightnessValue = new Label();
-            trackBarBrightness = new TrackBar();
-            labelBrightness = new Label();
-            lblThresholdValue = new Label();
-            trackBarThreshold = new TrackBar();
-            labelThreshold = new Label();
-            btnHistogram = new Button();
-            buttonBlue = new Button();
-            buttonGreen = new Button();
-            buttonRed = new Button();
             menuStrip1.SuspendLayout();
             panelHistogram.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBoxGrayHistogram).BeginInit();
@@ -80,9 +63,6 @@ namespace MiniPhotoShop
             ((System.ComponentModel.ISupportInitialize)pictureBoxGreenHistogram).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxRedHistogram).BeginInit();
             panelMainArea.SuspendLayout();
-            panelBottomButtons.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)trackBarBrightness).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)trackBarThreshold).BeginInit();
             SuspendLayout();
             // 
             // menuStrip1
@@ -99,7 +79,7 @@ namespace MiniPhotoShop
             // 
             fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openToolStripMenuItem, toolStripSeparator2, saveToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            fileToolStripMenuItem.Size = new Size(40, 23);
+            fileToolStripMenuItem.Size = new Size(40, 20);
             fileToolStripMenuItem.Text = "FILE";
             // 
             // openToolStripMenuItem
@@ -127,7 +107,7 @@ namespace MiniPhotoShop
             // 
             editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { cutToolStripMenuItem, copyToolStripMenuItem, pasteToolStripMenuItem, clearToolStripMenuItem });
             editToolStripMenuItem.Name = "editToolStripMenuItem";
-            editToolStripMenuItem.Size = new Size(42, 23);
+            editToolStripMenuItem.Size = new Size(42, 20);
             editToolStripMenuItem.Text = "EDIT";
             // 
             // cutToolStripMenuItem
@@ -160,69 +140,109 @@ namespace MiniPhotoShop
             // 
             // filterToolStripMenuItem
             // 
-            filterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { grayscaleToolStripMenuItem, negationToolStripMenuItem, bwToolStripMenuItem, imageSelectionToolStripMenuItem, toolStripSeparator1, restoreToolStripMenuItem });
+            filterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { grayscaleToolStripMenuItem, negationToolStripMenuItem, redToolStripMenuItem, greenToolStripMenuItem, blueToolStripMenuItem, toolStripSeparator3, bwToolStripMenuItem, brightnessToolStripMenuItem, imageSelectionToolStripMenuItem, toolStripSeparator1, restoreToolStripMenuItem });
             filterToolStripMenuItem.Name = "filterToolStripMenuItem";
-            filterToolStripMenuItem.Size = new Size(52, 23);
+            filterToolStripMenuItem.Size = new Size(52, 20);
             filterToolStripMenuItem.Text = "FILTER";
             // 
             // grayscaleToolStripMenuItem
             // 
             grayscaleToolStripMenuItem.Name = "grayscaleToolStripMenuItem";
-            grayscaleToolStripMenuItem.Size = new Size(158, 22);
+            grayscaleToolStripMenuItem.Size = new Size(180, 22);
             grayscaleToolStripMenuItem.Text = "Grayscale";
             grayscaleToolStripMenuItem.Click += grayscaleToolStripMenuItem_Click;
             // 
             // negationToolStripMenuItem
             // 
             negationToolStripMenuItem.Name = "negationToolStripMenuItem";
-            negationToolStripMenuItem.Size = new Size(158, 22);
+            negationToolStripMenuItem.Size = new Size(180, 22);
             negationToolStripMenuItem.Text = "Negation";
             negationToolStripMenuItem.Click += negationToolStripMenuItem_Click;
+            // 
+            // redToolStripMenuItem
+            // 
+            redToolStripMenuItem.Name = "redToolStripMenuItem";
+            redToolStripMenuItem.Size = new Size(180, 22);
+            redToolStripMenuItem.Text = "Red Channel";
+            redToolStripMenuItem.Click += redToolStripMenuItem_Click;
+            // 
+            // greenToolStripMenuItem
+            // 
+            greenToolStripMenuItem.Name = "greenToolStripMenuItem";
+            greenToolStripMenuItem.Size = new Size(180, 22);
+            greenToolStripMenuItem.Text = "Green Channel";
+            greenToolStripMenuItem.Click += greenToolStripMenuItem_Click;
+            // 
+            // blueToolStripMenuItem
+            // 
+            blueToolStripMenuItem.Name = "blueToolStripMenuItem";
+            blueToolStripMenuItem.Size = new Size(180, 22);
+            blueToolStripMenuItem.Text = "Blue Channel";
+            blueToolStripMenuItem.Click += blueToolStripMenuItem_Click;
+            // 
+            // toolStripSeparator3
+            // 
+            toolStripSeparator3.Name = "toolStripSeparator3";
+            toolStripSeparator3.Size = new Size(177, 6);
             // 
             // bwToolStripMenuItem
             // 
             bwToolStripMenuItem.Name = "bwToolStripMenuItem";
-            bwToolStripMenuItem.Size = new Size(158, 22);
-            bwToolStripMenuItem.Text = "Black/White";
+            bwToolStripMenuItem.Size = new Size(180, 22);
+            bwToolStripMenuItem.Text = "Black/White...";
             bwToolStripMenuItem.Click += bwToolStripMenuItem_Click;
+            // 
+            // brightnessToolStripMenuItem
+            // 
+            brightnessToolStripMenuItem.Name = "brightnessToolStripMenuItem";
+            brightnessToolStripMenuItem.Size = new Size(180, 22);
+            brightnessToolStripMenuItem.Text = "Brightness...";
+            brightnessToolStripMenuItem.Click += brightnessToolStripMenuItem_Click;
             // 
             // imageSelectionToolStripMenuItem
             // 
             imageSelectionToolStripMenuItem.Name = "imageSelectionToolStripMenuItem";
-            imageSelectionToolStripMenuItem.Size = new Size(158, 22);
+            imageSelectionToolStripMenuItem.Size = new Size(180, 22);
             imageSelectionToolStripMenuItem.Text = "Seleksi Gambar";
             imageSelectionToolStripMenuItem.Click += imageSelectionToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(155, 6);
+            toolStripSeparator1.Size = new Size(177, 6);
             // 
             // restoreToolStripMenuItem
             // 
             restoreToolStripMenuItem.Name = "restoreToolStripMenuItem";
-            restoreToolStripMenuItem.Size = new Size(158, 22);
+            restoreToolStripMenuItem.Size = new Size(180, 22);
             restoreToolStripMenuItem.Text = "Restore Original";
             restoreToolStripMenuItem.Click += restoreToolStripMenuItem_Click;
             // 
             // viewToolStripMenuItem
             // 
-            viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { tableDataToolStripMenuItem });
+            viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { tableDataToolStripMenuItem, histogramToolStripMenuItem });
             viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            viewToolStripMenuItem.Size = new Size(46, 23);
+            viewToolStripMenuItem.Size = new Size(46, 20);
             viewToolStripMenuItem.Text = "VIEW";
             // 
             // tableDataToolStripMenuItem
             // 
             tableDataToolStripMenuItem.Name = "tableDataToolStripMenuItem";
-            tableDataToolStripMenuItem.Size = new Size(128, 22);
+            tableDataToolStripMenuItem.Size = new Size(180, 22);
             tableDataToolStripMenuItem.Text = "Tabel Data";
             tableDataToolStripMenuItem.Click += tableDataToolStripMenuItem_Click;
+            // 
+            // histogramToolStripMenuItem
+            // 
+            histogramToolStripMenuItem.Name = "histogramToolStripMenuItem";
+            histogramToolStripMenuItem.Size = new Size(180, 22);
+            histogramToolStripMenuItem.Text = "Histogram";
+            histogramToolStripMenuItem.Click += histogramToolStripMenuItem_Click;
             // 
             // helpToolStripMenuItem
             // 
             helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            helpToolStripMenuItem.Size = new Size(47, 23);
+            helpToolStripMenuItem.Size = new Size(47, 20);
             helpToolStripMenuItem.Text = "HELP";
             // 
             // tabControlCanvas
@@ -232,7 +252,7 @@ namespace MiniPhotoShop
             tabControlCanvas.Location = new Point(0, 0);
             tabControlCanvas.Name = "tabControlCanvas";
             tabControlCanvas.SelectedIndex = 0;
-            tabControlCanvas.Size = new Size(639, 516);
+            tabControlCanvas.Size = new Size(639, 576);
             tabControlCanvas.TabIndex = 2;
             tabControlCanvas.DrawItem += tabControlCanvas_DrawItem;
             tabControlCanvas.SelectedIndexChanged += tabControlCanvas_SelectedIndexChanged;
@@ -266,6 +286,8 @@ namespace MiniPhotoShop
             panelHistogram.Name = "panelHistogram";
             panelHistogram.Size = new Size(200, 576);
             panelHistogram.TabIndex = 4;
+            panelHistogram.Visible = false;
+
             // 
             // labelGray
             // 
@@ -342,142 +364,12 @@ namespace MiniPhotoShop
             // panelMainArea
             // 
             panelMainArea.Controls.Add(tabControlCanvas);
-            panelMainArea.Controls.Add(panelBottomButtons);
             panelMainArea.Controls.Add(panelHistogram);
             panelMainArea.Dock = DockStyle.Fill;
             panelMainArea.Location = new Point(161, 24);
             panelMainArea.Name = "panelMainArea";
             panelMainArea.Size = new Size(839, 576);
             panelMainArea.TabIndex = 4;
-            // 
-            // panelBottomButtons
-            // 
-            panelBottomButtons.BorderStyle = BorderStyle.FixedSingle;
-            panelBottomButtons.Controls.Add(lblBrightnessValue);
-            panelBottomButtons.Controls.Add(trackBarBrightness);
-            panelBottomButtons.Controls.Add(labelBrightness);
-            panelBottomButtons.Controls.Add(lblThresholdValue);
-            panelBottomButtons.Controls.Add(trackBarThreshold);
-            panelBottomButtons.Controls.Add(labelThreshold);
-            panelBottomButtons.Controls.Add(btnHistogram);
-            panelBottomButtons.Controls.Add(buttonBlue);
-            panelBottomButtons.Controls.Add(buttonGreen);
-            panelBottomButtons.Controls.Add(buttonRed);
-            panelBottomButtons.Dock = DockStyle.Bottom;
-            panelBottomButtons.Location = new Point(0, 516);
-            panelBottomButtons.Name = "panelBottomButtons";
-            panelBottomButtons.Size = new Size(639, 60);
-            panelBottomButtons.TabIndex = 5;
-            // 
-            // lblBrightnessValue
-            // 
-            lblBrightnessValue.Anchor = AnchorStyles.Top;
-            lblBrightnessValue.BorderStyle = BorderStyle.FixedSingle;
-            lblBrightnessValue.Location = new Point(644, 20);
-            lblBrightnessValue.Name = "lblBrightnessValue";
-            lblBrightnessValue.Size = new Size(35, 20);
-            lblBrightnessValue.TabIndex = 9;
-            lblBrightnessValue.Text = "0";
-            lblBrightnessValue.TextAlign = ContentAlignment.MiddleCenter;
-            lblBrightnessValue.Click += lblBrightnessValue_Click;
-            // 
-            // trackBarBrightness
-            // 
-            trackBarBrightness.Anchor = AnchorStyles.Top;
-            trackBarBrightness.Location = new Point(566, 20);
-            trackBarBrightness.Maximum = 255;
-            trackBarBrightness.Minimum = -255;
-            trackBarBrightness.Name = "trackBarBrightness";
-            trackBarBrightness.Size = new Size(88, 45);
-            trackBarBrightness.TabIndex = 8;
-            trackBarBrightness.TickFrequency = 32;
-            trackBarBrightness.Scroll += trackBarBrightness_Scroll;
-            trackBarBrightness.MouseUp += trackBarBrightness_MouseUp;
-            // 
-            // labelBrightness
-            // 
-            labelBrightness.Anchor = AnchorStyles.Top;
-            labelBrightness.AutoSize = true;
-            labelBrightness.Location = new Point(505, 23);
-            labelBrightness.Name = "labelBrightness";
-            labelBrightness.Size = new Size(65, 15);
-            labelBrightness.TabIndex = 7;
-            labelBrightness.Text = "Brightness:";
-            // 
-            // lblThresholdValue
-            // 
-            lblThresholdValue.Anchor = AnchorStyles.Top;
-            lblThresholdValue.BorderStyle = BorderStyle.FixedSingle;
-            lblThresholdValue.Location = new Point(449, 21);
-            lblThresholdValue.Name = "lblThresholdValue";
-            lblThresholdValue.Size = new Size(35, 20);
-            lblThresholdValue.TabIndex = 6;
-            lblThresholdValue.Text = "128";
-            lblThresholdValue.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // trackBarThreshold
-            // 
-            trackBarThreshold.Anchor = AnchorStyles.Top;
-            trackBarThreshold.Location = new Point(371, 19);
-            trackBarThreshold.Maximum = 255;
-            trackBarThreshold.Name = "trackBarThreshold";
-            trackBarThreshold.Size = new Size(87, 45);
-            trackBarThreshold.TabIndex = 5;
-            trackBarThreshold.TickFrequency = 16;
-            trackBarThreshold.Value = 128;
-            trackBarThreshold.Scroll += trackBarThreshold_Scroll;
-            trackBarThreshold.MouseUp += trackBarThreshold_MouseUp;
-            // 
-            // labelThreshold
-            // 
-            labelThreshold.Anchor = AnchorStyles.Top;
-            labelThreshold.AutoSize = true;
-            labelThreshold.Location = new Point(343, 23);
-            labelThreshold.Name = "labelThreshold";
-            labelThreshold.Size = new Size(33, 15);
-            labelThreshold.TabIndex = 4;
-            labelThreshold.Text = "B/W:";
-            labelThreshold.Click += labelThreshold_Click;
-            // 
-            // btnHistogram
-            // 
-            btnHistogram.Location = new Point(259, 19);
-            btnHistogram.Name = "btnHistogram";
-            btnHistogram.Size = new Size(75, 23);
-            btnHistogram.TabIndex = 3;
-            btnHistogram.Text = "Histogram";
-            btnHistogram.UseVisualStyleBackColor = true;
-            btnHistogram.Click += BtnHistogramClick;
-            // 
-            // buttonBlue
-            // 
-            buttonBlue.Location = new Point(178, 19);
-            buttonBlue.Name = "buttonBlue";
-            buttonBlue.Size = new Size(75, 23);
-            buttonBlue.TabIndex = 2;
-            buttonBlue.Text = "Blue";
-            buttonBlue.UseVisualStyleBackColor = true;
-            buttonBlue.Click += buttonBlue_Click;
-            // 
-            // buttonGreen
-            // 
-            buttonGreen.Location = new Point(86, 19);
-            buttonGreen.Name = "buttonGreen";
-            buttonGreen.Size = new Size(75, 23);
-            buttonGreen.TabIndex = 1;
-            buttonGreen.Text = "Green";
-            buttonGreen.UseVisualStyleBackColor = true;
-            buttonGreen.Click += buttonGreen_Click;
-            // 
-            // buttonRed
-            // 
-            buttonRed.Location = new Point(5, 18);
-            buttonRed.Name = "buttonRed";
-            buttonRed.Size = new Size(75, 23);
-            buttonRed.TabIndex = 0;
-            buttonRed.Text = "Red";
-            buttonRed.UseVisualStyleBackColor = true;
-            buttonRed.Click += buttonRed_Click;
             // 
             // Form1
             // 
@@ -500,16 +392,13 @@ namespace MiniPhotoShop
             ((System.ComponentModel.ISupportInitialize)pictureBoxGreenHistogram).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBoxRedHistogram).EndInit();
             panelMainArea.ResumeLayout(false);
-            panelBottomButtons.ResumeLayout(false);
-            panelBottomButtons.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)trackBarBrightness).EndInit();
-            ((System.ComponentModel.ISupportInitialize)trackBarThreshold).EndInit();
             ResumeLayout(false);
             PerformLayout();
 
         }
 
         #endregion
+
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
@@ -536,22 +425,17 @@ namespace MiniPhotoShop
         private Label labelRed;
         private PictureBox pictureBoxRedHistogram;
         private Panel panelMainArea;
-        private Panel panelBottomButtons;
-        private Button buttonBlue;
-        private Button buttonGreen;
-        private Button buttonRed;
-        private Button btnHistogram;
         private ToolStripMenuItem tableDataToolStripMenuItem;
         private ToolStripMenuItem openToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator2;
-        private Label labelThreshold;
-        private TrackBar trackBarThreshold;
-        private Label lblThresholdValue;
-        private Label labelBrightness;
-        private TrackBar trackBarBrightness;
-        private Label lblBrightnessValue;
         private ToolStripMenuItem negationToolStripMenuItem;
         private ToolStripMenuItem bwToolStripMenuItem;
         private ToolStripMenuItem imageSelectionToolStripMenuItem;
+        private ToolStripMenuItem redToolStripMenuItem;
+        private ToolStripMenuItem greenToolStripMenuItem;
+        private ToolStripMenuItem blueToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator3;
+        private ToolStripMenuItem brightnessToolStripMenuItem;
+        private ToolStripMenuItem histogramToolStripMenuItem;
     }
 }

@@ -129,12 +129,7 @@ namespace MiniPhotoShop.Filters
     public class ThresholdFilter : IImageFilter
     {
         private readonly int _threshold;
-
-        public ThresholdFilter(int threshold)
-        {
-            _threshold = threshold;
-        }
-
+        public ThresholdFilter(int threshold) { _threshold = threshold; }
         public Color ProcessPixel(int r, int g, int b, int gray)
         {
             if (gray < _threshold)

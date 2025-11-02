@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Forms;
 using MiniPhotoShop.Models;
+using System;
 
 namespace MiniPhotoShop.Services
 {

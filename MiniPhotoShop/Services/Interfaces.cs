@@ -15,6 +15,9 @@ namespace MiniPhotoShop
         Bitmap CreateBitmapFromPixelArray(Bitmap sourcedBitmap, IImageFilter filter);
         HistogramData CalculateHistogram(int[,,] pixelArray);
         Bitmap DrawHistogram(int width, int height, int[] counts, int maxCount, Color barColor);
+
+        Bitmap AddImages(Bitmap source, Bitmap target);
+        Bitmap SubtractImages(Bitmap source, Bitmap target);
     }
 
     public interface IImageFileService
