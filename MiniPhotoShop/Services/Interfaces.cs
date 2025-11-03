@@ -7,7 +7,7 @@ namespace MiniPhotoShop
     {
         Color ProcessPixel(int r, int g, int b, int gray);
     }
-    
+
     public interface IImageProcessingService : IPixelService, IHistogramService
     {
     }
@@ -28,6 +28,8 @@ namespace MiniPhotoShop
     {
         Bitmap AddImages(Bitmap source, Bitmap target);
         Bitmap SubtractImages(Bitmap source, Bitmap target);
+        Bitmap MultiplyImages(Bitmap source, Bitmap target);
+        Bitmap DivideImages(Bitmap source, Bitmap target);
     }
 
     public interface IImageFileService

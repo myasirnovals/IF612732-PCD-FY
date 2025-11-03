@@ -204,25 +204,46 @@ namespace MiniPhotoShop.Services
                     for (int x = 0; x < maxWidth; x++)
                     {
                         int i = x * bytesPerPixel;
+
                         int b1 = pRowA[i];
                         int g1 = pRowA[i + 1];
                         int r1 = pRowA[i + 2];
+
                         int b2 = pRowB[i];
                         int g2 = pRowB[i + 1];
                         int r2 = pRowB[i + 2];
+
                         int r_new, g_new, b_new;
 
-                        if (operation == "Add")
+                        switch (operation)
                         {
-                            r_new = Math.Min(255, r1 + r2);
-                            g_new = Math.Min(255, g1 + g2);
-                            b_new = Math.Min(255, b1 + b2);
-                        }
-                        else
-                        {
-                            r_new = Math.Abs(r1 - r2);
-                            g_new = Math.Abs(g1 - g2);
-                            b_new = Math.Abs(b1 - b2);
+                            case "Add":
+                                r_new = Math.Min(255, r1 + r2);
+                                g_new = Math.Min(255, g1 + g2);
+                                b_new = Math.Min(255, b1 + b2);
+                                break;
+
+                            case "Subtract":
+                                r_new = Math.Abs(r2 - r1);
+                                g_new = Math.Abs(g2 - g1);
+                                b_new = Math.Abs(b2 - b1);
+                                break;
+
+                            case "Multiply":
+                                r_new = (r1 * r2) / 255;
+                                g_new = (g1 * g2) / 255;
+                                b_new = (b1 * b2) / 255;
+                                break;
+
+                            case "Divide":
+                                r_new = (r2 == 0) ? 255 : Math.Min(255, (r1 * 255) / r2);
+                                g_new = (g2 == 0) ? 255 : Math.Min(255, (g1 * 255) / g2);
+                                b_new = (b2 == 0) ? 255 : Math.Min(255, (b1 * 255) / b2);
+                                break;
+                            
+                            default:
+                                r_new = g_new = b_new = 0;
+                                break;
                         }
 
                         pRowResult[i] = (byte)b_new;
@@ -250,6 +271,18 @@ namespace MiniPhotoShop.Services
         {
             if (source == null || target == null) return null;
             return PerformArithmetic(source, target, "Subtract");
+        }
+        
+        public Bitmap MultiplyImages(Bitmap source, Bitmap target)
+        {
+            if (source == null || target == null) return null;
+            return PerformArithmetic(source, target, "Multiply");
+        }
+
+        public Bitmap DivideImages(Bitmap source, Bitmap target)
+        {
+            if (source == null || target == null) return null;
+            return PerformArithmetic(source, target, "Divide");
         }
     }
 }
