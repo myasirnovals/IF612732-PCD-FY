@@ -1,85 +1,96 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using MiniPhotoShop.Filters;
-using MiniPhotoShop.Managers;
 using MiniPhotoShop.Models;
 using MiniPhotoShop.Services;
+using System.IO;
+using MiniPhotoShop.Managers;
+
 
 namespace MiniPhotoShop
 {
     public partial class Form1 : Form
     {
-<<<<<<< HEAD
         private readonly IImageProcessingService _imageProcessor;
         private readonly IImageFileService _imageFileService;
         private readonly IDataExportService _dataExportService;
+
         private readonly Dictionary<TabPage, ImageDocument> _openDocuments = new Dictionary<TabPage, ImageDocument>();
         private readonly Dictionary<TabPage, bool> _isBitwiseDocument = new Dictionary<TabPage, bool>();
-        private readonly IImageFilter _rgbFilter = new RgbFilter();
-=======
-        private readonly DocumentManager _documentManager;
-        private readonly ThumbnailManager _thumbnailManager;
-        private readonly IImageFileService _imageFileService;
-        private readonly IDataExportService _dataExportService;
-        private readonly IImageProcessingService _imageProcessor;
-        private readonly IImageArithmeticService _imageArithmeticService;
-        private readonly IDialogService _dialogService;
 
->>>>>>> b2cca5aeae26e51f632ed1759be726b35639eff7
+        private readonly IImageFilter _rgbFilter = new RgbFilter();
         private readonly IImageFilter _grayFilter = new GrayscaleFilter();
         private readonly IImageFilter _redFilter = new RedChannelFilter();
         private readonly IImageFilter _greenFilter = new GreenChannelFilter();
         private readonly IImageFilter _blueFilter = new BlueChannelFilter();
         private readonly IImageFilter _negationFilter = new NegationFilter();
-<<<<<<< HEAD
         private readonly IImageFilter _notFilter = new NotFilter();
         private ContextMenuStrip _thumbnailContextMenu;
         private PictureBox _dragSourceThumb = null;
         private bool _isDragging = false;
-=======
->>>>>>> b2cca5aeae26e51f632ed1759be726b35639eff7
+        private ImageProcessingService imageProcessorService1;
+        private ImageProcessingService imageProcessorService2;
+        private IDialogService dialogService;
 
-        public Form1(
-            DocumentManager documentManager,
-            ThumbnailManager thumbnailManager,
-            IImageFileService imageFileService,
-            IDataExportService dataExportService,
-            IImageProcessingService imageProcessor,
-            IImageArithmeticService imageArithmeticService,
-            IDialogService dialogService)
+        public Form1(Managers.DocumentManager documentManager, Managers.ThumbnailManager thumbnailManager)
         {
             InitializeComponent();
+            _imageProcessor = new ImageProcessingService();
+            _imageFileService = new ImageFileService();
+            _dataExportService = new DataExportService();
 
-            _documentManager = documentManager;
-            _thumbnailManager = thumbnailManager;
+            if (tabControlCanvas.TabPages.Count > 0)
+            {
+                tabControlCanvas.TabPages.Clear();
+            }
+
+            InitializeThumbnails();
+            InitializeThumbnailContextMenu();
+        }
+
+        public Form1(DocumentManager documentManager, ThumbnailManager thumbnailManager, IImageFileService imageFileService, IDataExportService dataExportService, ImageProcessingService imageProcessorService1, ImageProcessingService imageProcessorService2, IDialogService dialogService) : this(documentManager, thumbnailManager)
+        {
             _imageFileService = imageFileService;
             _dataExportService = dataExportService;
-            _imageProcessor = imageProcessor;
-            _imageArithmeticService = imageArithmeticService;
-            _dialogService = dialogService;
-
-            _documentManager.Initialize(tabControlCanvas);
-            _thumbnailManager.Initialize(flowLayoutPanelThumbnails);
-
-            _documentManager.ActiveDocumentChanged += DisplayHistogram;
-            _documentManager.CanvasDragEnter += Canvas_DragEnter; 
-            _documentManager.CanvasDragDrop += Canvas_DragDrop; 
-            _thumbnailManager.ThumbnailClicked += OnThumbnailClicked;
+            this.imageProcessorService1 = imageProcessorService1;
+            this.imageProcessorService2 = imageProcessorService2;
+            this.dialogService = dialogService;
         }
 
-<<<<<<< HEAD
         private void InitializeThumbnails()
-=======
-        private void OnThumbnailClicked(Bitmap image, string name)
->>>>>>> b2cca5aeae26e51f632ed1759be726b35639eff7
         {
-            if (IsSelectionModeActive()) return;
-            _documentManager.OpenDocument(image, name);
+            var imageResources = new[]
+            {
+                new { Name = "yuruyuri", Image = Properties.Resources.yuruyuri },
+                new { Name = "aurora", Image = Properties.Resources.aurora },
+                new { Name = "haikyuu", Image = Properties.Resources.haikyuu },
+                new { Name = "ruri", Image = Properties.Resources.ruri },
+            };
+
+            foreach (var resource in imageResources)
+            {
+                PictureBox thumb = new PictureBox
+                {
+                    Image = resource.Image,
+                    Tag = resource.Name,
+                    Size = new Size(120, 100),
+                    SizeMode = PictureBoxSizeMode.Zoom,
+                    BorderStyle = BorderStyle.FixedSingle,
+                    Cursor = Cursors.Hand,
+                    Margin = new Padding(10)
+                };
+
+                thumb.MouseDown += Thumbnail_MouseDown;
+                thumb.MouseMove += Thumbnail_MouseMove;
+                thumb.MouseUp += Thumbnail_MouseUp;
+
+                thumb.ContextMenuStrip = _thumbnailContextMenu;
+                flowLayoutPanelThumbnails.Controls.Add(thumb);
+            }
         }
-<<<<<<< HEAD
 
         private void InitializeThumbnailContextMenu()
         {
@@ -94,24 +105,37 @@ namespace MiniPhotoShop
 
         }
 
-=======
-        
->>>>>>> b2cca5aeae26e51f632ed1759be726b35639eff7
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (IsSelectionModeActive()) return;
             Bitmap loadedImage = _imageFileService.OpenImage(out string fileName);
             if (loadedImage != null)
             {
-                _documentManager.OpenDocument(loadedImage, fileName);
-                _thumbnailManager.AddThumbnail(loadedImage, fileName);
+                ProcessAndDisplayImage(new Bitmap(loadedImage), fileName);
+                PictureBox thumb = new PictureBox
+                {
+                    Image = loadedImage,
+                    Tag = fileName,
+                    Size = new Size(120, 100),
+                    SizeMode = PictureBoxSizeMode.Zoom,
+                    BorderStyle = BorderStyle.FixedSingle,
+                    Cursor = Cursors.Hand,
+                    Margin = new Padding(10)
+                };
+
+                thumb.MouseDown += Thumbnail_MouseDown;
+                thumb.MouseMove += Thumbnail_MouseMove;
+                thumb.MouseUp += Thumbnail_MouseUp;
+
+                thumb.ContextMenuStrip = _thumbnailContextMenu;
+                flowLayoutPanelThumbnails.Controls.Add(thumb);
             }
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (IsSelectionModeActive()) return;
-            ImageDocument doc = _documentManager.GetActiveDocument();
+            ImageDocument doc = GetActiveDocument();
             if (doc == null) return;
 
             using (SaveFileDialog sfd = new SaveFileDialog())
@@ -136,27 +160,20 @@ namespace MiniPhotoShop
                             case ".bmp":
                                 format = System.Drawing.Imaging.ImageFormat.Bmp; break;
                         }
-
                         doc.CurrentBitmap.Save(sfd.FileName, format);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Terjadi kesalahan saat menyimpan gambar: {ex.Message}", "Error",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Terjadi kesalahan saat menyimpan gambar: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
         }
 
-        private void cutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (IsSelectionModeActive()) return;
-        }
-
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (IsSelectionModeActive()) return;
-            ImageDocument doc = _documentManager.GetActiveDocument();
+            ImageDocument doc = GetActiveDocument();
             if (doc?.CurrentBitmap != null)
             {
                 Clipboard.SetImage(doc.CurrentBitmap);
@@ -169,129 +186,138 @@ namespace MiniPhotoShop
             if (Clipboard.ContainsImage())
             {
                 Bitmap pastedImage = new Bitmap(Clipboard.GetImage());
-<<<<<<< HEAD
-                ProcessAndDisplayImage(pastedImage, "Pasted Image"); 
-=======
-                _documentManager.OpenDocument(pastedImage, "Pasted Image");
->>>>>>> b2cca5aeae26e51f632ed1759be726b35639eff7
+                ProcessAndDisplayImage(pastedImage, "Pasted Image");
             }
         }
 
         private void clearToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (IsSelectionModeActive()) return;
-            _documentManager.CloseActiveDocument();
+            TabPage activeTab = GetActiveTab();
+            if (activeTab != null)
+            {
+                CloseTab(activeTab);
+            }
+        }
+
+        private void cutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (IsSelectionModeActive()) return;
+            MessageBox.Show("Fungsi CUT belum diimplementasikan.");
         }
 
         private void grayscaleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (IsSelectionModeActive()) return;
-            ApplyFilter(_grayFilter);
+            ApplyChannelFilter(_grayFilter);
         }
 
         private void negationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (IsSelectionModeActive()) return;
-            ApplyFilter(_negationFilter);
+            ApplyChannelFilter(_negationFilter);
         }
 
         private void notToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (IsSelectionModeActive()) return;
-            ApplyChannelFilter(_notFilter); 
+            ApplyChannelFilter(_notFilter);
         }
 
         private void redToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (IsSelectionModeActive()) return;
-            ApplyFilter(_redFilter);
+            ApplyChannelFilter(_redFilter);
         }
 
         private void greenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (IsSelectionModeActive()) return;
-            ApplyFilter(_greenFilter);
+            ApplyChannelFilter(_greenFilter);
         }
 
         private void blueToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (IsSelectionModeActive()) return;
-            ApplyFilter(_blueFilter);
+            ApplyChannelFilter(_blueFilter);
         }
 
         private void bwToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (IsSelectionModeActive()) return;
-            ImageDocument doc = _documentManager.GetActiveDocument();
+            ImageDocument doc = GetActiveDocument();
             if (doc == null) return;
-            
-            DialogResult result = _dialogService.ShowAdjustmentDialog(
+
+            Action<int> previewAction = (value) => { ApplyThresholdFilter(value, isPreview: true); };
+
+            DialogResult result = ShowAdjustmentDialog(
                 "Atur Threshold Black/White", 0, 255, 128, 16, "B/W:",
-                (value) => { ApplyThresholdFilter(value, isPreview: true); },
-                out int newThresholdValue
+                previewAction, out int newThresholdValue
             );
 
             if (result == DialogResult.OK)
+            {
                 ApplyThresholdFilter(newThresholdValue, isPreview: false);
+            }
             else
+            {
                 doc.Restore();
-
-            _documentManager.UpdateActiveCanvas();
-            DisplayHistogram();
+                UpdateCanvas(GetActiveTab(), doc.CurrentBitmap);
+                DisplayHistogram();
+            }
         }
 
         private void brightnessToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (IsSelectionModeActive()) return;
-            ImageDocument doc = _documentManager.GetActiveDocument();
+            ImageDocument doc = GetActiveDocument();
             if (doc == null) return;
-            
-            DialogResult result = _dialogService.ShowAdjustmentDialog(
+
+            Action<int> previewAction = (value) => { ApplyBrightnessFilter(value, isPreview: true); };
+
+            DialogResult result = ShowAdjustmentDialog(
                 "Atur Brightness", -255, 255, 0, 32, "Brightness:",
-                (value) => { ApplyBrightnessFilter(value, isPreview: true); },
-                out int newBrightnessValue
+                previewAction, out int newBrightnessValue
             );
 
             if (result == DialogResult.OK)
+            {
                 ApplyBrightnessFilter(newBrightnessValue, isPreview: false);
+            }
             else
+            {
                 doc.Restore();
-
-            _documentManager.UpdateActiveCanvas();
-            DisplayHistogram();
+                UpdateCanvas(GetActiveTab(), doc.CurrentBitmap);
+                DisplayHistogram();
+            }
         }
 
         private void imageSelectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ImageDocument doc = _documentManager.GetActiveDocument();
+            ImageDocument doc = GetActiveDocument();
             if (doc == null) return;
-            _documentManager.ToggleSelectionMode(true);
-            MessageBox.Show("Mode Seleksi Gambar diaktifkan.\nKlik pada sebuah warna di gambar untuk menyeleksinya.",
-                "Mode Seleksi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            doc.IsInSelectionMode = true;
+            MessageBox.Show("Mode Seleksi Gambar diaktifkan.\nKlik pada sebuah warna di gambar untuk menyeleksinya.", "Mode Seleksi", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void restoreToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ImageDocument doc = _documentManager.GetActiveDocument();
+            ImageDocument doc = GetActiveDocument();
             if (doc == null) return;
 
-<<<<<<< HEAD
             if (_isBitwiseDocument.ContainsKey(GetActiveTab()))
                 _isBitwiseDocument[GetActiveTab()] = false;
 
-=======
->>>>>>> b2cca5aeae26e51f632ed1759be726b35639eff7
             doc.Restore();
-            _documentManager.UpdateActiveCanvas();
+            UpdateCanvas(GetActiveTab(), doc.CurrentBitmap);
             DisplayHistogram();
-            MessageBox.Show("Gambar telah dikembalikan ke kondisi semula.", "Restore", MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+            MessageBox.Show("Gambar telah dikembalikan ke kondisi semula.", "Restore", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void tableDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (IsSelectionModeActive()) return;
-            ImageDocument doc = _documentManager.GetActiveDocument();
+            ImageDocument doc = GetActiveDocument();
             if (doc == null) return;
             _dataExportService.SaveHistogramData(doc.Name, doc.Histogram);
         }
@@ -304,7 +330,6 @@ namespace MiniPhotoShop
                 DisplayHistogram();
             }
         }
-<<<<<<< HEAD
 
         private void savePixelDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -473,28 +498,27 @@ namespace MiniPhotoShop
             catch (Exception) { }
         }
 
-=======
-        
->>>>>>> b2cca5aeae26e51f632ed1759be726b35639eff7
         private void Canvas_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.StringFormat))
+            {
                 e.Effect = DragDropEffects.Copy;
+            }
             else
+            {
                 e.Effect = DragDropEffects.None;
+            }
         }
 
         private void Canvas_DragDrop(object sender, DragEventArgs e)
         {
-            if (IsSelectionModeActive()) return;
             try
             {
-                ImageDocument targetDoc = _documentManager.GetActiveDocument();
+                ImageDocument targetDoc = GetActiveDocument();
                 if (targetDoc == null) return;
 
                 string sourceName = (string)e.Data.GetData(DataFormats.StringFormat);
-                
-                using (Bitmap sourceBmp = _thumbnailManager.FindThumbnailImageByName(sourceName))
+                using (Bitmap sourceBmp = FindThumbnailImageByName(sourceName))
                 {
                     if (sourceBmp == null) return;
 
@@ -526,44 +550,32 @@ namespace MiniPhotoShop
                     }
                     else if (ctrlPressed)
                     {
-                        resultBmp = _imageArithmeticService.SubtractImages(sourceBmp, targetDoc.CurrentBitmap);
+                        resultBmp = _imageProcessor.SubtractImages(sourceBmp, targetDoc.CurrentBitmap);
                         opName = "Difference";
-
                     }
                     else
                     {
-                        resultBmp = _imageArithmeticService.AddImages(sourceBmp, targetDoc.CurrentBitmap);
+                        resultBmp = _imageProcessor.AddImages(sourceBmp, targetDoc.CurrentBitmap);
                         opName = "Addition";
-
                     }
 
 
                     if (resultBmp != null)
                     {
-<<<<<<< HEAD
                         string newName = $"{Path.GetFileNameWithoutExtension(targetDoc.Name)}_{opName}_{Path.GetFileNameWithoutExtension(sourceName)}";
 
                         ProcessAndDisplayImage(resultBmp, newName, isBitwise);
-
-                        resultBmp.Dispose();
-=======
-                        string newName =
-                            $"{Path.GetFileNameWithoutExtension(targetDoc.Name)}_{opName}_{Path.GetFileNameWithoutExtension(sourceName)}";
-                        _documentManager.OpenDocument(resultBmp, newName);
->>>>>>> b2cca5aeae26e51f632ed1759be726b35639eff7
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Terjadi kesalahan saat drag-drop: {ex.Message}", "Error", MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                MessageBox.Show($"Terjadi kesalahan saat drag-drop: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void ApplyFilter(IImageFilter filter)
+        private Bitmap FindThumbnailImageByName(string name)
         {
-<<<<<<< HEAD
             foreach (Control ctrl in flowLayoutPanelThumbnails.Controls)
             {
                 if (ctrl is PictureBox pb && pb.Tag.ToString().Equals(name, StringComparison.OrdinalIgnoreCase))
@@ -584,9 +596,6 @@ namespace MiniPhotoShop
         private void ApplyChannelFilter(IImageFilter filter)
         {
             ImageDocument doc = GetActiveDocument();
-=======
-            ImageDocument doc = _documentManager.GetActiveDocument();
->>>>>>> b2cca5aeae26e51f632ed1759be726b35639eff7
             if (doc == null) return;
             try
             {
@@ -597,25 +606,22 @@ namespace MiniPhotoShop
                     _isBitwiseDocument.Add(GetActiveTab(), isBitwise);
 
                 doc.ApplyFilter(filter);
-                _documentManager.UpdateActiveCanvas();
+                UpdateCanvas(GetActiveTab(), doc.CurrentBitmap);
                 DisplayHistogram();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Terjadi kesalahan saat menerapkan filter: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Terjadi kesalahan saat menerapkan filter: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-<<<<<<< HEAD
-=======
-        
->>>>>>> b2cca5aeae26e51f632ed1759be726b35639eff7
+
         private void ApplyBrightnessFilter(int brightness, bool isPreview = false)
         {
-            ImageDocument doc = _documentManager.GetActiveDocument();
+            ImageDocument doc = GetActiveDocument();
             if (doc == null) return;
             try
             {
+
                 if (!isPreview && _isBitwiseDocument.ContainsKey(GetActiveTab()))
                     _isBitwiseDocument[GetActiveTab()] = false;
 
@@ -624,7 +630,13 @@ namespace MiniPhotoShop
 
                 IImageFilter brightnessFilter = new BrightnessFilter(brightness);
                 doc.ApplyFilter(brightnessFilter);
-                _documentManager.UpdateActiveCanvas();
+
+                UpdateCanvas(GetActiveTab(), doc.CurrentBitmap);
+
+                if (!isPreview)
+                {
+                    DisplayHistogram();
+                }
             }
             catch (Exception)
             {
@@ -634,7 +646,7 @@ namespace MiniPhotoShop
 
         private void ApplyThresholdFilter(int threshold, bool isPreview = false)
         {
-            ImageDocument doc = _documentManager.GetActiveDocument();
+            ImageDocument doc = GetActiveDocument();
             if (doc == null) return;
             try
             {
@@ -646,7 +658,13 @@ namespace MiniPhotoShop
 
                 IImageFilter thresholdFilter = new ThresholdFilter(threshold);
                 doc.ApplyFilter(thresholdFilter);
-                _documentManager.UpdateActiveCanvas();
+
+                UpdateCanvas(GetActiveTab(), doc.CurrentBitmap);
+
+                if (!isPreview)
+                {
+                    DisplayHistogram();
+                }
             }
             catch (Exception)
             {
@@ -654,23 +672,39 @@ namespace MiniPhotoShop
             }
         }
 
-<<<<<<< HEAD
         private TabPage GetActiveTab()
-=======
-        private bool IsSelectionModeActive()
->>>>>>> b2cca5aeae26e51f632ed1759be726b35639eff7
         {
-            if (_documentManager.IsSelectionModeActive())
-            {
-                MessageBox.Show(
-                    "Fitur lain tidak dapat digunakan saat dalam mode Seleksi Gambar.\nKlik 'Restore Original' untuk keluar.",
-                    "Mode Seleksi Aktif", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return true;
-            }
-
-            return false;
+            return tabControlCanvas.SelectedTab;
         }
-        
+
+        private PictureBox GetActiveCanvas()
+        {
+            TabPage activeTab = GetActiveTab();
+            if (activeTab != null && activeTab.Controls.Count > 0)
+            {
+                return activeTab.Controls[0] as PictureBox;
+            }
+            return null;
+        }
+
+        private ImageDocument GetActiveDocument()
+        {
+            TabPage activeTab = GetActiveTab();
+            if (activeTab != null && _openDocuments.ContainsKey(activeTab))
+            {
+                return _openDocuments[activeTab];
+            }
+            return null;
+        }
+
+        private void UpdateCanvas(TabPage tab, Image newImage)
+        {
+            if (tab?.Controls[0] is PictureBox canvas)
+            {
+                canvas.Image = newImage;
+            }
+        }
+
         private void DisplayHistogram()
         {
             if (!panelHistogram.Visible)
@@ -679,7 +713,7 @@ namespace MiniPhotoShop
                 return;
             }
 
-            ImageDocument doc = _documentManager.GetActiveDocument();
+            ImageDocument doc = GetActiveDocument();
             if (doc == null || doc.CurrentBitmap == null)
             {
                 ClearHistogram();
@@ -694,38 +728,27 @@ namespace MiniPhotoShop
                 {
                     ClearHistogramRGB();
 
-                    int maxGray = histo.GrayCounts.Max();
-                    if (maxGray == 0) maxGray = 1;
-                    pictureBoxGrayHistogram.Image = _imageProcessor.DrawHistogram(pictureBoxGrayHistogram.Width,
-                        pictureBoxGrayHistogram.Height, histo.GrayCounts, maxGray, Color.Gray);
+                    int maxGray = histo.GrayCounts.Max(); if (maxGray == 0) maxGray = 1;
+                    pictureBoxGrayHistogram.Image = _imageProcessor.DrawHistogram(pictureBoxGrayHistogram.Width, pictureBoxGrayHistogram.Height, histo.GrayCounts, maxGray, Color.Gray);
                 }
                 else
                 {
-                    int maxRed = histo.RedCounts.Max();
-                    if (maxRed == 0) maxRed = 1;
-                    pictureBoxRedHistogram.Image = _imageProcessor.DrawHistogram(pictureBoxRedHistogram.Width,
-                        pictureBoxRedHistogram.Height, histo.RedCounts, maxRed, Color.Red);
+                    int maxRed = histo.RedCounts.Max(); if (maxRed == 0) maxRed = 1;
+                    pictureBoxRedHistogram.Image = _imageProcessor.DrawHistogram(pictureBoxRedHistogram.Width, pictureBoxRedHistogram.Height, histo.RedCounts, maxRed, Color.Red);
 
-                    int maxGreen = histo.GreenCounts.Max();
-                    if (maxGreen == 0) maxGreen = 1;
-                    pictureBoxGreenHistogram.Image = _imageProcessor.DrawHistogram(pictureBoxGreenHistogram.Width,
-                        pictureBoxGreenHistogram.Height, histo.GreenCounts, maxGreen, Color.Green);
+                    int maxGreen = histo.GreenCounts.Max(); if (maxGreen == 0) maxGreen = 1;
+                    pictureBoxGreenHistogram.Image = _imageProcessor.DrawHistogram(pictureBoxGreenHistogram.Width, pictureBoxGreenHistogram.Height, histo.GreenCounts, maxGreen, Color.Green);
 
-                    int maxBlue = histo.BlueCounts.Max();
-                    if (maxBlue == 0) maxBlue = 1;
-                    pictureBoxBlueHistogram.Image = _imageProcessor.DrawHistogram(pictureBoxBlueHistogram.Width,
-                        pictureBoxBlueHistogram.Height, histo.BlueCounts, maxBlue, Color.Blue);
+                    int maxBlue = histo.BlueCounts.Max(); if (maxBlue == 0) maxBlue = 1;
+                    pictureBoxBlueHistogram.Image = _imageProcessor.DrawHistogram(pictureBoxBlueHistogram.Width, pictureBoxBlueHistogram.Height, histo.BlueCounts, maxBlue, Color.Blue);
 
-                    int maxGray = histo.GrayCounts.Max();
-                    if (maxGray == 0) maxGray = 1;
-                    pictureBoxGrayHistogram.Image = _imageProcessor.DrawHistogram(pictureBoxGrayHistogram.Width,
-                        pictureBoxGrayHistogram.Height, histo.GrayCounts, maxGray, Color.Gray);
+                    int maxGray = histo.GrayCounts.Max(); if (maxGray == 0) maxGray = 1;
+                    pictureBoxGrayHistogram.Image = _imageProcessor.DrawHistogram(pictureBoxGrayHistogram.Width, pictureBoxGrayHistogram.Height, histo.GrayCounts, maxGray, Color.Gray);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Terjadi kesalahan saat membuat histogram: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Terjadi kesalahan saat membuat histogram: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -745,19 +768,59 @@ namespace MiniPhotoShop
             pictureBoxGrayHistogram.Image?.Dispose();
             pictureBoxGrayHistogram.Image = null;
         }
-<<<<<<< HEAD
 
         private DialogResult ShowAdjustmentDialog(
             string title, int min, int max, int initialValue, int tickFreq, string labelText,
             Action<int> onPreview,
             out int finalValue)
-=======
-             
-        private void Form1_Load(object sender, EventArgs e)
->>>>>>> b2cca5aeae26e51f632ed1759be726b35639eff7
         {
+            Form dialog = new Form()
+            {
+                FormBorderStyle = FormBorderStyle.FixedDialog,
+                StartPosition = FormStartPosition.CenterParent,
+                ControlBox = false,
+                Text = title,
+                Size = new Size(320, 140)
+            };
+            Label label = new Label() { Text = labelText, Location = new Point(12, 23), AutoSize = true };
+            TrackBar trackBar = new TrackBar()
+            {
+                Minimum = min,
+                Maximum = max,
+                Value = initialValue,
+                TickFrequency = tickFreq,
+                Location = new Point(label.Right + 5, 15),
+                Size = new Size(180, 45)
+            };
+            Label valueLabel = new Label()
+            {
+                Text = initialValue.ToString(),
+                BorderStyle = BorderStyle.FixedSingle,
+                Location = new Point(trackBar.Right + 10, 23),
+                Size = new Size(40, 20),
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+
+            trackBar.Scroll += (sender, e) => {
+                valueLabel.Text = trackBar.Value.ToString();
+                onPreview(trackBar.Value);
+            };
+
+            Button btnOk = new Button() { Text = "OK", DialogResult = DialogResult.OK, Location = new Point(130, 70), Size = new Size(75, 23) };
+            Button btnCancel = new Button() { Text = "Cancel", DialogResult = DialogResult.Cancel, Location = new Point(215, 70), Size = new Size(75, 23) };
+            dialog.Controls.Add(label);
+            dialog.Controls.Add(trackBar);
+            dialog.Controls.Add(valueLabel);
+            dialog.Controls.Add(btnOk);
+            dialog.Controls.Add(btnCancel);
+            dialog.AcceptButton = btnOk;
+            dialog.CancelButton = btnCancel;
+
+            DialogResult result = dialog.ShowDialog();
+            finalValue = trackBar.Value;
+            dialog.Dispose();
+            return result;
         }
-<<<<<<< HEAD
 
         private bool IsSelectionModeActive()
         {
@@ -831,7 +894,5 @@ namespace MiniPhotoShop
                 return new Point(x, y);
             }
         }
-=======
->>>>>>> b2cca5aeae26e51f632ed1759be726b35639eff7
     }
 }

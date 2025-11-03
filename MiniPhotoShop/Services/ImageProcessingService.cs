@@ -261,7 +261,6 @@ namespace MiniPhotoShop.Services
             if (source == null || target == null) return null;
             return PerformArithmetic(source, target, "Subtract");
         }
-<<<<<<< HEAD
 
 
         private Bitmap PerformBitwiseOperation(Bitmap source, Bitmap target, string operation)
@@ -355,7 +354,5 @@ namespace MiniPhotoShop.Services
             if (source == null || target == null) return null;
             return PerformBitwiseOperation(source, target, "XOR");
         }
-=======
->>>>>>> b2cca5aeae26e51f632ed1759be726b35639eff7
     }
 }

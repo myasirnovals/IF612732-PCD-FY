@@ -7,9 +7,14 @@ namespace MiniPhotoShop
     {
         Color ProcessPixel(int r, int g, int b, int gray);
     }
-    
+
     public interface IImageProcessingService : IPixelService, IHistogramService
     {
+        Bitmap? AddImages(Bitmap sourceBmp, Bitmap currentBitmap);
+        Bitmap? AndImages(Bitmap sourceBmp, Bitmap currentBitmap);
+        Bitmap? OrImages(Bitmap sourceBmp, Bitmap currentBitmap);
+        Bitmap? SubtractImages(Bitmap sourceBmp, Bitmap currentBitmap);
+        Bitmap? XorImages(Bitmap sourceBmp, Bitmap currentBitmap);
     }
 
     public interface IPixelService
