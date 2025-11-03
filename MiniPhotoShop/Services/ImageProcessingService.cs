@@ -6,16 +6,16 @@ using System.Runtime.InteropServices;
 
 namespace MiniPhotoShop.Services
 {
-    public unsafe class ImageProcessingService : IImageProcessingService
+    public unsafe class ImageProcessingService : IImageProcessingService, IImageArithmeticService
     {
-        #region Metode Pengolahan Citra (Tidak Berubah)
         public int[,,] CreatePixelArray(Bitmap bmp)
         {
             if (bmp == null) return null;
             int width = bmp.Width;
             int height = bmp.Height;
             int[,,] pixelArray = new int[width, height, 4];
-            BitmapData bmpData = bmp.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, bmp.PixelFormat);
+            BitmapData bmpData =
+                bmp.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, bmp.PixelFormat);
             int bytesPerPixel = Image.GetPixelFormatSize(bmp.PixelFormat) / 8;
             int stride = bmpData.Stride;
             byte* PtrFirstPixel = (byte*)bmpData.Scan0;
@@ -34,6 +34,7 @@ namespace MiniPhotoShop.Services
                     pixelArray[x, y, 3] = (int)((r * 0.3) + (g * 0.59) + (b * 0.11));
                 }
             }
+
             bmp.UnlockBits(bmpData);
             return pixelArray;
         }
@@ -44,7 +45,8 @@ namespace MiniPhotoShop.Services
             int width = pixelArray.GetLength(0);
             int height = pixelArray.GetLength(1);
             Bitmap bmp = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-            BitmapData bmpData = bmp.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.WriteOnly, bmp.PixelFormat);
+            BitmapData bmpData = bmp.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.WriteOnly,
+                bmp.PixelFormat);
             int bytesPerPixel = 4;
             int stride = bmpData.Stride;
             byte* PtrFirstPixel = (byte*)bmpData.Scan0;
@@ -65,6 +67,7 @@ namespace MiniPhotoShop.Services
                     pCurrentRow[x_offset + 3] = 255;
                 }
             }
+
             bmp.UnlockBits(bmpData);
             return bmp;
         }
@@ -75,8 +78,10 @@ namespace MiniPhotoShop.Services
             int width = sourcedBitmap.Width;
             int height = sourcedBitmap.Height;
             Bitmap resultBmp = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-            BitmapData sourceData = sourcedBitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, sourcedBitmap.PixelFormat);
-            BitmapData resultData = resultBmp.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.WriteOnly, resultBmp.PixelFormat);
+            BitmapData sourceData = sourcedBitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly,
+                sourcedBitmap.PixelFormat);
+            BitmapData resultData = resultBmp.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.WriteOnly,
+                resultBmp.PixelFormat);
             int srcBytesPerPixel = Image.GetPixelFormatSize(sourcedBitmap.PixelFormat) / 8;
             int resBytesPerPixel = 4;
             int srcStride = sourceData.Stride;
@@ -102,13 +107,12 @@ namespace MiniPhotoShop.Services
                     pResRow[res_x_offset + 3] = 255;
                 }
             }
+
             sourcedBitmap.UnlockBits(sourceData);
             resultBmp.UnlockBits(resultData);
             return resultBmp;
         }
-        #endregion
 
-        #region Metode Histogram (Tidak Berubah)
         public HistogramData CalculateHistogram(int[,,] pixelArray)
         {
             var data = new HistogramData();
@@ -125,6 +129,7 @@ namespace MiniPhotoShop.Services
                     data.GrayCounts[pixelArray[x, y, 3]]++;
                 }
             }
+
             int maxCount = 0;
             for (int i = 0; i < 256; i++)
             {
@@ -133,6 +138,7 @@ namespace MiniPhotoShop.Services
                 if (data.BlueCounts[i] > maxCount) maxCount = data.BlueCounts[i];
                 if (data.GrayCounts[i] > maxCount) maxCount = data.GrayCounts[i];
             }
+
             data.MaxCount = (maxCount == 0) ? 1 : maxCount;
             return data;
         }
@@ -152,11 +158,9 @@ namespace MiniPhotoShop.Services
                     g.DrawLine(pen, xPos, height, xPos, height - barHeight);
                 }
             }
+
             return bmp;
         }
-        #endregion
-
-        #region Metode Aritmatika (Hasil Tunggal)
 
         private Bitmap ResizeAndPad(Bitmap image, int targetWidth, int targetHeight)
         {
@@ -166,6 +170,7 @@ namespace MiniPhotoShop.Services
                 g.Clear(Color.Black);
                 g.DrawImage(image, 0, 0, image.Width, image.Height);
             }
+
             return canvas;
         }
 
@@ -178,9 +183,12 @@ namespace MiniPhotoShop.Services
             using (Bitmap paddedSource = ResizeAndPad(source, maxWidth, maxHeight))
             {
                 Bitmap resultBmp = new Bitmap(maxWidth, maxHeight, PixelFormat.Format32bppArgb);
-                BitmapData dataA = paddedTarget.LockBits(new Rectangle(0, 0, maxWidth, maxHeight), ImageLockMode.ReadOnly, paddedTarget.PixelFormat);
-                BitmapData dataB = paddedSource.LockBits(new Rectangle(0, 0, maxWidth, maxHeight), ImageLockMode.ReadOnly, paddedSource.PixelFormat);
-                BitmapData dataResult = resultBmp.LockBits(new Rectangle(0, 0, maxWidth, maxHeight), ImageLockMode.WriteOnly, resultBmp.PixelFormat);
+                BitmapData dataA = paddedTarget.LockBits(new Rectangle(0, 0, maxWidth, maxHeight),
+                    ImageLockMode.ReadOnly, paddedTarget.PixelFormat);
+                BitmapData dataB = paddedSource.LockBits(new Rectangle(0, 0, maxWidth, maxHeight),
+                    ImageLockMode.ReadOnly, paddedSource.PixelFormat);
+                BitmapData dataResult = resultBmp.LockBits(new Rectangle(0, 0, maxWidth, maxHeight),
+                    ImageLockMode.WriteOnly, resultBmp.PixelFormat);
 
                 int bytesPerPixel = 4;
                 int stride = dataA.Stride;
@@ -196,8 +204,12 @@ namespace MiniPhotoShop.Services
                     for (int x = 0; x < maxWidth; x++)
                     {
                         int i = x * bytesPerPixel;
-                        int b1 = pRowA[i]; int g1 = pRowA[i + 1]; int r1 = pRowA[i + 2];
-                        int b2 = pRowB[i]; int g2 = pRowB[i + 1]; int r2 = pRowB[i + 2];
+                        int b1 = pRowA[i];
+                        int g1 = pRowA[i + 1];
+                        int r1 = pRowA[i + 2];
+                        int b2 = pRowB[i];
+                        int g2 = pRowB[i + 1];
+                        int r2 = pRowB[i + 2];
                         int r_new, g_new, b_new;
 
                         if (operation == "Add")
@@ -212,12 +224,14 @@ namespace MiniPhotoShop.Services
                             g_new = Math.Abs(g1 - g2);
                             b_new = Math.Abs(b1 - b2);
                         }
+
                         pRowResult[i] = (byte)b_new;
                         pRowResult[i + 1] = (byte)g_new;
                         pRowResult[i + 2] = (byte)r_new;
                         pRowResult[i + 3] = 255;
                     }
                 }
+
                 paddedTarget.UnlockBits(dataA);
                 paddedSource.UnlockBits(dataB);
                 resultBmp.UnlockBits(dataResult);
@@ -237,7 +251,5 @@ namespace MiniPhotoShop.Services
             if (source == null || target == null) return null;
             return PerformArithmetic(source, target, "Subtract");
         }
-
-        #endregion
     }
 }

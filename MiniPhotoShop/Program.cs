@@ -1,5 +1,7 @@
 using System;
 using System.Windows.Forms;
+using MiniPhotoShop.Managers;
+using MiniPhotoShop.Services;
 
 namespace MiniPhotoShop
 {
@@ -11,10 +13,28 @@ namespace MiniPhotoShop
         [STAThread]
         static void Main()
         {
-            Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            
+            ImageProcessingService imageProcessorService = new ImageProcessingService();
+            IImageFileService imageFileService = new ImageFileService();
+            IDataExportService dataExportService = new DataExportService();
+            IDialogService dialogService = new DialogService();
+            
+            var documentManager = new DocumentManager(imageProcessorService);
+            var thumbnailManager = new ThumbnailManager();
+            
+            var mainForm = new Form1(
+                documentManager,
+                thumbnailManager,
+                imageFileService,
+                dataExportService,
+                imageProcessorService,
+                imageProcessorService,
+                dialogService
+            );
+            
+            Application.Run(mainForm);
         }
     }
 }

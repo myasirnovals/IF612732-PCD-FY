@@ -254,9 +254,6 @@ namespace MiniPhotoShop
             tabControlCanvas.SelectedIndex = 0;
             tabControlCanvas.Size = new Size(639, 576);
             tabControlCanvas.TabIndex = 2;
-            tabControlCanvas.DrawItem += tabControlCanvas_DrawItem;
-            tabControlCanvas.SelectedIndexChanged += tabControlCanvas_SelectedIndexChanged;
-            tabControlCanvas.MouseClick += tabControlCanvas_MouseClick;
             // 
             // flowLayoutPanelThumbnails
             // 
