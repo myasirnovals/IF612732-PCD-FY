@@ -281,12 +281,12 @@ namespace MiniPhotoShop
                     if (ctrlPressed)
                     {
                         resultBmp = _imageArithmeticService.SubtractImages(sourceBmp, targetDoc.CurrentBitmap);
-                        opName = "Difference";
+                        opName = "Subtract";
                     }
                     else
                     {
                         resultBmp = _imageArithmeticService.AddImages(sourceBmp, targetDoc.CurrentBitmap);
-                        opName = "Addition";
+                        opName = "Add";
                     }
 
                     if (resultBmp != null)
