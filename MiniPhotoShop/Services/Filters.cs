@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿
+using System.Drawing;
 using MiniPhotoShop;
 
 namespace MiniPhotoShop.Filters
@@ -115,6 +116,18 @@ namespace MiniPhotoShop.Filters
     }
 
     public class NegationFilter : IImageFilter
+    {
+        public Color ProcessPixel(int r, int g, int b, int gray)
+        {
+            int newR = 255 - r;
+            int newG = 255 - g;
+            int newB = 255 - b;
+
+            return Color.FromArgb(newR, newG, newB);
+        }
+    }
+
+    public class NotFilter : IImageFilter
     {
         public Color ProcessPixel(int r, int g, int b, int gray)
         {

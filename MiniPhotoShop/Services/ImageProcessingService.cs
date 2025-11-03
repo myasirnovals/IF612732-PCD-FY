@@ -8,7 +8,6 @@ namespace MiniPhotoShop.Services
 {
     public unsafe class ImageProcessingService : IImageProcessingService
     {
-        #region Metode Pengolahan Citra (Tidak Berubah)
         public int[,,] CreatePixelArray(Bitmap bmp)
         {
             if (bmp == null) return null;
@@ -106,9 +105,7 @@ namespace MiniPhotoShop.Services
             resultBmp.UnlockBits(resultData);
             return resultBmp;
         }
-        #endregion
 
-        #region Metode Histogram (Tidak Berubah)
         public HistogramData CalculateHistogram(int[,,] pixelArray)
         {
             var data = new HistogramData();
@@ -154,9 +151,6 @@ namespace MiniPhotoShop.Services
             }
             return bmp;
         }
-        #endregion
-
-        #region Metode Aritmatika (Hasil Tunggal)
 
         private Bitmap ResizeAndPad(Bitmap image, int targetWidth, int targetHeight)
         {
@@ -208,9 +202,19 @@ namespace MiniPhotoShop.Services
                         }
                         else
                         {
-                            r_new = Math.Abs(r1 - r2);
-                            g_new = Math.Abs(g1 - g2);
-                            b_new = Math.Abs(b1 - b2);
+                            int diffR = Math.Abs(r1 - r2);
+                            int diffG = Math.Abs(g1 - g2);
+                            int diffB = Math.Abs(b1 - b2);
+                            int threshold = 15;
+
+                            if (diffR <= threshold && diffG <= threshold && diffB <= threshold)
+                            {
+                                r_new = 0; g_new = 0; b_new = 0;
+                            }
+                            else
+                            {
+                                r_new = r2; g_new = g2; b_new = b2;
+                            }
                         }
                         pRowResult[i] = (byte)b_new;
                         pRowResult[i + 1] = (byte)g_new;
@@ -238,6 +242,97 @@ namespace MiniPhotoShop.Services
             return PerformArithmetic(source, target, "Subtract");
         }
 
-        #endregion
+
+        private Bitmap PerformBitwiseOperation(Bitmap source, Bitmap target, string operation)
+        {
+            int maxWidth = Math.Max(source.Width, target.Width);
+            int maxHeight = Math.Max(source.Height, target.Height);
+
+            using (Bitmap paddedTarget = ResizeAndPad(target, maxWidth, maxHeight))
+            using (Bitmap paddedSource = ResizeAndPad(source, maxWidth, maxHeight))
+            {
+                Bitmap resultBmp = new Bitmap(maxWidth, maxHeight, PixelFormat.Format32bppArgb);
+                BitmapData dataA = paddedTarget.LockBits(new Rectangle(0, 0, maxWidth, maxHeight), ImageLockMode.ReadOnly, paddedTarget.PixelFormat);
+                BitmapData dataB = paddedSource.LockBits(new Rectangle(0, 0, maxWidth, maxHeight), ImageLockMode.ReadOnly, paddedSource.PixelFormat);
+                BitmapData dataResult = resultBmp.LockBits(new Rectangle(0, 0, maxWidth, maxHeight), ImageLockMode.WriteOnly, resultBmp.PixelFormat);
+
+                int bytesPerPixel = 4;
+                int stride = dataA.Stride;
+                byte* pFirstA = (byte*)dataA.Scan0;
+                byte* pFirstB = (byte*)dataB.Scan0;
+                byte* pFirstResult = (byte*)dataResult.Scan0;
+
+                for (int y = 0; y < maxHeight; y++)
+                {
+                    byte* pRowA = pFirstA + (y * stride);
+                    byte* pRowB = pFirstB + (y * stride); 
+                    byte* pRowResult = pFirstResult + (y * stride);
+                    for (int x = 0; x < maxWidth; x++)
+                    {
+                        int i = x * bytesPerPixel;
+
+                        int b1 = pRowA[i];
+                        int g1 = pRowA[i + 1];
+                        int r1 = pRowA[i + 2];
+
+                        int b2 = pRowB[i];
+                        int g2 = pRowB[i + 1];
+                        int r2 = pRowB[i + 2];
+
+                        int r_new, g_new, b_new;
+
+                        switch (operation)
+                        {
+                            case "AND":
+                                r_new = r1 & r2;
+                                g_new = g1 & g2;
+                                b_new = b1 & b2;
+                                break;
+                            case "OR":
+                                r_new = r1 | r2;
+                                g_new = g1 | g2;
+                                b_new = b1 | b2;
+                                break;
+                            case "XOR":
+                                r_new = r1 ^ r2;
+                                g_new = g1 ^ g2;
+                                b_new = b1 ^ b2;
+                                break;
+                            default:
+                                r_new = r1; g_new = g1; b_new = b1;
+                                break;
+                        }
+
+                        pRowResult[i] = (byte)b_new;
+                        pRowResult[i + 1] = (byte)g_new;
+                        pRowResult[i + 2] = (byte)r_new;
+                        pRowResult[i + 3] = 255;
+                    }
+                }
+                paddedTarget.UnlockBits(dataA);
+                paddedSource.UnlockBits(dataB);
+                resultBmp.UnlockBits(dataResult);
+
+                return resultBmp;
+            }
+        }
+
+        public Bitmap AndImages(Bitmap source, Bitmap target)
+        {
+            if (source == null || target == null) return null;
+            return PerformBitwiseOperation(source, target, "AND");
+        }
+
+        public Bitmap OrImages(Bitmap source, Bitmap target)
+        {
+            if (source == null || target == null) return null;
+            return PerformBitwiseOperation(source, target, "OR");
+        }
+
+        public Bitmap XorImages(Bitmap source, Bitmap target)
+        {
+            if (source == null || target == null) return null;
+            return PerformBitwiseOperation(source, target, "XOR");
+        }
     }
 }

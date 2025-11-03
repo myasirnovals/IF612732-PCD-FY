@@ -14,8 +14,6 @@ namespace MiniPhotoShop
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
-
         private void InitializeComponent()
         {
             menuStrip1 = new MenuStrip();
@@ -31,6 +29,7 @@ namespace MiniPhotoShop
             filterToolStripMenuItem = new ToolStripMenuItem();
             grayscaleToolStripMenuItem = new ToolStripMenuItem();
             negationToolStripMenuItem = new ToolStripMenuItem();
+            notToolStripMenuItem = new ToolStripMenuItem();
             redToolStripMenuItem = new ToolStripMenuItem();
             greenToolStripMenuItem = new ToolStripMenuItem();
             blueToolStripMenuItem = new ToolStripMenuItem();
@@ -43,6 +42,7 @@ namespace MiniPhotoShop
             viewToolStripMenuItem = new ToolStripMenuItem();
             tableDataToolStripMenuItem = new ToolStripMenuItem();
             histogramToolStripMenuItem = new ToolStripMenuItem();
+            savePixelDataToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
             tabControlCanvas = new TabControl();
             flowLayoutPanelThumbnails = new FlowLayoutPanel();
@@ -140,7 +140,19 @@ namespace MiniPhotoShop
             // 
             // filterToolStripMenuItem
             // 
-            filterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { grayscaleToolStripMenuItem, negationToolStripMenuItem, redToolStripMenuItem, greenToolStripMenuItem, blueToolStripMenuItem, toolStripSeparator3, bwToolStripMenuItem, brightnessToolStripMenuItem, imageSelectionToolStripMenuItem, toolStripSeparator1, restoreToolStripMenuItem });
+            filterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
+                grayscaleToolStripMenuItem,
+                negationToolStripMenuItem,
+                notToolStripMenuItem,
+                redToolStripMenuItem,
+                greenToolStripMenuItem,
+                blueToolStripMenuItem,
+                toolStripSeparator3,
+                bwToolStripMenuItem,
+                brightnessToolStripMenuItem,
+                imageSelectionToolStripMenuItem,
+                toolStripSeparator1,
+                restoreToolStripMenuItem });
             filterToolStripMenuItem.Name = "filterToolStripMenuItem";
             filterToolStripMenuItem.Size = new Size(52, 20);
             filterToolStripMenuItem.Text = "FILTER";
@@ -158,6 +170,13 @@ namespace MiniPhotoShop
             negationToolStripMenuItem.Size = new Size(180, 22);
             negationToolStripMenuItem.Text = "Negation";
             negationToolStripMenuItem.Click += negationToolStripMenuItem_Click;
+            // 
+            // notToolStripMenuItem
+            // 
+            notToolStripMenuItem.Name = "notToolStripMenuItem";
+            notToolStripMenuItem.Size = new Size(180, 22);
+            notToolStripMenuItem.Text = "NOT (Bitwise)";
+            notToolStripMenuItem.Click += notToolStripMenuItem_Click;
             // 
             // redToolStripMenuItem
             // 
@@ -220,7 +239,10 @@ namespace MiniPhotoShop
             // 
             // viewToolStripMenuItem
             // 
-            viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { tableDataToolStripMenuItem, histogramToolStripMenuItem });
+            viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
+                tableDataToolStripMenuItem,
+                histogramToolStripMenuItem,
+                savePixelDataToolStripMenuItem });
             viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             viewToolStripMenuItem.Size = new Size(46, 20);
             viewToolStripMenuItem.Text = "VIEW";
@@ -229,7 +251,7 @@ namespace MiniPhotoShop
             // 
             tableDataToolStripMenuItem.Name = "tableDataToolStripMenuItem";
             tableDataToolStripMenuItem.Size = new Size(180, 22);
-            tableDataToolStripMenuItem.Text = "Tabel Data";
+            tableDataToolStripMenuItem.Text = "Tabel Data (Histogram)";
             tableDataToolStripMenuItem.Click += tableDataToolStripMenuItem_Click;
             // 
             // histogramToolStripMenuItem
@@ -238,6 +260,15 @@ namespace MiniPhotoShop
             histogramToolStripMenuItem.Size = new Size(180, 22);
             histogramToolStripMenuItem.Text = "Histogram";
             histogramToolStripMenuItem.Click += histogramToolStripMenuItem_Click;
+
+            // 
+            // savePixelDataToolStripMenuItem
+            // 
+            savePixelDataToolStripMenuItem.Name = "savePixelDataToolStripMenuItem";
+            savePixelDataToolStripMenuItem.Size = new Size(180, 22);
+            savePixelDataToolStripMenuItem.Text = "Simpan Data Pixel...";
+            savePixelDataToolStripMenuItem.Click += savePixelDataToolStripMenuItem_Click;
+
             // 
             // helpToolStripMenuItem
             // 
@@ -397,8 +428,6 @@ namespace MiniPhotoShop
 
         }
 
-        #endregion
-
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
@@ -437,5 +466,7 @@ namespace MiniPhotoShop
         private ToolStripSeparator toolStripSeparator3;
         private ToolStripMenuItem brightnessToolStripMenuItem;
         private ToolStripMenuItem histogramToolStripMenuItem;
+        private ToolStripMenuItem notToolStripMenuItem;
+        private ToolStripMenuItem savePixelDataToolStripMenuItem;
     }
 }

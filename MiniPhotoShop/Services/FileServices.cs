@@ -38,7 +38,12 @@ namespace MiniPhotoShop.Services
 
     public class DataExportService : IDataExportService
     {
-        public void SavePixelData(string fileName, int[,,] pixelArray, bool isGrayscale)
+        private string ToBinaryString(int value)
+        {
+            return Convert.ToString(value, 2).PadLeft(8, '0');
+        }
+
+        public void SavePixelData(string fileName, int[,,] pixelArray, bool isGrayscale, bool outputAsBinary)
         {
             using (SaveFileDialog sfd = new SaveFileDialog())
             {
@@ -59,19 +64,33 @@ namespace MiniPhotoShop.Services
                             {
                                 for (int x = 0; x < width; x++)
                                 {
-                                    if (isGrayscale)
+                                    if (outputAsBinary)
                                     {
-                                        writer.Write(pixelArray[x, y, 3].ToString());
+                                        if (isGrayscale)
+                                        {
+                                            writer.Write(ToBinaryString(pixelArray[x, y, 3]));
+                                        }
+                                        else
+                                        {
+                                            writer.Write(
+                                                $"({ToBinaryString(pixelArray[x, y, 0])}, {ToBinaryString(pixelArray[x, y, 1])}, {ToBinaryString(pixelArray[x, y, 2])})");
+                                        }
                                     }
                                     else
                                     {
-                                        writer.Write(
-                                            $"({pixelArray[x, y, 0]}, {pixelArray[x, y, 1]}, {pixelArray[x, y, 2]})");
+                                        if (isGrayscale)
+                                        {
+                                            writer.Write(pixelArray[x, y, 3].ToString());
+                                        }
+                                        else
+                                        {
+                                            writer.Write(
+                                                $"({pixelArray[x, y, 0]}, {pixelArray[x, y, 1]}, {pixelArray[x, y, 2]})");
+                                        }
                                     }
 
                                     if (x < width - 1) writer.Write(" ");
                                 }
-
                                 writer.WriteLine();
                             }
                         }

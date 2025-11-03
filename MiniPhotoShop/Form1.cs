@@ -13,20 +13,18 @@ namespace MiniPhotoShop
 {
     public partial class Form1 : Form
     {
-        #region Fields & Constructor
-
         private readonly IImageProcessingService _imageProcessor;
         private readonly IImageFileService _imageFileService;
         private readonly IDataExportService _dataExportService;
-
         private readonly Dictionary<TabPage, ImageDocument> _openDocuments = new Dictionary<TabPage, ImageDocument>();
-
+        private readonly Dictionary<TabPage, bool> _isBitwiseDocument = new Dictionary<TabPage, bool>();
         private readonly IImageFilter _rgbFilter = new RgbFilter();
         private readonly IImageFilter _grayFilter = new GrayscaleFilter();
         private readonly IImageFilter _redFilter = new RedChannelFilter();
         private readonly IImageFilter _greenFilter = new GreenChannelFilter();
         private readonly IImageFilter _blueFilter = new BlueChannelFilter();
         private readonly IImageFilter _negationFilter = new NegationFilter();
+        private readonly IImageFilter _notFilter = new NotFilter();
         private ContextMenuStrip _thumbnailContextMenu;
         private PictureBox _dragSourceThumb = null;
         private bool _isDragging = false;
@@ -46,10 +44,6 @@ namespace MiniPhotoShop
             InitializeThumbnails();
             InitializeThumbnailContextMenu();
         }
-
-        #endregion
-
-        #region Initialization
 
         private void InitializeThumbnails()
         {
@@ -93,12 +87,8 @@ namespace MiniPhotoShop
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+
         }
-
-        #endregion
-
-        #region Menu Handlers (File, Edit, Filter, View)
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -181,7 +171,7 @@ namespace MiniPhotoShop
             if (Clipboard.ContainsImage())
             {
                 Bitmap pastedImage = new Bitmap(Clipboard.GetImage());
-                ProcessAndDisplayImage(pastedImage, "Pasted Image");
+                ProcessAndDisplayImage(pastedImage, "Pasted Image"); 
             }
         }
 
@@ -211,6 +201,12 @@ namespace MiniPhotoShop
         {
             if (IsSelectionModeActive()) return;
             ApplyChannelFilter(_negationFilter);
+        }
+
+        private void notToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (IsSelectionModeActive()) return;
+            ApplyChannelFilter(_notFilter); 
         }
 
         private void redToolStripMenuItem_Click(object sender, EventArgs e)
@@ -293,6 +289,10 @@ namespace MiniPhotoShop
         {
             ImageDocument doc = GetActiveDocument();
             if (doc == null) return;
+
+            if (_isBitwiseDocument.ContainsKey(GetActiveTab()))
+                _isBitwiseDocument[GetActiveTab()] = false;
+
             doc.Restore();
             UpdateCanvas(GetActiveTab(), doc.CurrentBitmap);
             DisplayHistogram();
@@ -316,9 +316,20 @@ namespace MiniPhotoShop
             }
         }
 
-        #endregion
+        private void savePixelDataToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (IsSelectionModeActive()) return;
+            ImageDocument doc = GetActiveDocument();
+            if (doc == null) return;
 
-        #region Thumbnail & Tab Management
+            TabPage activeTab = GetActiveTab();
+            bool isBitwise = _isBitwiseDocument.ContainsKey(activeTab) && _isBitwiseDocument[activeTab];
+
+            int[,,] currentPixelArray = _imageProcessor.CreatePixelArray(doc.CurrentBitmap);
+            if (currentPixelArray == null) return;
+
+            _dataExportService.SavePixelData(doc.Name, currentPixelArray, doc.IsGrayscale, isBitwise);
+        }
 
         private void Thumbnail_MouseDown(object sender, MouseEventArgs e)
         {
@@ -380,12 +391,15 @@ namespace MiniPhotoShop
             }
         }
 
-        private void ProcessAndDisplayImage(Bitmap image, string imageName)
+        private void ProcessAndDisplayImage(Bitmap image, string imageName, bool isBitwiseResult = false)
         {
             if (image == null) return;
             var newDocument = new ImageDocument(image, imageName, _imageProcessor);
             TabPage newTab = AddNewTab(imageName);
             _openDocuments.Add(newTab, newDocument);
+
+            _isBitwiseDocument[newTab] = isBitwiseResult;
+
             UpdateCanvas(newTab, newDocument.CurrentBitmap);
         }
 
@@ -423,6 +437,12 @@ namespace MiniPhotoShop
                 _openDocuments[tab].OriginalBitmap?.Dispose();
                 _openDocuments.Remove(tab);
             }
+
+            if (_isBitwiseDocument.ContainsKey(tab))
+            {
+                _isBitwiseDocument.Remove(tab);
+            }
+
             tabControlCanvas.TabPages.Remove(tab);
             tab.Dispose();
             DisplayHistogram();
@@ -460,12 +480,8 @@ namespace MiniPhotoShop
                 ControlPaint.DrawCaptionButton(e.Graphics, closeButton, CaptionButton.Close, ButtonState.Normal);
                 e.DrawFocusRectangle();
             }
-            catch (Exception) {  }
+            catch (Exception) { }
         }
-
-        #endregion
-
-        #region Drag & Drop Handlers (Logika BARU Request 1 & 4)
 
         private void Canvas_DragEnter(object sender, DragEventArgs e)
         {
@@ -490,25 +506,53 @@ namespace MiniPhotoShop
                 using (Bitmap sourceBmp = FindThumbnailImageByName(sourceName))
                 {
                     if (sourceBmp == null) return;
+
                     bool ctrlPressed = (e.KeyState & 8) == 8;
+                    bool shiftPressed = (e.KeyState & 4) == 4;
+                    bool altPressed = (e.KeyState & 32) == 32;
+
                     Bitmap resultBmp = null;
                     string opName = "";
+                    bool isBitwise = false;
 
-                    if (ctrlPressed)
+                    if (ctrlPressed && shiftPressed)
+                    {
+                        resultBmp = _imageProcessor.XorImages(sourceBmp, targetDoc.CurrentBitmap);
+                        opName = "XOR";
+                        isBitwise = true;
+                    }
+                    else if (shiftPressed)
+                    {
+                        resultBmp = _imageProcessor.AndImages(sourceBmp, targetDoc.CurrentBitmap);
+                        opName = "AND";
+                        isBitwise = true;
+                    }
+                    else if (altPressed)
+                    {
+                        resultBmp = _imageProcessor.OrImages(sourceBmp, targetDoc.CurrentBitmap);
+                        opName = "OR";
+                        isBitwise = true;
+                    }
+                    else if (ctrlPressed)
                     {
                         resultBmp = _imageProcessor.SubtractImages(sourceBmp, targetDoc.CurrentBitmap);
                         opName = "Difference";
+
                     }
                     else
                     {
                         resultBmp = _imageProcessor.AddImages(sourceBmp, targetDoc.CurrentBitmap);
                         opName = "Addition";
+
                     }
+
 
                     if (resultBmp != null)
                     {
                         string newName = $"{Path.GetFileNameWithoutExtension(targetDoc.Name)}_{opName}_{Path.GetFileNameWithoutExtension(sourceName)}";
-                        ProcessAndDisplayImage(resultBmp, newName);
+
+                        ProcessAndDisplayImage(resultBmp, newName, isBitwise);
+
                         resultBmp.Dispose();
                     }
                 }
@@ -538,16 +582,18 @@ namespace MiniPhotoShop
             return null;
         }
 
-        #endregion
-
-        #region Filter & Image Logic (Dengan Preview)
-
         private void ApplyChannelFilter(IImageFilter filter)
         {
             ImageDocument doc = GetActiveDocument();
             if (doc == null) return;
             try
             {
+                bool isBitwise = (filter is NotFilter);
+                if (_isBitwiseDocument.ContainsKey(GetActiveTab()))
+                    _isBitwiseDocument[GetActiveTab()] = isBitwise;
+                else
+                    _isBitwiseDocument.Add(GetActiveTab(), isBitwise);
+
                 doc.ApplyFilter(filter);
                 UpdateCanvas(GetActiveTab(), doc.CurrentBitmap);
                 DisplayHistogram();
@@ -557,13 +603,15 @@ namespace MiniPhotoShop
                 MessageBox.Show($"Terjadi kesalahan saat menerapkan filter: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void ApplyBrightnessFilter(int brightness, bool isPreview = false)
         {
             ImageDocument doc = GetActiveDocument();
             if (doc == null) return;
             try
             {
+                if (!isPreview && _isBitwiseDocument.ContainsKey(GetActiveTab()))
+                    _isBitwiseDocument[GetActiveTab()] = false;
+
                 if (brightness < -255) brightness = -255;
                 if (brightness > 255) brightness = 255;
 
@@ -589,6 +637,9 @@ namespace MiniPhotoShop
             if (doc == null) return;
             try
             {
+                if (!isPreview && _isBitwiseDocument.ContainsKey(GetActiveTab()))
+                    _isBitwiseDocument[GetActiveTab()] = false;
+
                 if (threshold < 0) threshold = 0;
                 if (threshold > 255) threshold = 255;
 
@@ -607,10 +658,6 @@ namespace MiniPhotoShop
                 if (!isPreview) MessageBox.Show("Error saat menerapkan threshold.");
             }
         }
-
-        #endregion
-
-        #region UI Helpers
 
         private TabPage GetActiveTab()
         {
@@ -709,10 +756,6 @@ namespace MiniPhotoShop
             pictureBoxGrayHistogram.Image = null;
         }
 
-        #endregion
-
-        #region Dynamic Dialog Helper (Dengan Live Preview)
-
         private DialogResult ShowAdjustmentDialog(
             string title, int min, int max, int initialValue, int tickFreq, string labelText,
             Action<int> onPreview,
@@ -766,10 +809,6 @@ namespace MiniPhotoShop
             return result;
         }
 
-        #endregion
-
-        #region Image Selection (Canvas Click)
-
         private bool IsSelectionModeActive()
         {
             ImageDocument doc = GetActiveDocument();
@@ -790,6 +829,10 @@ namespace MiniPhotoShop
             {
                 return;
             }
+
+            if (_isBitwiseDocument.ContainsKey(GetActiveTab()))
+                _isBitwiseDocument[GetActiveTab()] = false;
+
             Point? imagePoint = ConvertCoordinates(canvas, mouse.Location);
             if (!imagePoint.HasValue) return;
             Color clickedColor = doc.OriginalBitmap.GetPixel(imagePoint.Value.X, imagePoint.Value.Y);
@@ -838,7 +881,5 @@ namespace MiniPhotoShop
                 return new Point(x, y);
             }
         }
-
-        #endregion
     }
 }
