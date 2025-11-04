@@ -18,16 +18,16 @@ namespace MiniPhotoShop.Services
                 bmp.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, bmp.PixelFormat);
             int bytesPerPixel = Image.GetPixelFormatSize(bmp.PixelFormat) / 8;
             int stride = bmpData.Stride;
-            byte* PtrFirstPixel = (byte*)bmpData.Scan0;
+            byte* ptrFirstPixel = (byte*)bmpData.Scan0;
             for (int y = 0; y < height; y++)
             {
-                byte* pCurrentRow = PtrFirstPixel + (y * stride);
+                byte* pCurrentRow = ptrFirstPixel + (y * stride);
                 for (int x = 0; x < width; x++)
                 {
-                    int x_offset = x * bytesPerPixel;
-                    int b = pCurrentRow[x_offset];
-                    int g = pCurrentRow[x_offset + 1];
-                    int r = pCurrentRow[x_offset + 2];
+                    int xOffset = x * bytesPerPixel;
+                    int b = pCurrentRow[xOffset];
+                    int g = pCurrentRow[xOffset + 1];
+                    int r = pCurrentRow[xOffset + 2];
                     pixelArray[x, y, 0] = r;
                     pixelArray[x, y, 1] = g;
                     pixelArray[x, y, 2] = b;
@@ -49,10 +49,10 @@ namespace MiniPhotoShop.Services
                 bmp.PixelFormat);
             int bytesPerPixel = 4;
             int stride = bmpData.Stride;
-            byte* PtrFirstPixel = (byte*)bmpData.Scan0;
+            byte* ptrFirstPixel = (byte*)bmpData.Scan0;
             for (int y = 0; y < height; y++)
             {
-                byte* pCurrentRow = PtrFirstPixel + (y * stride);
+                byte* pCurrentRow = ptrFirstPixel + (y * stride);
                 for (int x = 0; x < width; x++)
                 {
                     int r = pixelArray[x, y, 0];
@@ -60,11 +60,11 @@ namespace MiniPhotoShop.Services
                     int b = pixelArray[x, y, 2];
                     int gray = pixelArray[x, y, 3];
                     Color c = filter.ProcessPixel(r, g, b, gray);
-                    int x_offset = x * bytesPerPixel;
-                    pCurrentRow[x_offset] = c.B;
-                    pCurrentRow[x_offset + 1] = c.G;
-                    pCurrentRow[x_offset + 2] = c.R;
-                    pCurrentRow[x_offset + 3] = 255;
+                    int xOffset = x * bytesPerPixel;
+                    pCurrentRow[xOffset] = c.B;
+                    pCurrentRow[xOffset + 1] = c.G;
+                    pCurrentRow[xOffset + 2] = c.R;
+                    pCurrentRow[xOffset + 3] = 255;
                 }
             }
 
@@ -94,17 +94,17 @@ namespace MiniPhotoShop.Services
                 byte* pResRow = pResFirst + (y * resStride);
                 for (int x = 0; x < width; x++)
                 {
-                    int src_x_offset = x * srcBytesPerPixel;
-                    int b = pSrcRow[src_x_offset];
-                    int g = pSrcRow[src_x_offset + 1];
-                    int r = pSrcRow[src_x_offset + 2];
+                    int srcXOffset = x * srcBytesPerPixel;
+                    int b = pSrcRow[srcXOffset];
+                    int g = pSrcRow[srcXOffset + 1];
+                    int r = pSrcRow[srcXOffset + 2];
                     int gray = (int)((r * 0.3) + (g * 0.59) + (b * 0.11));
                     Color newColor = filter.ProcessPixel(r, g, b, gray);
-                    int res_x_offset = x * resBytesPerPixel;
-                    pResRow[res_x_offset] = newColor.B;
-                    pResRow[res_x_offset + 1] = newColor.G;
-                    pResRow[res_x_offset + 2] = newColor.R;
-                    pResRow[res_x_offset + 3] = 255;
+                    int resXOffset = x * resBytesPerPixel;
+                    pResRow[resXOffset] = newColor.B;
+                    pResRow[resXOffset + 1] = newColor.G;
+                    pResRow[resXOffset + 2] = newColor.R;
+                    pResRow[resXOffset + 3] = 255;
                 }
             }
 
@@ -213,42 +213,30 @@ namespace MiniPhotoShop.Services
                         int g2 = pRowB[i + 1];
                         int r2 = pRowB[i + 2];
 
-                        int r_new, g_new, b_new;
+                        int rNew, gNew, bNew;
 
                         switch (operation)
                         {
                             case "Add":
-                                r_new = Math.Min(255, r1 + r2);
-                                g_new = Math.Min(255, g1 + g2);
-                                b_new = Math.Min(255, b1 + b2);
+                                rNew = Math.Min(255, r1 + r2);
+                                gNew = Math.Min(255, g1 + g2);
+                                bNew = Math.Min(255, b1 + b2);
                                 break;
 
                             case "Subtract":
-                                r_new = Math.Abs(r2 - r1);
-                                g_new = Math.Abs(g2 - g1);
-                                b_new = Math.Abs(b2 - b1);
+                                rNew = Math.Abs(r2 - r1);
+                                gNew = Math.Abs(g2 - g1);
+                                bNew = Math.Abs(b2 - b1);
                                 break;
 
-                            case "Multiply":
-                                r_new = (r1 * r2) / 255;
-                                g_new = (g1 * g2) / 255;
-                                b_new = (b1 * b2) / 255;
-                                break;
-
-                            case "Divide":
-                                r_new = (r2 == 0) ? 255 : Math.Min(255, (r1 * 255) / r2);
-                                g_new = (g2 == 0) ? 255 : Math.Min(255, (g1 * 255) / g2);
-                                b_new = (b2 == 0) ? 255 : Math.Min(255, (b1 * 255) / b2);
-                                break;
-                            
                             default:
-                                r_new = g_new = b_new = 0;
+                                rNew = gNew = bNew = 0;
                                 break;
                         }
 
-                        pRowResult[i] = (byte)b_new;
-                        pRowResult[i + 1] = (byte)g_new;
-                        pRowResult[i + 2] = (byte)r_new;
+                        pRowResult[i] = (byte)bNew;
+                        pRowResult[i + 1] = (byte)gNew;
+                        pRowResult[i + 2] = (byte)rNew;
                         pRowResult[i + 3] = 255;
                     }
                 }
@@ -256,6 +244,177 @@ namespace MiniPhotoShop.Services
                 paddedTarget.UnlockBits(dataA);
                 paddedSource.UnlockBits(dataB);
                 resultBmp.UnlockBits(dataResult);
+
+                return resultBmp;
+            }
+        }
+
+        private Bitmap PerformNormalizedArithmetic(Bitmap source, Bitmap target, string operation)
+        {
+            int maxWidth = Math.Max(source.Width, target.Width);
+            int maxHeight = Math.Max(source.Height, target.Height);
+
+            int overlapWidth = Math.Min(source.Width, target.Width);
+            int overlapHeight = Math.Min(source.Height, target.Height);
+
+            if (overlapWidth == 0 || overlapHeight == 0)
+            {
+                return new Bitmap(target);
+            }
+
+            double[,,] rawResults = new double[overlapWidth, overlapHeight, 3];
+
+            double minR = double.MaxValue, maxR = double.MinValue;
+            double minG = double.MaxValue, maxG = double.MinValue;
+            double minB = double.MaxValue, maxB = double.MinValue;
+
+            using (Bitmap paddedTarget = ResizeAndPad(target, maxWidth, maxHeight))
+            using (Bitmap paddedSource = ResizeAndPad(source, maxWidth, maxHeight))
+            {
+                BitmapData dataTarget = null;
+                BitmapData dataSource = null;
+
+                try
+                {
+                    dataTarget = paddedTarget.LockBits(new Rectangle(0, 0, maxWidth, maxHeight),
+                        ImageLockMode.ReadOnly, paddedTarget.PixelFormat);
+                    dataSource = paddedSource.LockBits(new Rectangle(0, 0, maxWidth, maxHeight),
+                        ImageLockMode.ReadOnly, paddedSource.PixelFormat);
+
+                    int bpp = 4;
+                    int stride = dataTarget.Stride;
+
+                    for (int y = 0; y < overlapHeight; y++)
+                    {
+                        byte* pRowTarget = (byte*)dataTarget.Scan0 + (y * stride);
+                        byte* pRowSource = (byte*)dataSource.Scan0 + (y * stride);
+
+                        for (int x = 0; x < overlapWidth; x++)
+                        {
+                            int i = x * bpp;
+
+                            int b1 = pRowTarget[i];
+                            int g1 = pRowTarget[i + 1];
+                            int r1 = pRowTarget[i + 2];
+
+                            int b2 = pRowSource[i];
+                            int g2 = pRowSource[i + 1];
+                            int r2 = pRowSource[i + 2];
+
+                            double resR, resG, resB;
+
+                            if (operation == "Multiply")
+                            {
+                                resR = (double)r1 * r2;
+                                resG = (double)g1 * g2;
+                                resB = (double)b1 * b2;
+                            }
+                            else
+                            {
+                                resR = (r2 == 0) ? (r1 * 255.0) : Math.Min(((double)r1 * 255.0) / r2, 255.0 * 255.0);
+                                resG = (g2 == 0) ? (g1 * 255.0) : Math.Min(((double)g1 * 255.0) / g2, 255.0 * 255.0);
+                                resB = (b2 == 0) ? (b1 * 255.0) : Math.Min(((double)b1 * 255.0) / b2, 255.0 * 255.0);
+                            }
+
+                            rawResults[x, y, 0] = resR;
+                            rawResults[x, y, 1] = resG;
+                            rawResults[x, y, 2] = resB;
+
+                            if (resR < minR) minR = resR;
+                            if (resR > maxR) maxR = resR;
+                            if (resG < minG) minG = resG;
+                            if (resG > maxG) maxG = resG;
+                            if (resB < minB) minB = resB;
+                            if (resB > maxB) maxB = resB;
+                        }
+                    }
+                }
+                finally
+                {
+                    if (dataTarget != null) paddedTarget.UnlockBits(dataTarget);
+                    if (dataSource != null) paddedSource.UnlockBits(dataSource);
+                }
+
+                double rangeR = maxR - minR;
+                double rangeG = maxG - minG;
+                double rangeB = maxB - minB;
+
+                Bitmap resultBmp = new Bitmap(maxWidth, maxHeight, PixelFormat.Format32bppArgb);
+
+                BitmapData dataResult = null;
+                BitmapData dataTargetRead = null;
+                BitmapData dataSourceRead = null;
+
+                try
+                {
+                    dataResult = resultBmp.LockBits(new Rectangle(0, 0, maxWidth, maxHeight),
+                        ImageLockMode.WriteOnly, resultBmp.PixelFormat);
+                    dataTargetRead = paddedTarget.LockBits(new Rectangle(0, 0, maxWidth, maxHeight),
+                        ImageLockMode.ReadOnly, paddedTarget.PixelFormat);
+                    dataSourceRead = paddedSource.LockBits(new Rectangle(0, 0, maxWidth, maxHeight),
+                        ImageLockMode.ReadOnly, paddedSource.PixelFormat);
+
+                    int bpp = 4;
+                    int stride = dataResult.Stride;
+
+                    for (int y = 0; y < maxHeight; y++)
+                    {
+                        byte* pRowResult = (byte*)dataResult.Scan0 + (y * stride);
+                        byte* pRowTarget = (byte*)dataTargetRead.Scan0 + (y * stride);
+                        byte* pRowSource = (byte*)dataSourceRead.Scan0 + (y * stride);
+
+                        for (int x = 0; x < maxWidth; x++)
+                        {
+                            int i = x * bpp;
+
+                            if (x < overlapWidth && y < overlapHeight)
+                            {
+                                double rawR = rawResults[x, y, 0];
+                                double rawG = rawResults[x, y, 1];
+                                double rawB = rawResults[x, y, 2];
+
+                                byte newR = (byte)Math.Clamp((rangeR == 0) ? 0 : ((rawR - minR) / rangeR) * 255.0, 0,
+                                    255);
+                                byte newG = (byte)Math.Clamp((rangeG == 0) ? 0 : ((rawG - minG) / rangeG) * 255.0, 0,
+                                    255);
+                                byte newB = (byte)Math.Clamp((rangeB == 0) ? 0 : ((rawB - minB) / rangeB) * 255.0, 0,
+                                    255);
+
+                                pRowResult[i] = newB;
+                                pRowResult[i + 1] = newG;
+                                pRowResult[i + 2] = newR;
+                                pRowResult[i + 3] = 255;
+                            }
+                            else if (x < target.Width && y < target.Height)
+                            {
+                                pRowResult[i] = pRowTarget[i];
+                                pRowResult[i + 1] = pRowTarget[i + 1];
+                                pRowResult[i + 2] = pRowTarget[i + 2];
+                                pRowResult[i + 3] = pRowTarget[i + 3];
+                            }
+                            else if (x < source.Width && y < source.Height)
+                            {
+                                pRowResult[i] = pRowSource[i];
+                                pRowResult[i + 1] = pRowSource[i + 1];
+                                pRowResult[i + 2] = pRowSource[i + 2];
+                                pRowResult[i + 3] = pRowSource[i + 3];
+                            }
+                            else
+                            {
+                                pRowResult[i] = 0;
+                                pRowResult[i + 1] = 0;
+                                pRowResult[i + 2] = 0;
+                                pRowResult[i + 3] = 255;
+                            }
+                        }
+                    }
+                }
+                finally
+                {
+                    if (dataResult != null) resultBmp.UnlockBits(dataResult);
+                    if (dataTargetRead != null) paddedTarget.UnlockBits(dataTargetRead);
+                    if (dataSourceRead != null) paddedSource.UnlockBits(dataSourceRead);
+                }
 
                 return resultBmp;
             }
@@ -272,17 +431,17 @@ namespace MiniPhotoShop.Services
             if (source == null || target == null) return null;
             return PerformArithmetic(source, target, "Subtract");
         }
-        
+
         public Bitmap MultiplyImages(Bitmap source, Bitmap target)
         {
             if (source == null || target == null) return null;
-            return PerformArithmetic(source, target, "Multiply");
+            return PerformNormalizedArithmetic(source, target, "Multiply");
         }
 
         public Bitmap DivideImages(Bitmap source, Bitmap target)
         {
             if (source == null || target == null) return null;
-            return PerformArithmetic(source, target, "Divide");
+            return PerformNormalizedArithmetic(source, target, "Divide");
         }
     }
 }
