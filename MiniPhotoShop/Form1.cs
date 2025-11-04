@@ -26,6 +26,8 @@ namespace MiniPhotoShop
         private readonly IImageFilter _blueFilter = new BlueChannelFilter();
         private readonly IImageFilter _negationFilter = new NegationFilter();
 
+        private string _currentArithmeticOperation = "None";
+
         public Form1(
             DocumentManager documentManager,
             ThumbnailManager thumbnailManager,
@@ -49,9 +51,14 @@ namespace MiniPhotoShop
             _thumbnailManager.Initialize(flowLayoutPanelThumbnails);
 
             _documentManager.ActiveDocumentChanged += DisplayHistogram;
-            _documentManager.CanvasDragEnter += Canvas_DragEnter; 
-            _documentManager.CanvasDragDrop += Canvas_DragDrop; 
+            _documentManager.CanvasDragEnter += Canvas_DragEnter;
+            _documentManager.CanvasDragDrop += Canvas_DragDrop;
             _thumbnailManager.ThumbnailClicked += OnThumbnailClicked;
+
+            tambahToolStripMenuItem.Click += tambahToolStripMenuItem_Click;
+            kurangToolStripMenuItem.Click += kurangToolStripMenuItem_Click;
+            kaliToolStripMenuItem.Click += kaliToolStripMenuItem_Click;
+            bagiToolStripMenuItem.Click += bagiToolStripMenuItem_Click;
         }
 
         private void OnThumbnailClicked(Bitmap image, string name)
@@ -59,7 +66,7 @@ namespace MiniPhotoShop
             if (IsSelectionModeActive()) return;
             _documentManager.OpenDocument(image, name);
         }
-        
+
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (IsSelectionModeActive()) return;
@@ -114,6 +121,12 @@ namespace MiniPhotoShop
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (IsSelectionModeActive()) return;
+            ImageDocument doc = _documentManager.GetActiveDocument();
+            if (doc?.CurrentBitmap != null)
+            {
+                Clipboard.SetImage(doc.CurrentBitmap);
+                _documentManager.CloseActiveDocument();
+            }
         }
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
@@ -177,7 +190,7 @@ namespace MiniPhotoShop
             if (IsSelectionModeActive()) return;
             ImageDocument doc = _documentManager.GetActiveDocument();
             if (doc == null) return;
-            
+
             DialogResult result = _dialogService.ShowAdjustmentDialog(
                 "Atur Threshold Black/White", 0, 255, 128, 16, "B/W:",
                 (value) => { ApplyThresholdFilter(value, isPreview: true); },
@@ -198,7 +211,7 @@ namespace MiniPhotoShop
             if (IsSelectionModeActive()) return;
             ImageDocument doc = _documentManager.GetActiveDocument();
             if (doc == null) return;
-            
+
             DialogResult result = _dialogService.ShowAdjustmentDialog(
                 "Atur Brightness", -255, 255, 0, 32, "Brightness:",
                 (value) => { ApplyBrightnessFilter(value, isPreview: true); },
@@ -251,10 +264,38 @@ namespace MiniPhotoShop
                 DisplayHistogram();
             }
         }
-        
+
+        private void tambahToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _currentArithmeticOperation = "Add";
+            MessageBox.Show("Mode Tambah diaktifkan. \nDrag gambar dari thumbnail ke kanvas.", "Mode Aritmatika",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void kurangToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _currentArithmeticOperation = "Subtract";
+            MessageBox.Show("Mode Kurang diaktifkan. \nDrag gambar dari thumbnail ke kanvas.", "Mode Aritmatika",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void kaliToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _currentArithmeticOperation = "Multiply";
+            MessageBox.Show("Mode Kali diaktifkan. \nDrag gambar dari thumbnail ke kanvas.", "Mode Aritmatika",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void bagiToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _currentArithmeticOperation = "Divide";
+            MessageBox.Show("Mode Bagi diaktifkan. \nDrag gambar dari thumbnail ke kanvas.", "Mode Aritmatika",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
         private void Canvas_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.StringFormat))
+            if (e.Data.GetDataPresent(DataFormats.StringFormat) && _currentArithmeticOperation != "None")
                 e.Effect = DragDropEffects.Copy;
             else
                 e.Effect = DragDropEffects.None;
@@ -262,31 +303,39 @@ namespace MiniPhotoShop
 
         private void Canvas_DragDrop(object sender, DragEventArgs e)
         {
-            if (IsSelectionModeActive()) return;
+            if (IsSelectionModeActive() || _currentArithmeticOperation == "None") return;
             try
             {
                 ImageDocument targetDoc = _documentManager.GetActiveDocument();
                 if (targetDoc == null) return;
 
                 string sourceName = (string)e.Data.GetData(DataFormats.StringFormat);
-                
+
                 using (Bitmap sourceBmp = _thumbnailManager.FindThumbnailImageByName(sourceName))
                 {
                     if (sourceBmp == null) return;
 
-                    bool ctrlPressed = (e.KeyState & 8) == 8;
                     Bitmap resultBmp = null;
                     string opName = "";
 
-                    if (ctrlPressed)
+                    switch (_currentArithmeticOperation)
                     {
-                        resultBmp = _imageArithmeticService.SubtractImages(sourceBmp, targetDoc.CurrentBitmap);
-                        opName = "Subtract";
-                    }
-                    else
-                    {
-                        resultBmp = _imageArithmeticService.AddImages(sourceBmp, targetDoc.CurrentBitmap);
-                        opName = "Add";
+                        case "Add":
+                            resultBmp = _imageArithmeticService.AddImages(sourceBmp, targetDoc.CurrentBitmap);
+                            opName = "Addition";
+                            break;
+                        case "Subtract":
+                            resultBmp = _imageArithmeticService.SubtractImages(sourceBmp, targetDoc.CurrentBitmap);
+                            opName = "Difference";
+                            break;
+                        case "Multiply":
+                            resultBmp = _imageArithmeticService.MultiplyImages(sourceBmp, targetDoc.CurrentBitmap);
+                            opName = "Multiplication";
+                            break;
+                        case "Divide":
+                            resultBmp = _imageArithmeticService.DivideImages(sourceBmp, targetDoc.CurrentBitmap);
+                            opName = "Division";
+                            break;
                     }
 
                     if (resultBmp != null)
@@ -294,6 +343,7 @@ namespace MiniPhotoShop
                         string newName =
                             $"{Path.GetFileNameWithoutExtension(targetDoc.Name)}_{opName}_{Path.GetFileNameWithoutExtension(sourceName)}";
                         _documentManager.OpenDocument(resultBmp, newName);
+                        resultBmp.Dispose();
                     }
                 }
             }
@@ -301,6 +351,10 @@ namespace MiniPhotoShop
             {
                 MessageBox.Show($"Terjadi kesalahan saat drag-drop: {ex.Message}", "Error", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
+            }
+            finally
+            {
+                _currentArithmeticOperation = "None";
             }
         }
 
@@ -320,7 +374,7 @@ namespace MiniPhotoShop
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        
+
         private void ApplyBrightnessFilter(int brightness, bool isPreview = false)
         {
             ImageDocument doc = _documentManager.GetActiveDocument();
@@ -371,7 +425,7 @@ namespace MiniPhotoShop
 
             return false;
         }
-        
+
         private void DisplayHistogram()
         {
             if (!panelHistogram.Visible)
@@ -446,7 +500,7 @@ namespace MiniPhotoShop
             pictureBoxGrayHistogram.Image?.Dispose();
             pictureBoxGrayHistogram.Image = null;
         }
-             
+
         private void Form1_Load(object sender, EventArgs e)
         {
         }
