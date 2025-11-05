@@ -420,6 +420,114 @@ namespace MiniPhotoShop.Services
             }
         }
 
+        private Bitmap PerformConstantArithmetic(Bitmap source, double constant, string operation)
+        {
+            int width = source.Width;
+            int height = source.Height;
+
+            double[,,] rawResults = new double[width, height, 3];
+            double minR = double.MaxValue, maxR = double.MinValue;
+            double minG = double.MaxValue, maxG = double.MinValue;
+            double minB = double.MaxValue, maxB = double.MinValue;
+
+            BitmapData dataSource = null;
+            try
+            {
+                dataSource = source.LockBits(new Rectangle(0, 0, width, height),
+                    ImageLockMode.ReadOnly, source.PixelFormat);
+
+                int bpp = Image.GetPixelFormatSize(source.PixelFormat) / 8;
+                int stride = dataSource.Stride;
+
+                for (int y = 0; y < height; y++)
+                {
+                    byte* pRowSource = (byte*)dataSource.Scan0 + (y * stride);
+                    for (int x = 0; x < width; x++)
+                    {
+                        int i = x * bpp;
+                        int b = pRowSource[i];
+                        int g = pRowSource[i + 1];
+                        int r = pRowSource[i + 2];
+
+                        double resR, resG, resB;
+
+                        if (operation == "Multiply")
+                        {
+                            resR = (double)r * constant;
+                            resG = (double)g * constant;
+                            resB = (double)b * constant;
+                        }
+                        else
+                        {
+                            double c = (constant == 0) ? 1.0 : constant;
+                            resR = (double)r / c;
+                            resG = (double)g / c;
+                            resB = (double)b / c;
+                        }
+
+                        rawResults[x, y, 0] = resR;
+                        rawResults[x, y, 1] = resG;
+                        rawResults[x, y, 2] = resB;
+
+                        if (resR < minR) minR = resR;
+                        if (resR > maxR) maxR = resR;
+                        if (resG < minG) minG = resG;
+                        if (resG > maxG) maxG = resG;
+                        if (resB < minB) minB = resB;
+                        if (resB > maxB) maxB = resB;
+                    }
+                }
+            }
+            finally
+            {
+                if (dataSource != null) source.UnlockBits(dataSource);
+            }
+
+            double rangeR = maxR - minR;
+            double rangeG = maxG - minG;
+            double rangeB = maxB - minB;
+
+            Bitmap resultBmp = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+            BitmapData dataResult = null;
+
+            try
+            {
+                dataResult = resultBmp.LockBits(new Rectangle(0, 0, width, height),
+                    ImageLockMode.WriteOnly, resultBmp.PixelFormat);
+
+                int resBpp = 4;
+                int resStride = dataResult.Stride;
+
+                for (int y = 0; y < height; y++)
+                {
+                    byte* pRowResult = (byte*)dataResult.Scan0 + (y * resStride);
+                    for (int x = 0; x < width; x++)
+                    {
+                        int i = x * resBpp;
+
+                        double rawR = rawResults[x, y, 0];
+                        double rawG = rawResults[x, y, 1];
+                        double rawB = rawResults[x, y, 2];
+
+                        byte newR = (byte)Math.Clamp((rangeR == 0) ? 0 : ((rawR - minR) / rangeR) * 255.0, 0, 255);
+                        byte newG = (byte)Math.Clamp((rangeG == 0) ? 0 : ((rawG - minG) / rangeG) * 255.0, 0, 255);
+                        byte newB = (byte)Math.Clamp((rangeB == 0) ? 0 : ((rawB - minB) / rangeB) * 255.0, 0, 255);
+
+                        pRowResult[i] = newB;
+                        pRowResult[i + 1] = newG;
+                        pRowResult[i + 2] = newR;
+                        pRowResult[i + 3] = 255;
+                    }
+                }
+            }
+            finally
+            {
+                if (dataResult != null) resultBmp.UnlockBits(dataResult);
+            }
+
+            return resultBmp;
+        }
+
         public Bitmap AddImages(Bitmap source, Bitmap target)
         {
             if (source == null || target == null) return null;
@@ -442,6 +550,26 @@ namespace MiniPhotoShop.Services
         {
             if (source == null || target == null) return null;
             return PerformNormalizedArithmetic(source, target, "Divide");
+        }
+
+        public Bitmap MultiplyByConstant(Bitmap source, double constant)
+        {
+            if (source == null) return null;
+            return PerformConstantArithmetic(source, constant, "Multiply");
+        }
+
+        public Bitmap DivideByConstant(Bitmap source, double constant)
+        {
+            if (source == null) return null;
+
+            if (Math.Abs(constant) < 0.0001)
+            {
+                MessageBox.Show("Tidak dapat membagi dengan konstanta nol.", "Error", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return new Bitmap(source);
+            }
+            
+            return PerformConstantArithmetic(source, constant, "Divide");       
         }
     }
 }

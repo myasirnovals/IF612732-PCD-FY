@@ -418,12 +418,14 @@ namespace MiniPhotoShop
             kaliToolStripMenuItem1.Name = "kaliToolStripMenuItem1";
             kaliToolStripMenuItem1.Size = new Size(180, 22);
             kaliToolStripMenuItem1.Text = "Kali";
+            kaliToolStripMenuItem1.Click += new System.EventHandler(this.kaliKonstantaToolStripMenuItem_Click);
             // 
             // bagiToolStripMenuItem1
             // 
             bagiToolStripMenuItem1.Name = "bagiToolStripMenuItem1";
             bagiToolStripMenuItem1.Size = new Size(180, 22);
             bagiToolStripMenuItem1.Text = "Bagi";
+            bagiToolStripMenuItem1.Click += new System.EventHandler(this.bagiKonstantaToolStripMenuItem_Click);
             // 
             // Form1
             // 
