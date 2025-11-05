@@ -60,8 +60,6 @@ namespace MiniPhotoShop
             kurangToolStripMenuItem.Click += kurangToolStripMenuItem_Click;
             kaliToolStripMenuItem.Click += kaliToolStripMenuItem_Click;
             bagiToolStripMenuItem.Click += bagiToolStripMenuItem_Click;
-            kaliToolStripMenuItem1.Click += kaliKonstantaToolStripMenuItem_Click;
-            bagiToolStripMenuItem1.Click += bagiKonstantaToolStripMenuItem_Click;
         }
 
         private void OnThumbnailClicked(Bitmap image, string name)

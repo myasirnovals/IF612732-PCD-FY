@@ -425,26 +425,33 @@ namespace MiniPhotoShop.Services
             int width = source.Width;
             int height = source.Height;
 
-            double[,,] rawResults = new double[width, height, 3];
-            double minR = double.MaxValue, maxR = double.MinValue;
-            double minG = double.MaxValue, maxG = double.MinValue;
-            double minB = double.MaxValue, maxB = double.MinValue;
+            Bitmap resultBmp = new Bitmap(width, height, PixelFormat.Format32bppArgb);
 
             BitmapData dataSource = null;
+            BitmapData dataResult = null;
             try
             {
                 dataSource = source.LockBits(new Rectangle(0, 0, width, height),
                     ImageLockMode.ReadOnly, source.PixelFormat);
+                dataResult = resultBmp.LockBits(new Rectangle(0, 0, width, height),
+                    ImageLockMode.WriteOnly, resultBmp.PixelFormat);
+                
 
                 int bpp = Image.GetPixelFormatSize(source.PixelFormat) / 8;
+                int resBpp = 4;
                 int stride = dataSource.Stride;
+                int resStride = dataResult.Stride;
 
                 for (int y = 0; y < height; y++)
                 {
                     byte* pRowSource = (byte*)dataSource.Scan0 + (y * stride);
+                    byte* pRowResult = (byte*)dataResult.Scan0 + (y * resStride);
+                    
                     for (int x = 0; x < width; x++)
                     {
                         int i = x * bpp;
+                        int resI = x * resBpp;
+                        
                         int b = pRowSource[i];
                         int g = pRowSource[i + 1];
                         int r = pRowSource[i + 2];
@@ -465,63 +472,16 @@ namespace MiniPhotoShop.Services
                             resB = (double)b / c;
                         }
 
-                        rawResults[x, y, 0] = resR;
-                        rawResults[x, y, 1] = resG;
-                        rawResults[x, y, 2] = resB;
-
-                        if (resR < minR) minR = resR;
-                        if (resR > maxR) maxR = resR;
-                        if (resG < minG) minG = resG;
-                        if (resG > maxG) maxG = resG;
-                        if (resB < minB) minB = resB;
-                        if (resB > maxB) maxB = resB;
+                        pRowResult[resI] = (byte)Math.Clamp(resB, 0, 255);
+                        pRowResult[resI + 1] = (byte)Math.Clamp(resG, 0, 255);
+                        pRowResult[resI + 2] = (byte)Math.Clamp(resR, 0, 255);
+                        pRowResult[resI + 3] = 255;
                     }
                 }
             }
             finally
             {
                 if (dataSource != null) source.UnlockBits(dataSource);
-            }
-
-            double rangeR = maxR - minR;
-            double rangeG = maxG - minG;
-            double rangeB = maxB - minB;
-
-            Bitmap resultBmp = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-            BitmapData dataResult = null;
-
-            try
-            {
-                dataResult = resultBmp.LockBits(new Rectangle(0, 0, width, height),
-                    ImageLockMode.WriteOnly, resultBmp.PixelFormat);
-
-                int resBpp = 4;
-                int resStride = dataResult.Stride;
-
-                for (int y = 0; y < height; y++)
-                {
-                    byte* pRowResult = (byte*)dataResult.Scan0 + (y * resStride);
-                    for (int x = 0; x < width; x++)
-                    {
-                        int i = x * resBpp;
-
-                        double rawR = rawResults[x, y, 0];
-                        double rawG = rawResults[x, y, 1];
-                        double rawB = rawResults[x, y, 2];
-
-                        byte newR = (byte)Math.Clamp((rangeR == 0) ? 0 : ((rawR - minR) / rangeR) * 255.0, 0, 255);
-                        byte newG = (byte)Math.Clamp((rangeG == 0) ? 0 : ((rawG - minG) / rangeG) * 255.0, 0, 255);
-                        byte newB = (byte)Math.Clamp((rangeB == 0) ? 0 : ((rawB - minB) / rangeB) * 255.0, 0, 255);
-
-                        pRowResult[i] = newB;
-                        pRowResult[i + 1] = newG;
-                        pRowResult[i + 2] = newR;
-                        pRowResult[i + 3] = 255;
-                    }
-                }
-            }
-            finally
-            {
                 if (dataResult != null) resultBmp.UnlockBits(dataResult);
             }
 
