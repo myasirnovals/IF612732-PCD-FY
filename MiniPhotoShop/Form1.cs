@@ -17,10 +17,9 @@ namespace MiniPhotoShop
         private readonly IImageProcessingService _imageProcessor;
         private readonly IImageFileService _imageFileService;
         private readonly IDataExportService _dataExportService;
-
         private readonly Dictionary<TabPage, ImageDocument> _openDocuments = new Dictionary<TabPage, ImageDocument>();
         private readonly Dictionary<TabPage, bool> _isBitwiseDocument = new Dictionary<TabPage, bool>();
-
+        private string _pendingOperation = null;
         private readonly IImageFilter _rgbFilter = new RgbFilter();
         private readonly IImageFilter _grayFilter = new GrayscaleFilter();
         private readonly IImageFilter _redFilter = new RedChannelFilter();
@@ -294,6 +293,12 @@ namespace MiniPhotoShop
 
         private void imageSelectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (_pendingOperation != null)
+            {
+                MessageBox.Show($"Mode '{_pendingOperation}' sedang aktif. Batalkan (Restore) sebelum memulai mode seleksi.", "Operasi Tertunda", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             ImageDocument doc = GetActiveDocument();
             if (doc == null) return;
             doc.IsInSelectionMode = true;
@@ -305,14 +310,71 @@ namespace MiniPhotoShop
             ImageDocument doc = GetActiveDocument();
             if (doc == null) return;
 
+            bool wasInOperationMode = (_pendingOperation != null);
+            _pendingOperation = null;
+
             if (_isBitwiseDocument.ContainsKey(GetActiveTab()))
                 _isBitwiseDocument[GetActiveTab()] = false;
 
-            doc.Restore();
+            doc.Restore(); 
             UpdateCanvas(GetActiveTab(), doc.CurrentBitmap);
             DisplayHistogram();
-            MessageBox.Show("Gambar telah dikembalikan ke kondisi semula.", "Restore", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            if (wasInOperationMode)
+            {
+                MessageBox.Show("Mode operasi dibatalkan dan gambar telah dikembalikan.", "Operasi Dibatalkan", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Gambar telah dikembalikan ke kondisi semula.", "Restore", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
+
+        private void SetPendingOperation(string operation)
+        {
+            ImageDocument doc = GetActiveDocument();
+            if (doc != null && doc.IsInSelectionMode)
+            {
+                MessageBox.Show("Batalkan 'Mode Seleksi' (Restore) sebelum memulai operasi ini.", "Mode Seleksi Aktif", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (doc == null)
+            {
+                MessageBox.Show("Silakan buka gambar terlebih dahulu.", "Tidak Ada Gambar Aktif", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            _pendingOperation = operation;
+            MessageBox.Show($"Mode '{operation}' diaktifkan.\nSeret gambar dari panel thumbnail ke kanvas ini untuk menerapkan.",
+                            "Mode Operasi Aktif", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void penjumlahanToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SetPendingOperation("Add");
+        }
+
+        private void penguranganToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SetPendingOperation("Subtract");
+        }
+
+        private void andToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SetPendingOperation("AND");
+        }
+
+        private void orToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SetPendingOperation("OR");
+        }
+
+        private void xorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SetPendingOperation("XOR");
+        }
+
 
         private void tableDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -372,7 +434,7 @@ namespace MiniPhotoShop
         {
             if (!_isDragging && _dragSourceThumb != null && e.Button == MouseButtons.Left)
             {
-                if (IsSelectionModeActive()) return;
+                if (IsSelectionModeActive()) return; 
                 var clickedThumbnail = sender as PictureBox;
                 if (clickedThumbnail?.Image != null)
                 {
@@ -385,7 +447,7 @@ namespace MiniPhotoShop
 
         private void DeleteThumbnail_Click(object sender, EventArgs e)
         {
-            if (IsSelectionModeActive()) return;
+            if (IsSelectionModeActive()) return; 
             try
             {
                 ToolStripMenuItem menuItem = sender as ToolStripMenuItem;
@@ -446,6 +508,12 @@ namespace MiniPhotoShop
         private void CloseTab(TabPage tab)
         {
             if (tab == null) return;
+
+            if (tab == GetActiveTab())
+            {
+                _pendingOperation = null;
+            }
+
             if (_openDocuments.ContainsKey(tab))
             {
                 _openDocuments[tab].CurrentBitmap?.Dispose();
@@ -512,65 +580,70 @@ namespace MiniPhotoShop
 
         private void Canvas_DragDrop(object sender, DragEventArgs e)
         {
-            try
+            string sourceName = (string)e.Data.GetData(DataFormats.StringFormat);
+
+            using (Bitmap sourceBmp = FindThumbnailImageByName(sourceName))
             {
-                ImageDocument targetDoc = GetActiveDocument();
-                if (targetDoc == null) return;
-
-                string sourceName = (string)e.Data.GetData(DataFormats.StringFormat);
-                using (Bitmap sourceBmp = FindThumbnailImageByName(sourceName))
+                if (sourceBmp == null)
                 {
-                    if (sourceBmp == null) return;
+                    MessageBox.Show("Gagal menemukan gambar yang diseret.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
-                    bool ctrlPressed = (e.KeyState & 8) == 8;
-                    bool shiftPressed = (e.KeyState & 4) == 4;
-                    bool altPressed = (e.KeyState & 32) == 32;
-
-                    Bitmap resultBmp = null;
-                    string opName = "";
-                    bool isBitwise = false;
-
-                    if (ctrlPressed && shiftPressed)
+                if (_pendingOperation == null)
+                {
+                    ProcessAndDisplayImage(new Bitmap(sourceBmp), sourceName);
+                }
+                else
+                {
+                    try
                     {
-                        resultBmp = _imageProcessor.XorImages(sourceBmp, targetDoc.CurrentBitmap);
-                        opName = "XOR";
-                        isBitwise = true;
+                        ImageDocument targetDoc = GetActiveDocument();
+                        if (targetDoc == null) return;
+
+                        Bitmap resultBmp = null;
+                        string opName = _pendingOperation;
+                        bool isBitwise = false;
+
+                        switch (_pendingOperation)
+                        {
+                            case "Add":
+                                resultBmp = _imageProcessor.AddImages(sourceBmp, targetDoc.CurrentBitmap);
+                                opName = "Addition";
+                                break;
+                            case "Subtract":
+                                resultBmp = _imageProcessor.SubtractImages(sourceBmp, targetDoc.CurrentBitmap);
+                                opName = "Difference";
+                                break;
+                            case "AND":
+                                resultBmp = _imageProcessor.AndImages(sourceBmp, targetDoc.CurrentBitmap);
+                                isBitwise = true;
+                                break;
+                            case "OR":
+                                resultBmp = _imageProcessor.OrImages(sourceBmp, targetDoc.CurrentBitmap);
+                                isBitwise = true;
+                                break;
+                            case "XOR":
+                                resultBmp = _imageProcessor.XorImages(sourceBmp, targetDoc.CurrentBitmap);
+                                isBitwise = true;
+                                break;
+                        }
+
+                        if (resultBmp != null)
+                        {
+                            string newName = $"{Path.GetFileNameWithoutExtension(targetDoc.Name)}_{opName}_{Path.GetFileNameWithoutExtension(sourceName)}";
+                            ProcessAndDisplayImage(resultBmp, newName, isBitwise);
+                        }
                     }
-                    else if (shiftPressed)
+                    catch (Exception ex)
                     {
-                        resultBmp = _imageProcessor.AndImages(sourceBmp, targetDoc.CurrentBitmap);
-                        opName = "AND";
-                        isBitwise = true;
+                        MessageBox.Show($"Terjadi kesalahan saat drag-drop: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-                    else if (altPressed)
+                    finally
                     {
-                        resultBmp = _imageProcessor.OrImages(sourceBmp, targetDoc.CurrentBitmap);
-                        opName = "OR";
-                        isBitwise = true;
-                    }
-                    else if (ctrlPressed)
-                    {
-                        resultBmp = _imageProcessor.SubtractImages(sourceBmp, targetDoc.CurrentBitmap);
-                        opName = "Difference";
-                    }
-                    else
-                    {
-                        resultBmp = _imageProcessor.AddImages(sourceBmp, targetDoc.CurrentBitmap);
-                        opName = "Addition";
-                    }
-
-
-                    if (resultBmp != null)
-                    {
-                        string newName = $"{Path.GetFileNameWithoutExtension(targetDoc.Name)}_{opName}_{Path.GetFileNameWithoutExtension(sourceName)}";
-
-                        ProcessAndDisplayImage(resultBmp, newName, isBitwise);
+                        _pendingOperation = null;
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Terjadi kesalahan saat drag-drop: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -830,6 +903,15 @@ namespace MiniPhotoShop
                 MessageBox.Show("Fitur lain tidak dapat digunakan saat dalam mode Seleksi Gambar.\nKlik 'Restore Original' untuk keluar.", "Mode Seleksi Aktif", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return true;
             }
+
+            if (_pendingOperation != null)
+            {
+                MessageBox.Show($"Mode '{_pendingOperation}' sedang aktif.\n" +
+                                "Seret gambar dari thumbnail ke kanvas untuk menyelesaikan.\n" +
+                                "Klik 'Restore Original' untuk membatalkan.", "Operasi Tertunda", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return true;
+            }
+
             return false;
         }
 
@@ -838,6 +920,14 @@ namespace MiniPhotoShop
             ImageDocument doc = GetActiveDocument();
             PictureBox canvas = sender as PictureBox;
             MouseEventArgs mouse = e as MouseEventArgs;
+
+            // Jangan lakukan seleksi warna jika sedang menunggu operasi
+            if (_pendingOperation != null)
+            {
+                MessageBox.Show($"Mode '{_pendingOperation}' sedang aktif. Selesaikan atau batalkan (Restore) operasi.", "Operasi Tertuda", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             if (doc == null || canvas == null || mouse == null || !doc.IsInSelectionMode)
             {
                 return;

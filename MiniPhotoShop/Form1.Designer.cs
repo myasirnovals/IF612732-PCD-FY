@@ -33,6 +33,13 @@ namespace MiniPhotoShop
             redToolStripMenuItem = new ToolStripMenuItem();
             greenToolStripMenuItem = new ToolStripMenuItem();
             blueToolStripMenuItem = new ToolStripMenuItem();
+            perhitunganToolStripMenuItem = new ToolStripMenuItem();
+            penjumlahanToolStripMenuItem = new ToolStripMenuItem();
+            penguranganToolStripMenuItem = new ToolStripMenuItem();
+            citraBinerToolStripMenuItem = new ToolStripMenuItem();
+            andToolStripMenuItem = new ToolStripMenuItem();
+            orToolStripMenuItem = new ToolStripMenuItem();
+            xorToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator3 = new ToolStripSeparator();
             bwToolStripMenuItem = new ToolStripMenuItem();
             brightnessToolStripMenuItem = new ToolStripMenuItem();
@@ -143,10 +150,11 @@ namespace MiniPhotoShop
             filterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
                 grayscaleToolStripMenuItem,
                 negationToolStripMenuItem,
-                notToolStripMenuItem,
                 redToolStripMenuItem,
                 greenToolStripMenuItem,
                 blueToolStripMenuItem,
+                perhitunganToolStripMenuItem,
+                citraBinerToolStripMenuItem, 
                 toolStripSeparator3,
                 bwToolStripMenuItem,
                 brightnessToolStripMenuItem,
@@ -198,6 +206,61 @@ namespace MiniPhotoShop
             blueToolStripMenuItem.Size = new Size(180, 22);
             blueToolStripMenuItem.Text = "Blue Channel";
             blueToolStripMenuItem.Click += blueToolStripMenuItem_Click;
+            // 
+            // perhitunganToolStripMenuItem
+            // 
+            perhitunganToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
+                penjumlahanToolStripMenuItem,
+                penguranganToolStripMenuItem});
+            perhitunganToolStripMenuItem.Name = "perhitunganToolStripMenuItem";
+            perhitunganToolStripMenuItem.Size = new Size(180, 22);
+            perhitunganToolStripMenuItem.Text = "Perhitungan";
+            // 
+            // penjumlahanToolStripMenuItem
+            // 
+            penjumlahanToolStripMenuItem.Name = "penjumlahanToolStripMenuItem";
+            penjumlahanToolStripMenuItem.Size = new Size(180, 22);
+            penjumlahanToolStripMenuItem.Text = "Penjumlahan...";
+            penjumlahanToolStripMenuItem.Click += penjumlahanToolStripMenuItem_Click;
+            // 
+            // penguranganToolStripMenuItem
+            // 
+            penguranganToolStripMenuItem.Name = "penguranganToolStripMenuItem";
+            penguranganToolStripMenuItem.Size = new Size(180, 22);
+            penguranganToolStripMenuItem.Text = "Pengurangan...";
+            penguranganToolStripMenuItem.Click += penguranganToolStripMenuItem_Click;
+            // 
+            // citraBinerToolStripMenuItem
+            // 
+            citraBinerToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
+                notToolStripMenuItem, 
+                andToolStripMenuItem,
+                orToolStripMenuItem,
+                xorToolStripMenuItem});
+            citraBinerToolStripMenuItem.Name = "citraBinerToolStripMenuItem";
+            citraBinerToolStripMenuItem.Size = new Size(180, 22);
+            citraBinerToolStripMenuItem.Text = "Citra Biner";
+            // 
+            // andToolStripMenuItem
+            // 
+            andToolStripMenuItem.Name = "andToolStripMenuItem";
+            andToolStripMenuItem.Size = new Size(180, 22);
+            andToolStripMenuItem.Text = "AND...";
+            andToolStripMenuItem.Click += andToolStripMenuItem_Click;
+            // 
+            // orToolStripMenuItem
+            // 
+            orToolStripMenuItem.Name = "orToolStripMenuItem";
+            orToolStripMenuItem.Size = new Size(180, 22);
+            orToolStripMenuItem.Text = "OR...";
+            orToolStripMenuItem.Click += orToolStripMenuItem_Click;
+            // 
+            // xorToolStripMenuItem
+            // 
+            xorToolStripMenuItem.Name = "xorToolStripMenuItem";
+            xorToolStripMenuItem.Size = new Size(180, 22);
+            xorToolStripMenuItem.Text = "XOR...";
+            xorToolStripMenuItem.Click += xorToolStripMenuItem_Click;
             // 
             // toolStripSeparator3
             // 
@@ -467,5 +530,12 @@ namespace MiniPhotoShop
         private ToolStripMenuItem histogramToolStripMenuItem;
         private ToolStripMenuItem notToolStripMenuItem;
         private ToolStripMenuItem savePixelDataToolStripMenuItem;
+        private ToolStripMenuItem perhitunganToolStripMenuItem;
+        private ToolStripMenuItem penjumlahanToolStripMenuItem;
+        private ToolStripMenuItem penguranganToolStripMenuItem;
+        private ToolStripMenuItem citraBinerToolStripMenuItem;
+        private ToolStripMenuItem andToolStripMenuItem;
+        private ToolStripMenuItem orToolStripMenuItem;
+        private ToolStripMenuItem xorToolStripMenuItem;
     }
 }
