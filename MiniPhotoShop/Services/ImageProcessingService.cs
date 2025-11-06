@@ -3,6 +3,7 @@ using System.Drawing.Imaging;
 using MiniPhotoShop.Models;
 using System;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace MiniPhotoShop.Services
 {
@@ -181,6 +182,7 @@ namespace MiniPhotoShop.Services
 
             using (Bitmap paddedTarget = ResizeAndPad(target, maxWidth, maxHeight))
             using (Bitmap paddedSource = ResizeAndPad(source, maxWidth, maxHeight))
+
             {
                 Bitmap resultBmp = new Bitmap(maxWidth, maxHeight, PixelFormat.Format32bppArgb);
                 BitmapData dataA = paddedTarget.LockBits(new Rectangle(0, 0, maxWidth, maxHeight),
@@ -435,7 +437,7 @@ namespace MiniPhotoShop.Services
                     ImageLockMode.ReadOnly, source.PixelFormat);
                 dataResult = resultBmp.LockBits(new Rectangle(0, 0, width, height),
                     ImageLockMode.WriteOnly, resultBmp.PixelFormat);
-                
+
 
                 int bpp = Image.GetPixelFormatSize(source.PixelFormat) / 8;
                 int resBpp = 4;
@@ -446,12 +448,12 @@ namespace MiniPhotoShop.Services
                 {
                     byte* pRowSource = (byte*)dataSource.Scan0 + (y * stride);
                     byte* pRowResult = (byte*)dataResult.Scan0 + (y * resStride);
-                    
+
                     for (int x = 0; x < width; x++)
                     {
                         int i = x * bpp;
                         int resI = x * resBpp;
-                        
+
                         int b = pRowSource[i];
                         int g = pRowSource[i + 1];
                         int r = pRowSource[i + 2];
@@ -528,8 +530,8 @@ namespace MiniPhotoShop.Services
                     MessageBoxIcon.Error);
                 return new Bitmap(source);
             }
-            
-            return PerformConstantArithmetic(source, constant, "Divide");       
+
+            return PerformConstantArithmetic(source, constant, "Divide");
         }
 
 
@@ -540,6 +542,7 @@ namespace MiniPhotoShop.Services
 
             using (Bitmap paddedTarget = ResizeAndPad(target, maxWidth, maxHeight))
             using (Bitmap paddedSource = ResizeAndPad(source, maxWidth, maxHeight))
+
             {
                 Bitmap resultBmp = new Bitmap(maxWidth, maxHeight, PixelFormat.Format32bppArgb);
                 BitmapData dataA = paddedTarget.LockBits(new Rectangle(0, 0, maxWidth, maxHeight), ImageLockMode.ReadOnly, paddedTarget.PixelFormat);
@@ -555,7 +558,7 @@ namespace MiniPhotoShop.Services
                 for (int y = 0; y < maxHeight; y++)
                 {
                     byte* pRowA = pFirstA + (y * stride);
-                    byte* pRowB = pFirstB + (y * stride); 
+                    byte* pRowB = pFirstB + (y * stride);
                     byte* pRowResult = pFirstResult + (y * stride);
                     for (int x = 0; x < maxWidth; x++)
                     {
