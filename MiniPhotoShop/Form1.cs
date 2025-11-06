@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -362,6 +363,121 @@ namespace MiniPhotoShop
             _currentArithmeticOperation = "Divide";
             MessageBox.Show("Mode Bagi diaktifkan. \nDrag gambar dari thumbnail ke kanvas.", "Mode Aritmatika",
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void kaliKonstantaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PerformConstantArithmetic("Multiply");
+        }
+
+        private void bagiKonstantaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PerformConstantArithmetic("Divide");
+        }
+
+        private void PerformConstantArithmetic(string operation)
+        {
+            if (IsSelectionModeActive()) return;
+
+            ImageDocument activeDoc = _documentManager.GetActiveDocument();
+            if (activeDoc == null)
+            {
+                MessageBox.Show("Tidak ada gambar aktif untuk diproses.", "Error", MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
+
+            double constant = GetConstantFromUser($"Masukkan Konstanta {operation}");
+
+            if (double.IsNaN(constant))
+            {
+                return;
+            }
+
+            if (operation == "Divide" && Math.Abs(constant) < 0.0001)
+            {
+                MessageBox.Show("Tidak dapat membagi dengan konstanta nol.", "Error", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
+
+            try
+            {
+                Bitmap sourceBmp = activeDoc.CurrentBitmap;
+                Bitmap resultBmp = null;
+
+                if (operation == "Multiply")
+                {
+                    resultBmp = _imageArithmeticService.MultiplyByConstant(sourceBmp, constant);
+                }
+                else if (operation == "Divide")
+                {
+                    resultBmp = _imageArithmeticService.DivideByConstant(sourceBmp, constant);
+                }
+
+                if (resultBmp != null)
+                {
+                    string newName = $"{activeDoc.Name}_{operation}_{constant.ToString(CultureInfo.InvariantCulture)}";
+                    _documentManager.OpenDocument(resultBmp, newName);
+                    resultBmp.Dispose();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Terjadi kesalahan saat melakukan operasi: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private double GetConstantFromUser(string title)
+        {
+            Form prompt = new Form()
+            {
+                Width = 280,
+                Height = 160,
+                FormBorderStyle = FormBorderStyle.FixedDialog,
+                Text = title,
+                StartPosition = FormStartPosition.CenterParent,
+                MaximizeBox = false,
+                MinimizeBox = false
+            };
+
+            Label textLabel = new Label() { Left = 20, Top = 20, Text = "Nilai Konstanta:", Width = 240 };
+
+            NumericUpDown numericInput = new NumericUpDown()
+            {
+                Left = 20,
+                Top = 50,
+                Width = 220,
+                DecimalPlaces = 2,
+                Minimum = -10000,
+                Maximum = 10000,
+                Value = 1.0M
+            };
+
+            Button confirmationButton = new Button()
+                { Text = "Ok", Left = 60, Width = 70, Top = 90, DialogResult = DialogResult.OK };
+            Button cancelButton = new Button()
+                { Text = "Batal", Left = 150, Width = 70, Top = 90, DialogResult = DialogResult.Cancel };
+
+            confirmationButton.Click += (sender, e) => { prompt.Close(); };
+            cancelButton.Click += (sender, e) => { prompt.Close(); };
+
+            prompt.Controls.Add(textLabel);
+            prompt.Controls.Add(numericInput);
+            prompt.Controls.Add(confirmationButton);
+            prompt.Controls.Add(cancelButton);
+            prompt.AcceptButton = confirmationButton;
+            prompt.CancelButton = cancelButton;
+
+            if (prompt.ShowDialog() == DialogResult.OK)
+            {
+                return (double)numericInput.Value;
+            }
+            else
+            {
+                return double.NaN;
+            }
         }
 
         private void Canvas_DragEnter(object sender, DragEventArgs e)

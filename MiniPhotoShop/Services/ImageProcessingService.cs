@@ -420,6 +420,74 @@ namespace MiniPhotoShop.Services
             }
         }
 
+        private Bitmap PerformConstantArithmetic(Bitmap source, double constant, string operation)
+        {
+            int width = source.Width;
+            int height = source.Height;
+
+            Bitmap resultBmp = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+
+            BitmapData dataSource = null;
+            BitmapData dataResult = null;
+            try
+            {
+                dataSource = source.LockBits(new Rectangle(0, 0, width, height),
+                    ImageLockMode.ReadOnly, source.PixelFormat);
+                dataResult = resultBmp.LockBits(new Rectangle(0, 0, width, height),
+                    ImageLockMode.WriteOnly, resultBmp.PixelFormat);
+                
+
+                int bpp = Image.GetPixelFormatSize(source.PixelFormat) / 8;
+                int resBpp = 4;
+                int stride = dataSource.Stride;
+                int resStride = dataResult.Stride;
+
+                for (int y = 0; y < height; y++)
+                {
+                    byte* pRowSource = (byte*)dataSource.Scan0 + (y * stride);
+                    byte* pRowResult = (byte*)dataResult.Scan0 + (y * resStride);
+                    
+                    for (int x = 0; x < width; x++)
+                    {
+                        int i = x * bpp;
+                        int resI = x * resBpp;
+                        
+                        int b = pRowSource[i];
+                        int g = pRowSource[i + 1];
+                        int r = pRowSource[i + 2];
+
+                        double resR, resG, resB;
+
+                        if (operation == "Multiply")
+                        {
+                            resR = (double)r * constant;
+                            resG = (double)g * constant;
+                            resB = (double)b * constant;
+                        }
+                        else
+                        {
+                            double c = (constant == 0) ? 1.0 : constant;
+                            resR = (double)r / c;
+                            resG = (double)g / c;
+                            resB = (double)b / c;
+                        }
+
+                        pRowResult[resI] = (byte)Math.Clamp(resB, 0, 255);
+                        pRowResult[resI + 1] = (byte)Math.Clamp(resG, 0, 255);
+                        pRowResult[resI + 2] = (byte)Math.Clamp(resR, 0, 255);
+                        pRowResult[resI + 3] = 255;
+                    }
+                }
+            }
+            finally
+            {
+                if (dataSource != null) source.UnlockBits(dataSource);
+                if (dataResult != null) resultBmp.UnlockBits(dataResult);
+            }
+
+            return resultBmp;
+        }
+
         public Bitmap AddImages(Bitmap source, Bitmap target)
         {
             if (source == null || target == null) return null;
@@ -442,6 +510,26 @@ namespace MiniPhotoShop.Services
         {
             if (source == null || target == null) return null;
             return PerformNormalizedArithmetic(source, target, "Divide");
+        }
+
+        public Bitmap MultiplyByConstant(Bitmap source, double constant)
+        {
+            if (source == null) return null;
+            return PerformConstantArithmetic(source, constant, "Multiply");
+        }
+
+        public Bitmap DivideByConstant(Bitmap source, double constant)
+        {
+            if (source == null) return null;
+
+            if (Math.Abs(constant) < 0.0001)
+            {
+                MessageBox.Show("Tidak dapat membagi dengan konstanta nol.", "Error", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return new Bitmap(source);
+            }
+            
+            return PerformConstantArithmetic(source, constant, "Divide");       
         }
 
 
