@@ -31,14 +31,11 @@ namespace MiniPhotoShop
             filterToolStripMenuItem = new ToolStripMenuItem();
             grayscaleToolStripMenuItem = new ToolStripMenuItem();
             negationToolStripMenuItem = new ToolStripMenuItem();
-            notToolStripMenuItem = new ToolStripMenuItem();
             redToolStripMenuItem = new ToolStripMenuItem();
             greenToolStripMenuItem = new ToolStripMenuItem();
             blueToolStripMenuItem = new ToolStripMenuItem();
-            perhitunganToolStripMenuItem = new ToolStripMenuItem();
-            penjumlahanToolStripMenuItem = new ToolStripMenuItem();
-            penguranganToolStripMenuItem = new ToolStripMenuItem();
             citraBinerToolStripMenuItem = new ToolStripMenuItem();
+            notToolStripMenuItem = new ToolStripMenuItem();
             andToolStripMenuItem = new ToolStripMenuItem();
             orToolStripMenuItem = new ToolStripMenuItem();
             xorToolStripMenuItem = new ToolStripMenuItem();
@@ -46,6 +43,12 @@ namespace MiniPhotoShop
             bwToolStripMenuItem = new ToolStripMenuItem();
             brightnessToolStripMenuItem = new ToolStripMenuItem();
             imageSelectionToolStripMenuItem = new ToolStripMenuItem();
+            operasiAritmatikaToolStripMenuItem = new ToolStripMenuItem();
+            tambahToolStripMenuItem = new ToolStripMenuItem();
+            kurangToolStripMenuItem = new ToolStripMenuItem();
+            bagiToolStripMenuItem = new ToolStripMenuItem();
+            kaliToolStripMenuItem = new ToolStripMenuItem();
+            konstantaToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             restoreToolStripMenuItem = new ToolStripMenuItem();
             viewToolStripMenuItem = new ToolStripMenuItem();
@@ -53,6 +56,9 @@ namespace MiniPhotoShop
             histogramToolStripMenuItem = new ToolStripMenuItem();
             savePixelDataToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
+            perhitunganToolStripMenuItem = new ToolStripMenuItem();
+            penjumlahanToolStripMenuItem = new ToolStripMenuItem();
+            penguranganToolStripMenuItem = new ToolStripMenuItem();
             tabControlCanvas = new TabControl();
             flowLayoutPanelThumbnails = new FlowLayoutPanel();
             panelHistogram = new Panel();
@@ -65,12 +71,6 @@ namespace MiniPhotoShop
             labelRed = new Label();
             pictureBoxRedHistogram = new PictureBox();
             panelMainArea = new Panel();
-            operasiAritmatikaToolStripMenuItem = new ToolStripMenuItem();
-            tambahToolStripMenuItem = new ToolStripMenuItem();
-            kurangToolStripMenuItem = new ToolStripMenuItem();
-            bagiToolStripMenuItem = new ToolStripMenuItem();
-            kaliToolStripMenuItem = new ToolStripMenuItem();
-            konstantaToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             panelHistogram.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBoxGrayHistogram).BeginInit();
@@ -155,22 +155,7 @@ namespace MiniPhotoShop
             // 
             // filterToolStripMenuItem
             // 
-            filterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
-            {
-                grayscaleToolStripMenuItem,
-                negationToolStripMenuItem,
-                redToolStripMenuItem,
-                greenToolStripMenuItem,
-                blueToolStripMenuItem,
-                citraBinerToolStripMenuItem,
-                toolStripSeparator3,
-                bwToolStripMenuItem,
-                brightnessToolStripMenuItem,
-                imageSelectionToolStripMenuItem,
-                operasiAritmatikaToolStripMenuItem,
-                toolStripSeparator1,
-                restoreToolStripMenuItem
-            });
+            filterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { grayscaleToolStripMenuItem, redToolStripMenuItem, greenToolStripMenuItem, blueToolStripMenuItem, brightnessToolStripMenuItem, bwToolStripMenuItem, toolStripSeparator3, negationToolStripMenuItem, imageSelectionToolStripMenuItem, citraBinerToolStripMenuItem, operasiAritmatikaToolStripMenuItem, toolStripSeparator1, restoreToolStripMenuItem });
             filterToolStripMenuItem.Name = "filterToolStripMenuItem";
             filterToolStripMenuItem.Size = new Size(52, 20);
             filterToolStripMenuItem.Text = "FILTER";
@@ -188,13 +173,6 @@ namespace MiniPhotoShop
             negationToolStripMenuItem.Size = new Size(180, 22);
             negationToolStripMenuItem.Text = "Negation";
             negationToolStripMenuItem.Click += negationToolStripMenuItem_Click;
-            // 
-            // notToolStripMenuItem
-            // 
-            notToolStripMenuItem.Name = "notToolStripMenuItem";
-            notToolStripMenuItem.Size = new Size(180, 22);
-            notToolStripMenuItem.Text = "NOT (Bitwise)";
-            notToolStripMenuItem.Click += notToolStripMenuItem_Click;
             // 
             // redToolStripMenuItem
             // 
@@ -217,45 +195,39 @@ namespace MiniPhotoShop
             blueToolStripMenuItem.Text = "Blue Channel";
             blueToolStripMenuItem.Click += blueToolStripMenuItem_Click;
             // 
-            // perhitunganToolStripMenuItem
-            // 
-            perhitunganToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
-                penjumlahanToolStripMenuItem,
-                penguranganToolStripMenuItem});
-            perhitunganToolStripMenuItem.Name = "perhitunganToolStripMenuItem";
-            perhitunganToolStripMenuItem.Size = new Size(180, 22);
-            perhitunganToolStripMenuItem.Text = "Perhitungan";
-            // 
             // citraBinerToolStripMenuItem
             // 
-            citraBinerToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
-                notToolStripMenuItem, 
-                andToolStripMenuItem,
-                orToolStripMenuItem,
-                xorToolStripMenuItem});
+            citraBinerToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { notToolStripMenuItem, andToolStripMenuItem, orToolStripMenuItem, xorToolStripMenuItem });
             citraBinerToolStripMenuItem.Name = "citraBinerToolStripMenuItem";
             citraBinerToolStripMenuItem.Size = new Size(180, 22);
             citraBinerToolStripMenuItem.Text = "Citra Biner";
+            // 
+            // notToolStripMenuItem
+            // 
+            notToolStripMenuItem.Name = "notToolStripMenuItem";
+            notToolStripMenuItem.Size = new Size(180, 22);
+            notToolStripMenuItem.Text = "NOT";
+            andToolStripMenuItem.Click += notToolStripMenuItem_Click;
             // 
             // andToolStripMenuItem
             // 
             andToolStripMenuItem.Name = "andToolStripMenuItem";
             andToolStripMenuItem.Size = new Size(180, 22);
-            andToolStripMenuItem.Text = "AND...";
+            andToolStripMenuItem.Text = "AND";
             andToolStripMenuItem.Click += andToolStripMenuItem_Click;
             // 
             // orToolStripMenuItem
             // 
             orToolStripMenuItem.Name = "orToolStripMenuItem";
             orToolStripMenuItem.Size = new Size(180, 22);
-            orToolStripMenuItem.Text = "OR...";
+            orToolStripMenuItem.Text = "OR";
             orToolStripMenuItem.Click += orToolStripMenuItem_Click;
             // 
             // xorToolStripMenuItem
             // 
             xorToolStripMenuItem.Name = "xorToolStripMenuItem";
             xorToolStripMenuItem.Size = new Size(180, 22);
-            xorToolStripMenuItem.Text = "XOR...";
+            xorToolStripMenuItem.Text = "XOR";
             xorToolStripMenuItem.Click += xorToolStripMenuItem_Click;
             // 
             // toolStripSeparator3
@@ -266,14 +238,14 @@ namespace MiniPhotoShop
             // bwToolStripMenuItem
             // 
             bwToolStripMenuItem.Name = "bwToolStripMenuItem";
-            bwToolStripMenuItem.Size = new Size(172, 22);
+            bwToolStripMenuItem.Size = new Size(180, 22);
             bwToolStripMenuItem.Text = "Black/White";
             bwToolStripMenuItem.Click += bwToolStripMenuItem_Click;
             // 
             // brightnessToolStripMenuItem
             // 
             brightnessToolStripMenuItem.Name = "brightnessToolStripMenuItem";
-            brightnessToolStripMenuItem.Size = new Size(172, 22);
+            brightnessToolStripMenuItem.Size = new Size(180, 22);
             brightnessToolStripMenuItem.Text = "Brightness";
             brightnessToolStripMenuItem.Click += brightnessToolStripMenuItem_Click;
             // 
@@ -283,6 +255,43 @@ namespace MiniPhotoShop
             imageSelectionToolStripMenuItem.Size = new Size(180, 22);
             imageSelectionToolStripMenuItem.Text = "Seleksi Gambar";
             imageSelectionToolStripMenuItem.Click += imageSelectionToolStripMenuItem_Click;
+            // 
+            // operasiAritmatikaToolStripMenuItem
+            // 
+            operasiAritmatikaToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { tambahToolStripMenuItem, kurangToolStripMenuItem, bagiToolStripMenuItem, kaliToolStripMenuItem, konstantaToolStripMenuItem });
+            operasiAritmatikaToolStripMenuItem.Name = "operasiAritmatikaToolStripMenuItem";
+            operasiAritmatikaToolStripMenuItem.Size = new Size(180, 22);
+            operasiAritmatikaToolStripMenuItem.Text = "Operasi Aritmatika";
+            // 
+            // tambahToolStripMenuItem
+            // 
+            tambahToolStripMenuItem.Name = "tambahToolStripMenuItem";
+            tambahToolStripMenuItem.Size = new Size(127, 22);
+            tambahToolStripMenuItem.Text = "Tambah";
+            // 
+            // kurangToolStripMenuItem
+            // 
+            kurangToolStripMenuItem.Name = "kurangToolStripMenuItem";
+            kurangToolStripMenuItem.Size = new Size(127, 22);
+            kurangToolStripMenuItem.Text = "Kurang";
+            // 
+            // bagiToolStripMenuItem
+            // 
+            bagiToolStripMenuItem.Name = "bagiToolStripMenuItem";
+            bagiToolStripMenuItem.Size = new Size(127, 22);
+            bagiToolStripMenuItem.Text = "Bagi";
+            // 
+            // kaliToolStripMenuItem
+            // 
+            kaliToolStripMenuItem.Name = "kaliToolStripMenuItem";
+            kaliToolStripMenuItem.Size = new Size(127, 22);
+            kaliToolStripMenuItem.Text = "Kali";
+            // 
+            // konstantaToolStripMenuItem
+            // 
+            konstantaToolStripMenuItem.Name = "konstantaToolStripMenuItem";
+            konstantaToolStripMenuItem.Size = new Size(127, 22);
+            konstantaToolStripMenuItem.Text = "Konstanta";
             // 
             // toolStripSeparator1
             // 
@@ -298,12 +307,7 @@ namespace MiniPhotoShop
             // 
             // viewToolStripMenuItem
             // 
-            viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
-            {
-                tableDataToolStripMenuItem,
-                histogramToolStripMenuItem,
-                savePixelDataToolStripMenuItem
-            });
+            viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { tableDataToolStripMenuItem, histogramToolStripMenuItem, savePixelDataToolStripMenuItem });
             viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             viewToolStripMenuItem.Size = new Size(46, 20);
             viewToolStripMenuItem.Text = "VIEW";
@@ -311,31 +315,46 @@ namespace MiniPhotoShop
             // tableDataToolStripMenuItem
             // 
             tableDataToolStripMenuItem.Name = "tableDataToolStripMenuItem";
-            tableDataToolStripMenuItem.Size = new Size(130, 22);
+            tableDataToolStripMenuItem.Size = new Size(178, 22);
             tableDataToolStripMenuItem.Text = "Tabel Data";
             tableDataToolStripMenuItem.Click += tableDataToolStripMenuItem_Click;
             // 
             // histogramToolStripMenuItem
             // 
             histogramToolStripMenuItem.Name = "histogramToolStripMenuItem";
-            histogramToolStripMenuItem.Size = new Size(130, 22);
+            histogramToolStripMenuItem.Size = new Size(178, 22);
             histogramToolStripMenuItem.Text = "Histogram";
             histogramToolStripMenuItem.Click += histogramToolStripMenuItem_Click;
-
             // 
             // savePixelDataToolStripMenuItem
             // 
             savePixelDataToolStripMenuItem.Name = "savePixelDataToolStripMenuItem";
-            savePixelDataToolStripMenuItem.Size = new Size(180, 22);
+            savePixelDataToolStripMenuItem.Size = new Size(178, 22);
             savePixelDataToolStripMenuItem.Text = "Simpan Data Pixel...";
             savePixelDataToolStripMenuItem.Click += savePixelDataToolStripMenuItem_Click;
-
             // 
             // helpToolStripMenuItem
             // 
             helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             helpToolStripMenuItem.Size = new Size(47, 20);
             helpToolStripMenuItem.Text = "HELP";
+            // 
+            // perhitunganToolStripMenuItem
+            // 
+            perhitunganToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { penjumlahanToolStripMenuItem, penguranganToolStripMenuItem });
+            perhitunganToolStripMenuItem.Name = "perhitunganToolStripMenuItem";
+            perhitunganToolStripMenuItem.Size = new Size(180, 22);
+            perhitunganToolStripMenuItem.Text = "Perhitungan";
+            // 
+            // penjumlahanToolStripMenuItem
+            // 
+            penjumlahanToolStripMenuItem.Name = "penjumlahanToolStripMenuItem";
+            penjumlahanToolStripMenuItem.Size = new Size(67, 22);
+            // 
+            // penguranganToolStripMenuItem
+            // 
+            penguranganToolStripMenuItem.Name = "penguranganToolStripMenuItem";
+            penguranganToolStripMenuItem.Size = new Size(67, 22);
             // 
             // tabControlCanvas
             // 
@@ -460,43 +479,6 @@ namespace MiniPhotoShop
             panelMainArea.Name = "panelMainArea";
             panelMainArea.Size = new Size(839, 576);
             panelMainArea.TabIndex = 4;
-            // 
-            // operasiAritmatikaToolStripMenuItem
-            // 
-            operasiAritmatikaToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { tambahToolStripMenuItem, kurangToolStripMenuItem, bagiToolStripMenuItem, kaliToolStripMenuItem, konstantaToolStripMenuItem });
-            operasiAritmatikaToolStripMenuItem.Name = "operasiAritmatikaToolStripMenuItem";
-            operasiAritmatikaToolStripMenuItem.Size = new Size(172, 22);
-            operasiAritmatikaToolStripMenuItem.Text = "Operasi Aritmatika";
-            // 
-            // tambahToolStripMenuItem
-            // 
-            tambahToolStripMenuItem.Name = "tambahToolStripMenuItem";
-            tambahToolStripMenuItem.Size = new Size(180, 22);
-            tambahToolStripMenuItem.Text = "Tambah";
-            // 
-            // kurangToolStripMenuItem
-            // 
-            kurangToolStripMenuItem.Name = "kurangToolStripMenuItem";
-            kurangToolStripMenuItem.Size = new Size(180, 22);
-            kurangToolStripMenuItem.Text = "Kurang";
-            // 
-            // bagiToolStripMenuItem
-            // 
-            bagiToolStripMenuItem.Name = "bagiToolStripMenuItem";
-            bagiToolStripMenuItem.Size = new Size(180, 22);
-            bagiToolStripMenuItem.Text = "Bagi";
-            // 
-            // kaliToolStripMenuItem
-            // 
-            kaliToolStripMenuItem.Name = "kaliToolStripMenuItem";
-            kaliToolStripMenuItem.Size = new Size(180, 22);
-            kaliToolStripMenuItem.Text = "Kali";
-            // 
-            // konstantaToolStripMenuItem
-            // 
-            konstantaToolStripMenuItem.Name = "konstantaToolStripMenuItem";
-            konstantaToolStripMenuItem.Size = new Size(180, 22);
-            konstantaToolStripMenuItem.Text = "Konstanta";
             // 
             // Form1
             // 

@@ -72,7 +72,7 @@ namespace MiniPhotoShop
             kaliToolStripMenuItem.Click += kaliToolStripMenuItem_Click;
             bagiToolStripMenuItem.Click += bagiToolStripMenuItem_Click;
         }
-        
+
         private TabPage GetActiveTab()
         {
             return tabControlCanvas.SelectedTab;
@@ -295,6 +295,28 @@ namespace MiniPhotoShop
         private void savePixelDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (IsSelectionModeActive()) return;
+            ImageDocument doc = _documentManager.GetActiveDocument();
+
+            if (doc == null || doc.PixelArray == null)
+            {
+                MessageBox.Show("Tidak ada data pixel aktif untuk disimpan.", "Error", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
+
+            DialogResult binaryResult = MessageBox.Show
+            (
+                "Simpan sebagai data biner (Yes) atau teks (No)?",
+                "Format Simpan Data Pixel",
+                MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question
+            );
+
+            if (binaryResult == DialogResult.Cancel) return;
+
+            bool outputAsBinary = (binaryResult == DialogResult.Yes);
+
+            _dataExportService.SavePixelData(doc.Name, doc.PixelArray, doc.IsGrayscale, outputAsBinary);
         }
 
         private void tableDataToolStripMenuItem_Click(object sender, EventArgs e)
@@ -384,6 +406,18 @@ namespace MiniPhotoShop
                         case "Divide":
                             resultBmp = _imageArithmeticService.DivideImages(sourceBmp, targetDoc.CurrentBitmap);
                             opName = "Division";
+                            break;
+                        case "AND":
+                            resultBmp = _imageArithmeticService.AndImages(sourceBmp, targetDoc.CurrentBitmap);
+                            opName = "AND";
+                            break;
+                        case "OR":
+                            resultBmp = _imageArithmeticService.OrImages(sourceBmp, targetDoc.CurrentBitmap);
+                            opName = "OR";
+                            break;
+                        case "XOR":
+                            resultBmp = _imageArithmeticService.XorImages(sourceBmp, targetDoc.CurrentBitmap);
+                            opName = "XOR";
                             break;
                     }
 
@@ -560,6 +594,58 @@ namespace MiniPhotoShop
             ClearHistogramRGB();
             pictureBoxGrayHistogram.Image?.Dispose();
             pictureBoxGrayHistogram.Image = null;
+        }
+
+        private void tabControlCanvas_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            try
+            {
+                var tabPage = this.tabControlCanvas.TabPages[e.Index];
+                var tabRect = this.tabControlCanvas.GetTabRect(e.Index);
+                tabRect.Inflate(-2, -2);
+
+                e.DrawBackground();
+                using (var b = new SolidBrush(e.ForeColor))
+                {
+                    e.Graphics.DrawString(tabPage.Text, e.Font, b, e.Bounds.Left + 5, e.Bounds.Top + 4);
+                }
+
+                using (var pen = new Pen(Color.Red, 2))
+                {
+                    Rectangle closeRect = new Rectangle(e.Bounds.Right - 18, e.Bounds.Top + 6, 12, 12);
+                    e.Graphics.DrawLine(pen, closeRect.Left, closeRect.Top, closeRect.Right, closeRect.Bottom);
+                    e.Graphics.DrawLine(pen, closeRect.Left, closeRect.Bottom, closeRect.Right, closeRect.Top);
+                }
+
+                e.DrawFocusRectangle();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error drawing tab: " + ex.Message);
+            }
+        }
+        
+        private void tabControlCanvas_MouseClick(object sender, MouseEventArgs e)
+        {
+            for (int i = 0; i < this.tabControlCanvas.TabPages.Count; i++)
+            {
+                Rectangle r = this.tabControlCanvas.GetTabRect(i);
+                Rectangle closeButton = new Rectangle(r.Right - 18, r.Top + 6, 12, 12);
+                if (closeButton.Contains(e.Location))
+                {
+                    this.tabControlCanvas.SelectedIndex = i;
+                    
+                 
+                    if (_isBitwiseDocument.ContainsKey(this.tabControlCanvas.TabPages[i]))
+                    {
+                        _isBitwiseDocument.Remove(this.tabControlCanvas.TabPages[i]);
+                    }
+
+                    // Panggil DocumentManager untuk menutupnya
+                    _documentManager.CloseActiveDocument();
+                    break;
+                }
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
