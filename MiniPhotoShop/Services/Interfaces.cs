@@ -10,11 +10,6 @@ namespace MiniPhotoShop
 
     public interface IImageProcessingService : IPixelService, IHistogramService
     {
-        Bitmap? AddImages(Bitmap sourceBmp, Bitmap currentBitmap);
-        Bitmap? AndImages(Bitmap sourceBmp, Bitmap currentBitmap);
-        Bitmap? OrImages(Bitmap sourceBmp, Bitmap currentBitmap);
-        Bitmap? SubtractImages(Bitmap sourceBmp, Bitmap currentBitmap);
-        Bitmap? XorImages(Bitmap sourceBmp, Bitmap currentBitmap);
     }
 
     public interface IPixelService
@@ -47,7 +42,7 @@ namespace MiniPhotoShop
 
     public interface IDataExportService
     {
-        void SavePixelData(string fileName, int[,,] pixelArray, bool isGrayscale);
+        void SavePixelData(string fileName, int[,,] pixelArray, bool isGrayscale, bool outputAsBinary);
         void SaveHistogramData(string fileName, HistogramData histogram);
     }
 

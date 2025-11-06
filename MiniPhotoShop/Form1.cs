@@ -30,23 +30,24 @@ namespace MiniPhotoShop
         private readonly IImageFilter _blueFilter = new BlueChannelFilter();
         private readonly IImageFilter _negationFilter = new NegationFilter();
         private readonly IImageFilter _notFilter = new NotFilter();
+
+        private readonly Dictionary<TabPage, bool> _isBitwiseDocument = new Dictionary<TabPage, bool>();
+
         private ContextMenuStrip _thumbnailContextMenu;
         private PictureBox _dragSourceThumb = null;
         private bool _isDragging = false;
-        private ImageProcessingService imageProcessorService1;
-        private ImageProcessingService imageProcessorService2;
-        private IDialogService dialogService;
-
         private string _currentArithmeticOperation = "None";
 
-        public Form1(
+        public Form1
+        (
             DocumentManager documentManager,
             ThumbnailManager thumbnailManager,
             IImageFileService imageFileService,
             IDataExportService dataExportService,
             IImageProcessingService imageProcessor,
             IImageArithmeticService imageArithmeticService,
-            IDialogService dialogService)
+            IDialogService dialogService
+        )
         {
             InitializeComponent();
 
@@ -70,6 +71,11 @@ namespace MiniPhotoShop
             kurangToolStripMenuItem.Click += kurangToolStripMenuItem_Click;
             kaliToolStripMenuItem.Click += kaliToolStripMenuItem_Click;
             bagiToolStripMenuItem.Click += bagiToolStripMenuItem_Click;
+        }
+        
+        private TabPage GetActiveTab()
+        {
+            return tabControlCanvas.SelectedTab;
         }
 
         private void OnThumbnailClicked(Bitmap image, string name)
@@ -261,19 +267,35 @@ namespace MiniPhotoShop
 
         private void andToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SetPendingOperation("AND");
+            _currentArithmeticOperation = "AND";
+            MessageBox.Show("Mode AND diaktifkan. \nDrag gambar dari thumbnail ke kanvas.", "Mode Bitwise",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void orToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SetPendingOperation("OR");
+            _currentArithmeticOperation = "OR";
+            MessageBox.Show("Mode OR diaktifkan. \nDrag gambar dari thumbnail ke kanvas.", "Mode Bitwise",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void xorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SetPendingOperation("XOR");
+            _currentArithmeticOperation = "XOR";
+            MessageBox.Show("Mode XOR diaktifkan. \nDrag gambar dari thumbnail ke kanvas.", "Mode Bitwise",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        private void notToolStripMenutItem_Click(object sender, EventArgs e)
+        {
+            if (IsSelectionModeActive()) return;
+            ApplyFilter(_notFilter);
+        }
+
+        private void savePixelDataToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (IsSelectionModeActive()) return;
+        }
 
         private void tableDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -414,7 +436,6 @@ namespace MiniPhotoShop
             if (doc == null) return;
             try
             {
-
                 if (!isPreview && _isBitwiseDocument.ContainsKey(GetActiveTab()))
                     _isBitwiseDocument[GetActiveTab()] = false;
 

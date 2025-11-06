@@ -162,7 +162,6 @@ namespace MiniPhotoShop
                 redToolStripMenuItem,
                 greenToolStripMenuItem,
                 blueToolStripMenuItem,
-                perhitunganToolStripMenuItem,
                 citraBinerToolStripMenuItem,
                 toolStripSeparator3,
                 bwToolStripMenuItem,
