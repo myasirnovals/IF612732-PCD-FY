@@ -33,7 +33,8 @@ namespace MiniPhotoShop
     {
         Bitmap AddImages(Bitmap source, Bitmap target);
         Bitmap SubtractImages(Bitmap source, Bitmap target);
-
+        Bitmap MultiplyImages(Bitmap source, Bitmap target);
+        Bitmap DivideImages(Bitmap source, Bitmap target);
         Bitmap AndImages(Bitmap source, Bitmap target);
         Bitmap OrImages(Bitmap source, Bitmap target);
         Bitmap XorImages(Bitmap source, Bitmap target);
@@ -46,7 +47,7 @@ namespace MiniPhotoShop
 
     public interface IDataExportService
     {
-        void SavePixelData(string fileName, int[,,] pixelArray, bool isGrayscale, bool outputAsBinary);
+        void SavePixelData(string fileName, int[,,] pixelArray, bool isGrayscale);
         void SaveHistogramData(string fileName, HistogramData histogram);
     }
 
