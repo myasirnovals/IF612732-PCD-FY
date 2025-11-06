@@ -91,6 +91,7 @@ namespace MiniPhotoShop.Services
 
                                     if (x < width - 1) writer.Write(" ");
                                 }
+
                                 writer.WriteLine();
                             }
                         }

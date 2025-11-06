@@ -20,14 +20,14 @@ namespace MiniPhotoShop.Managers
         {
             _imageProcessor = imageProcessor;
         }
-        
+
         public void Initialize(TabControl tabControl)
         {
             _tabControl = tabControl;
             _tabControl.SelectedIndexChanged += (s, e) => ActiveDocumentChanged?.Invoke();
             _tabControl.MouseClick += TabControl_MouseClick;
             _tabControl.DrawItem += TabControlCanvas_DrawItem;
-            
+
             if (_tabControl.TabPages.Count > 0)
                 _tabControl.TabPages.Clear();
         }
@@ -39,6 +39,7 @@ namespace MiniPhotoShop.Managers
             {
                 return _openDocuments[activeTab];
             }
+
             return null;
         }
 
@@ -46,19 +47,19 @@ namespace MiniPhotoShop.Managers
         {
             if (image == null) return;
             var newDocument = new ImageDocument(image, imageName, _imageProcessor);
-            
+
             TabPage newTab = AddNewTab(imageName);
             _openDocuments.Add(newTab, newDocument);
             UpdateCanvas(newTab, newDocument.CurrentBitmap);
-            
+
             ActiveDocumentChanged?.Invoke();
         }
-        
+
         public void CloseActiveDocument()
         {
             CloseTab(_tabControl.SelectedTab);
         }
-        
+
         public void CloseTab(TabPage tab)
         {
             if (tab == null) return;
@@ -68,11 +69,12 @@ namespace MiniPhotoShop.Managers
                 _openDocuments[tab].OriginalBitmap?.Dispose();
                 _openDocuments.Remove(tab);
             }
+
             _tabControl.TabPages.Remove(tab);
             tab.Dispose();
             ActiveDocumentChanged?.Invoke();
         }
-        
+
         public void UpdateActiveCanvas()
         {
             ImageDocument doc = GetActiveDocument();
@@ -82,13 +84,13 @@ namespace MiniPhotoShop.Managers
                 UpdateCanvas(tab, doc.CurrentBitmap);
             }
         }
-        
+
         public bool IsSelectionModeActive()
         {
             ImageDocument doc = GetActiveDocument();
             return doc != null && doc.IsInSelectionMode;
         }
-        
+
         public void ToggleSelectionMode(bool enable)
         {
             ImageDocument doc = GetActiveDocument();
@@ -97,7 +99,7 @@ namespace MiniPhotoShop.Managers
                 doc.IsInSelectionMode = enable;
             }
         }
-        
+
         private void UpdateCanvas(TabPage tab, Image newImage)
         {
             if (tab?.Controls[0] is PictureBox canvas)
@@ -105,7 +107,7 @@ namespace MiniPhotoShop.Managers
                 canvas.Image = newImage;
             }
         }
-        
+
         private TabPage AddNewTab(string tabTitle)
         {
             TabPage newTabPage = new TabPage(tabTitle) { Padding = new Padding(3) };
@@ -117,9 +119,9 @@ namespace MiniPhotoShop.Managers
                 SizeMode = PictureBoxSizeMode.Zoom,
                 AllowDrop = true
             };
-            
-            newCanvas.Click += Canvas_Click; 
-            
+
+            newCanvas.Click += Canvas_Click;
+
             newCanvas.DragEnter += (s, e) => CanvasDragEnter?.Invoke(s, e);
             newCanvas.DragDrop += (s, e) => CanvasDragDrop?.Invoke(s, e);
 
@@ -128,10 +130,10 @@ namespace MiniPhotoShop.Managers
             _tabControl.SelectedTab = newTabPage;
             return newTabPage;
         }
-        
+
         public event DragEventHandler CanvasDragEnter;
         public event DragEventHandler CanvasDragDrop;
-        
+
         private void Canvas_Click(object sender, EventArgs e)
         {
             ImageDocument doc = GetActiveDocument();
@@ -141,10 +143,10 @@ namespace MiniPhotoShop.Managers
             {
                 return;
             }
-            
+
             Point? imagePoint = ConvertCoordinates(canvas, mouse.Location);
             if (!imagePoint.HasValue) return;
-            
+
             Color clickedColor = doc.OriginalBitmap.GetPixel(imagePoint.Value.X, imagePoint.Value.Y);
             ColorRanges clickedRange = ColorClassifier.GetColorRange(clickedColor.R, clickedColor.G, clickedColor.B);
 
@@ -158,17 +160,20 @@ namespace MiniPhotoShop.Managers
                 IImageFilter colorFilter = new ColorRangeFilter(clickedRange);
                 doc.ApplyFilter(colorFilter);
             }
-            
+
             UpdateActiveCanvas();
             ActiveDocumentChanged?.Invoke();
         }
-        
+
         private Point? ConvertCoordinates(PictureBox pb, Point mousePos)
         {
             if (pb.Image == null) return null;
-            int w_i = pb.Image.Width; int h_i = pb.Image.Height;
-            int w_c = pb.ClientSize.Width; int h_c = pb.ClientSize.Height;
-            float ratio_i = (float)w_i / h_i; float ratio_c = (float)w_c / h_c;
+            int w_i = pb.Image.Width;
+            int h_i = pb.Image.Height;
+            int w_c = pb.ClientSize.Width;
+            int h_c = pb.ClientSize.Height;
+            float ratio_i = (float)w_i / h_i;
+            float ratio_c = (float)w_c / h_c;
             if (ratio_i > ratio_c)
             {
                 float h_d = w_c / ratio_i;
@@ -190,7 +195,7 @@ namespace MiniPhotoShop.Managers
                 return new Point(x, y);
             }
         }
-        
+
         private void TabControl_MouseClick(object sender, MouseEventArgs e)
         {
             for (int i = 0; i < _tabControl.TabPages.Count; i++)
@@ -205,7 +210,7 @@ namespace MiniPhotoShop.Managers
                 }
             }
         }
-        
+
         private void TabControlCanvas_DrawItem(object sender, DrawItemEventArgs e)
         {
             try
@@ -213,12 +218,19 @@ namespace MiniPhotoShop.Managers
                 var tabPage = _tabControl.TabPages[e.Index];
                 var tabRect = _tabControl.GetTabRect(e.Index);
                 tabRect.Inflate(-2, -2);
-                TextRenderer.DrawText(e.Graphics, tabPage.Text, tabPage.Font, tabRect, tabPage.ForeColor, TextFormatFlags.Left);
+
+                Rectangle textRect = tabRect;
+
+                TextRenderer.DrawText(e.Graphics, tabPage.Text, tabPage.Font, textRect, tabPage.ForeColor,
+                    TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis);
+
                 Rectangle closeButton = new Rectangle(tabRect.Right - 15, tabRect.Top + 4, 12, 12);
                 ControlPaint.DrawCaptionButton(e.Graphics, closeButton, CaptionButton.Close, ButtonState.Normal);
                 e.DrawFocusRectangle();
             }
-            catch (Exception) {  }
+            catch (Exception)
+            {
+            }
         }
     }
 }

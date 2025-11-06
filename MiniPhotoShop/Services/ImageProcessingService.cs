@@ -540,14 +540,20 @@ namespace MiniPhotoShop.Services
             int maxWidth = Math.Max(source.Width, target.Width);
             int maxHeight = Math.Max(source.Height, target.Height);
 
+            int overlapWidth = Math.Min(source.Width, target.Width);
+            int overlapHeight = Math.Min(source.Height, target.Height);
+
             using (Bitmap paddedTarget = ResizeAndPad(target, maxWidth, maxHeight))
             using (Bitmap paddedSource = ResizeAndPad(source, maxWidth, maxHeight))
 
             {
                 Bitmap resultBmp = new Bitmap(maxWidth, maxHeight, PixelFormat.Format32bppArgb);
-                BitmapData dataA = paddedTarget.LockBits(new Rectangle(0, 0, maxWidth, maxHeight), ImageLockMode.ReadOnly, paddedTarget.PixelFormat);
-                BitmapData dataB = paddedSource.LockBits(new Rectangle(0, 0, maxWidth, maxHeight), ImageLockMode.ReadOnly, paddedSource.PixelFormat);
-                BitmapData dataResult = resultBmp.LockBits(new Rectangle(0, 0, maxWidth, maxHeight), ImageLockMode.WriteOnly, resultBmp.PixelFormat);
+                BitmapData dataA = paddedTarget.LockBits(new Rectangle(0, 0, maxWidth, maxHeight),
+                    ImageLockMode.ReadOnly, paddedTarget.PixelFormat);
+                BitmapData dataB = paddedSource.LockBits(new Rectangle(0, 0, maxWidth, maxHeight),
+                    ImageLockMode.ReadOnly, paddedSource.PixelFormat);
+                BitmapData dataResult = resultBmp.LockBits(new Rectangle(0, 0, maxWidth, maxHeight),
+                    ImageLockMode.WriteOnly, resultBmp.PixelFormat);
 
                 int bytesPerPixel = 4;
                 int stride = dataA.Stride;
@@ -564,44 +570,71 @@ namespace MiniPhotoShop.Services
                     {
                         int i = x * bytesPerPixel;
 
-                        int b1 = pRowA[i];
-                        int g1 = pRowA[i + 1];
-                        int r1 = pRowA[i + 2];
-
-                        int b2 = pRowB[i];
-                        int g2 = pRowB[i + 1];
-                        int r2 = pRowB[i + 2];
-
-                        int r_new, g_new, b_new;
-
-                        switch (operation)
+                        if (x < overlapWidth && y < overlapHeight)
                         {
-                            case "AND":
-                                r_new = r1 & r2;
-                                g_new = g1 & g2;
-                                b_new = b1 & b2;
-                                break;
-                            case "OR":
-                                r_new = r1 | r2;
-                                g_new = g1 | g2;
-                                b_new = b1 | b2;
-                                break;
-                            case "XOR":
-                                r_new = r1 ^ r2;
-                                g_new = g1 ^ g2;
-                                b_new = b1 ^ b2;
-                                break;
-                            default:
-                                r_new = r1; g_new = g1; b_new = b1;
-                                break;
-                        }
+                            int b1 = pRowA[i];
+                            int g1 = pRowA[i + 1];
+                            int r1 = pRowA[i + 2];
 
-                        pRowResult[i] = (byte)b_new;
-                        pRowResult[i + 1] = (byte)g_new;
-                        pRowResult[i + 2] = (byte)r_new;
-                        pRowResult[i + 3] = 255;
+                            int b2 = pRowB[i];
+                            int g2 = pRowB[i + 1];
+                            int r2 = pRowB[i + 2];
+
+                            int r_new, g_new, b_new;
+
+                            switch (operation)
+                            {
+                                case "AND":
+                                    r_new = r1 & r2;
+                                    g_new = g1 & g2;
+                                    b_new = b1 & b2;
+                                    break;
+                                case "OR":
+                                    r_new = r1 | r2;
+                                    g_new = g1 | g2;
+                                    b_new = b1 | b2;
+                                    break;
+                                case "XOR":
+                                    r_new = r1 ^ r2;
+                                    g_new = g1 ^ g2;
+                                    b_new = b1 ^ b2;
+                                    break;
+                                default:
+                                    r_new = r1;
+                                    g_new = g1;
+                                    b_new = b1;
+                                    break;
+                            }
+
+                            pRowResult[i] = (byte)b_new;
+                            pRowResult[i + 1] = (byte)g_new;
+                            pRowResult[i + 2] = (byte)r_new;
+                            pRowResult[i + 3] = 255;
+                        }
+                        else if (x < target.Width && y < target.Height)
+                        {
+                            pRowResult[i] = pRowA[i];
+                            pRowResult[i + 1] = pRowA[i + 1];
+                            pRowResult[i + 2] = pRowA[i + 2];
+                            pRowResult[i + 3] = pRowA[i + 3];
+                        }
+                        else if (x < source.Width && y < source.Height)
+                        {
+                            pRowResult[i] = pRowB[i];
+                            pRowResult[i + 1] = pRowB[i + 1];
+                            pRowResult[i + 2] = pRowB[i + 2];
+                            pRowResult[i + 3] = pRowB[i + 3];
+                        }
+                        else
+                        {
+                            pRowResult[i] = 0;
+                            pRowResult[i + 1] = 0;
+                            pRowResult[i + 2] = 0;
+                            pRowResult[i + 3] = 255;
+                        }
                     }
                 }
+
                 paddedTarget.UnlockBits(dataA);
                 paddedSource.UnlockBits(dataB);
                 resultBmp.UnlockBits(dataResult);

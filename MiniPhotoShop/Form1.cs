@@ -487,6 +487,21 @@ namespace MiniPhotoShop
             else
                 e.Effect = DragDropEffects.None;
         }
+        
+        private string GenerateShortTabName(string originalName, int maxLength = 20)
+        {
+            if (originalName.Length <= maxLength)
+            {
+                return originalName;
+            }
+            
+            string nameWithoutExtension = Path.GetFileNameWithoutExtension(originalName);
+            if (nameWithoutExtension.Length > maxLength - 3)
+            {
+                return nameWithoutExtension.Substring(0, maxLength - 3) + "...";
+            }
+            return originalName;
+        }
 
         private void Canvas_DragDrop(object sender, DragEventArgs e)
         {
@@ -541,6 +556,7 @@ namespace MiniPhotoShop
                     {
                         string newName =
                             $"{Path.GetFileNameWithoutExtension(targetDoc.Name)}_{opName}_{Path.GetFileNameWithoutExtension(sourceName)}";
+                        string displayTabName = GenerateShortTabName(newName);
                         _documentManager.OpenDocument(resultBmp, newName);
                         resultBmp.Dispose();
                     }
@@ -751,13 +767,11 @@ namespace MiniPhotoShop
                 {
                     this.tabControlCanvas.SelectedIndex = i;
                     
-                 
                     if (_isBitwiseDocument.ContainsKey(this.tabControlCanvas.TabPages[i]))
                     {
                         _isBitwiseDocument.Remove(this.tabControlCanvas.TabPages[i]);
                     }
-
-                    // Panggil DocumentManager untuk menutupnya
+                    
                     _documentManager.CloseActiveDocument();
                     break;
                 }

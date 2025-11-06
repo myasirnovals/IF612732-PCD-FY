@@ -360,8 +360,6 @@ namespace MiniPhotoShop
             tabControlCanvas.SelectedIndex = 0;
             tabControlCanvas.Size = new Size(639, 576);
             tabControlCanvas.TabIndex = 2;
-            tabControlCanvas.DrawItem += tabControlCanvas_DrawItem;
-            tabControlCanvas.MouseClick += tabControlCanvas_MouseClick;
             // 
             // flowLayoutPanelThumbnails
             // 
@@ -549,9 +547,6 @@ namespace MiniPhotoShop
         private ToolStripMenuItem bagiToolStripMenuItem1;
         private ToolStripMenuItem notToolStripMenuItem;
         private ToolStripMenuItem savePixelDataToolStripMenuItem;
-        private ToolStripMenuItem perhitunganToolStripMenuItem;
-        private ToolStripMenuItem penjumlahanToolStripMenuItem;
-        private ToolStripMenuItem penguranganToolStripMenuItem;
         private ToolStripMenuItem citraBinerToolStripMenuItem;
         private ToolStripMenuItem andToolStripMenuItem;
         private ToolStripMenuItem orToolStripMenuItem;
