@@ -487,19 +487,20 @@ namespace MiniPhotoShop
             else
                 e.Effect = DragDropEffects.None;
         }
-        
+
         private string GenerateShortTabName(string originalName, int maxLength = 20)
         {
             if (originalName.Length <= maxLength)
             {
                 return originalName;
             }
-            
+
             string nameWithoutExtension = Path.GetFileNameWithoutExtension(originalName);
             if (nameWithoutExtension.Length > maxLength - 3)
             {
                 return nameWithoutExtension.Substring(0, maxLength - 3) + "...";
             }
+
             return originalName;
         }
 
@@ -756,7 +757,7 @@ namespace MiniPhotoShop
                 Console.WriteLine("Error drawing tab: " + ex.Message);
             }
         }
-        
+
         private void tabControlCanvas_MouseClick(object sender, MouseEventArgs e)
         {
             for (int i = 0; i < this.tabControlCanvas.TabPages.Count; i++)
@@ -766,15 +767,60 @@ namespace MiniPhotoShop
                 if (closeButton.Contains(e.Location))
                 {
                     this.tabControlCanvas.SelectedIndex = i;
-                    
+
                     if (_isBitwiseDocument.ContainsKey(this.tabControlCanvas.TabPages[i]))
                     {
                         _isBitwiseDocument.Remove(this.tabControlCanvas.TabPages[i]);
                     }
-                    
+
                     _documentManager.CloseActiveDocument();
                     break;
                 }
+            }
+        }
+
+        private void translasiToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (IsSelectionModeActive()) return;
+
+            ImageDocument doc = _documentManager.GetActiveDocument();
+            if (doc == null) return;
+
+            int maxY = doc.CurrentBitmap.Width;
+            int maxX = doc.CurrentBitmap.Height;
+
+            DialogResult resultX = _dialogService.ShowAdjustmentDialog(
+                "Translasi Horizontal (X)",
+                -maxX, maxX, 0, 50,
+                "Geser X:",
+                (val) => { },
+                out int xOffset
+            );
+
+            if (resultX != DialogResult.OK) return;
+
+            DialogResult resultY = _dialogService.ShowAdjustmentDialog(
+                "Translasi Vertikal (Y)",
+                -maxY, maxY, 0, 50,
+                "Geser Y:",
+                (val) => { },
+                out int yOffset
+            );
+
+            if (resultY != DialogResult.OK) return;
+
+            try
+            {
+                Bitmap translateBmp = _imageProcessor.TranslateImage(doc.CurrentBitmap, xOffset, yOffset);
+
+                string newName = $"{doc.Name}_Trans({xOffset},{yOffset})";
+
+                _documentManager.OpenDocument(translateBmp, newName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Terjadi kesalahan saat melakukan translasi: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

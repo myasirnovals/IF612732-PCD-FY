@@ -56,6 +56,7 @@ namespace MiniPhotoShop
             histogramToolStripMenuItem = new ToolStripMenuItem();
             savePixelDataToolStripMenuItem = new ToolStripMenuItem();
             helpToolStripMenuItem = new ToolStripMenuItem();
+            translasiToolStripMenuItem = new ToolStripMenuItem();
             tabControlCanvas = new TabControl();
             flowLayoutPanelThumbnails = new FlowLayoutPanel();
             panelHistogram = new Panel();
@@ -152,7 +153,7 @@ namespace MiniPhotoShop
             // 
             // filterToolStripMenuItem
             // 
-            filterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { grayscaleToolStripMenuItem, redToolStripMenuItem, greenToolStripMenuItem, blueToolStripMenuItem, toolStripSeparator3, bwToolStripMenuItem, brightnessToolStripMenuItem, imageSelectionToolStripMenuItem, citraBinerToolStripMenuItem, operasiAritmatikaToolStripMenuItem, toolStripSeparator1, restoreToolStripMenuItem });
+            filterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { grayscaleToolStripMenuItem, redToolStripMenuItem, greenToolStripMenuItem, blueToolStripMenuItem, toolStripSeparator3, bwToolStripMenuItem, brightnessToolStripMenuItem, imageSelectionToolStripMenuItem, citraBinerToolStripMenuItem, operasiAritmatikaToolStripMenuItem, translasiToolStripMenuItem, toolStripSeparator1, restoreToolStripMenuItem });
             filterToolStripMenuItem.Name = "filterToolStripMenuItem";
             filterToolStripMenuItem.Size = new Size(52, 20);
             filterToolStripMenuItem.Text = "FILTER";
@@ -163,6 +164,13 @@ namespace MiniPhotoShop
             grayscaleToolStripMenuItem.Size = new Size(180, 22);
             grayscaleToolStripMenuItem.Text = "Grayscale";
             grayscaleToolStripMenuItem.Click += grayscaleToolStripMenuItem_Click;
+            //
+            // translasiToolStripMenuItem
+            // 
+            translasiToolStripMenuItem.Name = "translasiToolStripMenuItem";
+            translasiToolStripMenuItem.Size = new Size(180, 22);
+            translasiToolStripMenuItem.Text = "Translasi Citra";
+            translasiToolStripMenuItem.Click += translasiToolStripMenuItem_Click;
             // 
             // negationToolStripMenuItem
             // 
@@ -500,16 +508,17 @@ namespace MiniPhotoShop
         }
 
         private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.TabControl tabControlCanvas;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem filterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
-        private System.Windows.Forms.TabControl tabControlCanvas;
         private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pasteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem translasiToolStripMenuItem;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelThumbnails;
         private ToolStripMenuItem grayscaleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
