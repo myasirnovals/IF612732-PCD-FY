@@ -487,19 +487,20 @@ namespace MiniPhotoShop
             else
                 e.Effect = DragDropEffects.None;
         }
-        
+
         private string GenerateShortTabName(string originalName, int maxLength = 20)
         {
             if (originalName.Length <= maxLength)
             {
                 return originalName;
             }
-            
+
             string nameWithoutExtension = Path.GetFileNameWithoutExtension(originalName);
             if (nameWithoutExtension.Length > maxLength - 3)
             {
                 return nameWithoutExtension.Substring(0, maxLength - 3) + "...";
             }
+
             return originalName;
         }
 
@@ -756,7 +757,7 @@ namespace MiniPhotoShop
                 Console.WriteLine("Error drawing tab: " + ex.Message);
             }
         }
-        
+
         private void tabControlCanvas_MouseClick(object sender, MouseEventArgs e)
         {
             for (int i = 0; i < this.tabControlCanvas.TabPages.Count; i++)
@@ -766,15 +767,57 @@ namespace MiniPhotoShop
                 if (closeButton.Contains(e.Location))
                 {
                     this.tabControlCanvas.SelectedIndex = i;
-                    
+
                     if (_isBitwiseDocument.ContainsKey(this.tabControlCanvas.TabPages[i]))
                     {
                         _isBitwiseDocument.Remove(this.tabControlCanvas.TabPages[i]);
                     }
-                    
+
                     _documentManager.CloseActiveDocument();
                     break;
                 }
+            }
+        }
+
+        private void distorsiToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (IsSelectionModeActive()) return;
+
+            ImageDocument doc = _documentManager.GetActiveDocument();
+            if (doc == null) return;
+
+            DialogResult resultAmp = _dialogService.ShowAdjustmentDialog(
+                "Distorsi - Amplitudo",
+                0, 100, 20, 5,
+                "Kekuatan:",
+                (val) => { },
+                out int amplitude
+            );
+
+            if (resultAmp != DialogResult.OK) return;
+
+            DialogResult resultFreq = _dialogService.ShowAdjustmentDialog(
+                "Distorsi - Frekuensi",
+                1, 50, 5, 1,
+                "Jumlah Gelombang:",
+                (val) => { },
+                out int frequency
+            );
+
+            if (resultFreq != DialogResult.OK) return;
+
+            try
+            {
+                Bitmap distortedBmp =
+                    _imageProcessor.DistortImage(doc.CurrentBitmap, (double)amplitude, (double)frequency);
+                
+                string newName = $"{doc.Name}_Ripple(Amp{amplitude}_Freq{frequency})";
+                _documentManager.OpenDocument(distortedBmp, newName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Gagal melakukan distorsi: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
