@@ -11,6 +11,7 @@ namespace MiniPhotoShop
     public interface IImageProcessingService : IPixelService, IHistogramService
     {
         Bitmap TranslateImage(Bitmap source, int xOffset, int yOffset);
+        Bitmap DistortImage(Bitmap source, double amplitude, double frequency);
     }
 
     public interface IPixelService

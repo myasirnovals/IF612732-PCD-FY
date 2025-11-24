@@ -824,6 +824,48 @@ namespace MiniPhotoShop
             }
         }
 
+        private void distorsiToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (IsSelectionModeActive()) return;
+
+            ImageDocument doc = _documentManager.GetActiveDocument();
+            if (doc == null) return;
+
+            DialogResult resultAmp = _dialogService.ShowAdjustmentDialog(
+                "Distorsi - Amplitudo",
+                0, 100, 20, 5,
+                "Kekuatan:",
+                (val) => { },
+                out int amplitude
+            );
+
+            if (resultAmp != DialogResult.OK) return;
+
+            DialogResult resultFreq = _dialogService.ShowAdjustmentDialog(
+                "Distorsi - Frekuensi",
+                1, 50, 5, 1,
+                "Jumlah Gelombang:",
+                (val) => { },
+                out int frequency
+            );
+
+            if (resultFreq != DialogResult.OK) return;
+
+            try
+            {
+                Bitmap distortedBmp =
+                    _imageProcessor.DistortImage(doc.CurrentBitmap, (double)amplitude, (double)frequency);
+                
+                string newName = $"{doc.Name}_Ripple(Amp{amplitude}_Freq{frequency})";
+                _documentManager.OpenDocument(distortedBmp, newName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Gagal melakukan distorsi: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
         }
