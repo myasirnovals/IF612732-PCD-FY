@@ -42,7 +42,15 @@ namespace MiniPhotoShop
             brightnessToolStripMenuItem = new ToolStripMenuItem();
             imageSelectionToolStripMenuItem = new ToolStripMenuItem();
             distorsiToolStripMenuItem = new ToolStripMenuItem();
-            operasiAritmatikaToolStripMenuItem = new ToolStripMenuItem();
+            rotasiCitraToolStripMenuItem = new ToolStripMenuItem();
+            this.transformasiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dilatasiCitraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.zoomInToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.zoomOutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.operasiAritmatikaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.citraBinerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             tambahToolStripMenuItem = new ToolStripMenuItem();
             kurangToolStripMenuItem = new ToolStripMenuItem();
             bagiToolStripMenuItem = new ToolStripMenuItem();
@@ -185,6 +193,8 @@ namespace MiniPhotoShop
                 citraBinerToolStripMenuItem,
                 operasiAritmatikaToolStripMenuItem,
                 translasiToolStripMenuItem,
+                rotasiCitraToolStripMenuItem,
+                dilatasiCitraToolStripMenuItem,
                 distorsiToolStripMenuItem,
                 toolStripSeparator1,
                 restoreToolStripMenuItem
@@ -199,13 +209,27 @@ namespace MiniPhotoShop
             grayscaleToolStripMenuItem.Size = new Size(180, 22);
             grayscaleToolStripMenuItem.Text = "Grayscale";
             grayscaleToolStripMenuItem.Click += grayscaleToolStripMenuItem_Click;
-            //
+            // 
             // translasiToolStripMenuItem
             // 
             translasiToolStripMenuItem.Name = "translasiToolStripMenuItem";
             translasiToolStripMenuItem.Size = new Size(180, 22);
             translasiToolStripMenuItem.Text = "Translasi Citra";
             translasiToolStripMenuItem.Click += translasiToolStripMenuItem_Click;
+            //
+            // rotasiCitraToolStripMenuItem
+            //
+            rotasiCitraToolStripMenuItem.Name = "rotasiCitraToolStripMenuItem";
+            rotasiCitraToolStripMenuItem.Size = new Size(180, 22);
+            rotasiCitraToolStripMenuItem.Text = "Rotasi Citra";
+            rotasiCitraToolStripMenuItem.Click += rotasiCitraToolStripMenuItem_Click;
+            // 
+            // dilatasiCitraToolStripMenuItem
+            // 
+            this.dilatasiCitraToolStripMenuItem.Name = "dilatasiCitraToolStripMenuItem";
+            this.dilatasiCitraToolStripMenuItem.Size = new Size(180, 22);
+            this.dilatasiCitraToolStripMenuItem.Text = "Dilatasi Citra (Scale Custom)";
+            this.dilatasiCitraToolStripMenuItem.Click += new System.EventHandler(this.dilatasiCitraToolStripMenuItem_Click);
             // 
             // negationToolStripMenuItem
             // 
@@ -562,6 +586,11 @@ namespace MiniPhotoShop
         private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem translasiToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem distorsiToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem rotasiCitraToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem dilatasiCitraToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem transformasiToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem zoomInToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem zoomOutToolStripMenuItem;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelThumbnails;
         private ToolStripMenuItem grayscaleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;

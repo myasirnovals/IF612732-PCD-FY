@@ -45,7 +45,7 @@ namespace MiniPhotoShop
             ThumbnailManager thumbnailManager,
             IImageFileService imageFileService,
             IDataExportService dataExportService,
-            IImageProcessingService imageProcessor,
+            ImageProcessingService imageProcessor,
             IImageArithmeticService imageArithmeticService,
             IDialogService dialogService
         )
@@ -67,6 +67,7 @@ namespace MiniPhotoShop
             _documentManager.CanvasDragEnter += Canvas_DragEnter;
             _documentManager.CanvasDragDrop += Canvas_DragDrop;
             _thumbnailManager.ThumbnailClicked += OnThumbnailClicked;
+            _documentManager.CanvasMouseWheel += Canvas_MouseWheel;
 
             tambahToolStripMenuItem.Click += tambahToolStripMenuItem_Click;
             kurangToolStripMenuItem.Click += kurangToolStripMenuItem_Click;
@@ -419,7 +420,6 @@ namespace MiniPhotoShop
                 {
                     string newName = $"{activeDoc.Name}_{operation}_{constant.ToString(CultureInfo.InvariantCulture)}";
                     _documentManager.OpenDocument(resultBmp, newName);
-                    resultBmp.Dispose();
                 }
             }
             catch (Exception ex)
@@ -449,16 +449,16 @@ namespace MiniPhotoShop
                 Left = 20,
                 Top = 50,
                 Width = 220,
-                DecimalPlaces = 2,
-                Minimum = -10000,
-                Maximum = 10000,
+                DecimalPlaces = 4,
+                Minimum = 0.0001M,
+                Maximum = 100000M,
                 Value = 1.0M
             };
 
             Button confirmationButton = new Button()
-                { Text = "Ok", Left = 60, Width = 70, Top = 90, DialogResult = DialogResult.OK };
+            { Text = "Ok", Left = 60, Width = 70, Top = 90, DialogResult = DialogResult.OK };
             Button cancelButton = new Button()
-                { Text = "Batal", Left = 150, Width = 70, Top = 90, DialogResult = DialogResult.Cancel };
+            { Text = "Batal", Left = 150, Width = 70, Top = 90, DialogResult = DialogResult.Cancel };
 
             confirmationButton.Click += (sender, e) => { prompt.Close(); };
             cancelButton.Click += (sender, e) => { prompt.Close(); };
@@ -559,7 +559,6 @@ namespace MiniPhotoShop
                             $"{Path.GetFileNameWithoutExtension(targetDoc.Name)}_{opName}_{Path.GetFileNameWithoutExtension(sourceName)}";
                         string displayTabName = GenerateShortTabName(newName);
                         _documentManager.OpenDocument(resultBmp, newName);
-                        resultBmp.Dispose();
                     }
                 }
             }
@@ -779,6 +778,51 @@ namespace MiniPhotoShop
             }
         }
 
+        private void Canvas_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (IsSelectionModeActive()) return;
+
+            ImageDocument doc = _documentManager.GetActiveDocument();
+            if (doc == null) return;
+
+            Bitmap currentBmp = doc.CurrentBitmap;
+            double scaleFactor = 1.0;
+            const double zoomIncrement = 0.1;
+
+            if (e.Delta > 0)
+            {
+                scaleFactor = 1.0 + zoomIncrement;
+            }
+            else if (e.Delta < 0)
+            {
+                scaleFactor = 1.0 - zoomIncrement;
+            }
+            else
+            {
+                return;
+            }
+            if (currentBmp.Width * scaleFactor < 10 || currentBmp.Height * scaleFactor < 10)
+            {
+                return;
+            }
+
+            try
+            {
+                Bitmap scaledBmp = _imageProcessor.ScaleImage(currentBmp, scaleFactor);
+
+                currentBmp.Dispose();
+
+                doc.CurrentBitmap = scaledBmp;
+
+                _documentManager.UpdateActiveCanvas();
+                DisplayHistogram();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saat zoom: {ex.Message}");
+            }
+        }
+
         private void translasiToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (IsSelectionModeActive()) return;
@@ -855,7 +899,7 @@ namespace MiniPhotoShop
             {
                 Bitmap distortedBmp =
                     _imageProcessor.DistortImage(doc.CurrentBitmap, (double)amplitude, (double)frequency);
-                
+
                 string newName = $"{doc.Name}_Ripple(Amp{amplitude}_Freq{frequency})";
                 _documentManager.OpenDocument(distortedBmp, newName);
             }
@@ -864,6 +908,84 @@ namespace MiniPhotoShop
                 MessageBox.Show($"Gagal melakukan distorsi: {ex.Message}", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void rotasiCitraToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (IsSelectionModeActive()) return;
+
+            ImageDocument doc = _documentManager.GetActiveDocument();
+            if (doc == null) return;
+
+            DialogResult result = _dialogService.ShowAdjustmentDialog(
+                "Rotasi Citra - Sudut Bebas",
+                -360, 360, 0, 90,
+                "Sudut (Derajat):",
+                (val) => { },
+                out int angle
+            );
+
+            if (result != DialogResult.OK) return;
+
+            try
+            {
+                Bitmap rotatedBmp = _imageProcessor.RotateImage(doc.CurrentBitmap, (float)angle);
+
+                string newName = $"{doc.Name}_Rotated({angle}deg)";
+
+                _documentManager.OpenDocument(rotatedBmp, newName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Terjadi kesalahan saat melakukan rotasi: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void ApplyScaling(double scaleFactor, string operationName)
+        {
+            if (IsSelectionModeActive()) return;
+
+            ImageDocument doc = _documentManager.GetActiveDocument();
+            if (doc == null) return;
+
+            if (scaleFactor <= 0.0)
+            {
+                MessageBox.Show($"Faktor skala untuk {operationName} harus lebih besar dari 0.", "Error", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
+
+            try
+            {
+                Bitmap scaledBmp = _imageProcessor.ScaleImage(doc.CurrentBitmap, scaleFactor);
+
+                string newName =
+                    $"{doc.Name}_{operationName}({scaleFactor.ToString(System.Globalization.CultureInfo.InvariantCulture)}x)";
+
+                _documentManager.OpenDocument(scaledBmp, newName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Terjadi kesalahan saat melakukan {operationName}: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void dilatasiCitraToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (IsSelectionModeActive()) return;
+
+            double scaleFactor = GetConstantFromUser(
+                "Dilatasi Citra (Scale Custom). Masukkan Faktor Scale (contoh: 0.05 atau 15.0)"
+            );
+
+            if (double.IsNaN(scaleFactor))
+            {
+                return;
+            }
+
+            ApplyScaling(scaleFactor, "DilatasiCitra");
         }
 
         private void Form1_Load(object sender, EventArgs e)

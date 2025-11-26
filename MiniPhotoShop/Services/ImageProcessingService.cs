@@ -720,6 +720,107 @@ namespace MiniPhotoShop.Services
             return PerformBitwiseOperation(source, target, "XOR");
         }
 
+        public Bitmap RotateImage(Bitmap source, float angle)
+        {
+            if (source == null) return null;
+
+            int width = source.Width;
+            int height = source.Height;
+
+            double rad = angle * Math.PI / 180.0;
+
+            double cosA = Math.Abs(Math.Cos(rad));
+            double sinA = Math.Abs(Math.Sin(rad));
+            int newWidth = (int)(width * cosA + height * sinA);
+            int newHeight = (int)(width * sinA + height * cosA);
+
+            Bitmap resultBmp = new Bitmap(newWidth, newHeight);
+
+            using (Graphics g = Graphics.FromImage(resultBmp))
+            {
+                g.Clear(Color.Black);
+
+                g.TranslateTransform(newWidth / 2f, newHeight / 2f);
+                g.RotateTransform(angle);
+                g.TranslateTransform(-width / 2f, -height / 2f);
+
+                g.DrawImage(source, new Point(0, 0));
+            }
+
+            return resultBmp;
+        }
+
+        public Bitmap ScaleImage(Bitmap source, double scaleFactor)
+        {
+            if (source == null || scaleFactor <= 0)
+            {
+                return null;
+            }
+
+            int oldWidth = source.Width;
+            int oldHeight = source.Height;
+            int newWidth = (int)Math.Max(1, oldWidth * scaleFactor);
+            int newHeight = (int)Math.Max(1, oldHeight * scaleFactor);
+
+            Bitmap resultBitmap = new Bitmap(newWidth, newHeight, source.PixelFormat);
+
+            BitmapData srcData = source.LockBits(
+                new Rectangle(0, 0, oldWidth, oldHeight),
+                ImageLockMode.ReadOnly,
+                source.PixelFormat
+            );
+            BitmapData resData = resultBitmap.LockBits(
+                new Rectangle(0, 0, newWidth, newHeight),
+                ImageLockMode.WriteOnly,
+                resultBitmap.PixelFormat
+            );
+
+            int bytesPerPixel = Image.GetPixelFormatSize(source.PixelFormat) / 8;
+            int srcStride = srcData.Stride;
+            int resStride = resData.Stride;
+
+            unsafe
+            {
+                byte* srcPtr = (byte*)srcData.Scan0;
+                byte* resPtr = (byte*)resData.Scan0;
+
+                for (int y = 0; y < newHeight; y++)
+                {
+                    byte* pCurrentRow = resPtr + (y * resStride);
+                    for (int x = 0; x < newWidth; x++)
+                    {
+                        int originalX = (int)(x / scaleFactor);
+                        int originalY = (int)(y / scaleFactor);
+
+                        if (originalX >= 0 && originalX < oldWidth && originalY >= 0 && originalY < oldHeight)
+                        {
+                            int srcIndex = (originalY * srcStride) + (originalX * bytesPerPixel);
+                            int resIndex = x * bytesPerPixel;
+
+                            for (int i = 0; i < bytesPerPixel; i++)
+                            {
+                                pCurrentRow[resIndex + i] = srcPtr[srcIndex + i];
+                            }
+                        }
+                        else
+                        {
+                            int resIndex = x * bytesPerPixel;
+                            for (int i = 0; i < bytesPerPixel; i++)
+                            {
+                                pCurrentRow[resIndex + i] = (i == 3 && bytesPerPixel == 4) ? (byte)255 : (byte)0;
+                            }
+                        }
+                    }
+                }
+            }
+
+            source.UnlockBits(srcData);
+            resultBitmap.UnlockBits(resData);
+
+            return resultBitmap;
+        }
+
+
         public Bitmap TranslateImage(Bitmap source, int xOffset, int yOffset)
         {
             if (source == null) return null;

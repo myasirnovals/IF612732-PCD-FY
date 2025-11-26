@@ -125,10 +125,18 @@ namespace MiniPhotoShop.Managers
             newCanvas.DragEnter += (s, e) => CanvasDragEnter?.Invoke(s, e);
             newCanvas.DragDrop += (s, e) => CanvasDragDrop?.Invoke(s, e);
 
+            newCanvas.MouseWheel += Canvas_MouseWheel;
+
             newTabPage.Controls.Add(newCanvas);
             _tabControl.TabPages.Add(newTabPage);
             _tabControl.SelectedTab = newTabPage;
             return newTabPage;
+        }
+
+        public event MouseEventHandler CanvasMouseWheel;
+        private void Canvas_MouseWheel(object sender, MouseEventArgs e)
+        {
+            CanvasMouseWheel?.Invoke(sender, e);
         }
 
         public event DragEventHandler CanvasDragEnter;

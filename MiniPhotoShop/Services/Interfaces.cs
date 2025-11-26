@@ -12,6 +12,8 @@ namespace MiniPhotoShop
     {
         Bitmap TranslateImage(Bitmap source, int xOffset, int yOffset);
         Bitmap DistortImage(Bitmap source, double amplitude, double frequency);
+        Bitmap RotateImage(Bitmap source, float angle);
+        Bitmap ScaleImage(Bitmap source, double scaleFactor);
     }
 
     public interface IPixelService
