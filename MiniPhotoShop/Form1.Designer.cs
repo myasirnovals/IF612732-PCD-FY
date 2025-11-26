@@ -195,6 +195,8 @@ namespace MiniPhotoShop
                 translasiToolStripMenuItem,
                 rotasiCitraToolStripMenuItem,
                 dilatasiCitraToolStripMenuItem,
+                zoomInToolStripMenuItem,
+                zoomOutToolStripMenuItem,
                 distorsiToolStripMenuItem,
                 toolStripSeparator1,
                 restoreToolStripMenuItem
@@ -230,6 +232,23 @@ namespace MiniPhotoShop
             this.dilatasiCitraToolStripMenuItem.Size = new Size(180, 22);
             this.dilatasiCitraToolStripMenuItem.Text = "Dilatasi Citra (Scale Custom)";
             this.dilatasiCitraToolStripMenuItem.Click += new System.EventHandler(this.dilatasiCitraToolStripMenuItem_Click);
+
+            // 
+            // zoomInToolStripMenuItem
+            // 
+            this.zoomInToolStripMenuItem.Name = "zoomInToolStripMenuItem";
+            this.zoomInToolStripMenuItem.Size = new System.Drawing.Size(220, 22);
+            this.zoomInToolStripMenuItem.Text = "Zoom In (2x)";
+            this.zoomInToolStripMenuItem.Click += new System.EventHandler(this.zoomInToolStripMenuItem_Click);
+
+            // 
+            // zoomOutToolStripMenuItem
+            // 
+            this.zoomOutToolStripMenuItem.Name = "zoomOutToolStripMenuItem";
+            this.zoomOutToolStripMenuItem.Size = new System.Drawing.Size(220, 22);
+            this.zoomOutToolStripMenuItem.Text = "Zoom Out (0.5x)";
+            this.zoomOutToolStripMenuItem.Click += new System.EventHandler(this.zoomOutToolStripMenuItem_Click);
+
             // 
             // negationToolStripMenuItem
             // 

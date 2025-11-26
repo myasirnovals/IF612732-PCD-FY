@@ -836,7 +836,7 @@ namespace MiniPhotoShop.Services
                 ImageLockMode.WriteOnly, resultBmp.PixelFormat);
 
             int bytesPerPixel = 4;
-            int stride = srcData.Stride;
+            int stride = srcData.Stride; 
 
             unsafe
             {
@@ -847,6 +847,7 @@ namespace MiniPhotoShop.Services
                 {
                     for (int x = 0; x < width; x++)
                     {
+
                         int srcX = x - xOffset;
                         int srcY = y - yOffset;
 
@@ -856,17 +857,17 @@ namespace MiniPhotoShop.Services
                         {
                             int srcIndex = (srcY * stride) + (srcX * bytesPerPixel);
 
-                            resPtr[resIndex] = srcPtr[srcIndex];
-                            resPtr[resIndex + 1] = srcPtr[srcIndex + 1];
-                            resPtr[resIndex + 2] = srcPtr[srcIndex + 2];
-                            resPtr[resIndex + 3] = srcPtr[srcIndex + 3];
+                            resPtr[resIndex] = srcPtr[srcIndex];         
+                            resPtr[resIndex + 1] = srcPtr[srcIndex + 1]; 
+                            resPtr[resIndex + 2] = srcPtr[srcIndex + 2]; 
+                            resPtr[resIndex + 3] = srcPtr[srcIndex + 3]; 
                         }
                         else
                         {
-                            resPtr[resIndex] = 0;
-                            resPtr[resIndex + 1] = 0;
-                            resPtr[resIndex + 2] = 0;
-                            resPtr[resIndex + 3] = 255;
+                            resPtr[resIndex] = 255;     
+                            resPtr[resIndex + 1] = 255; 
+                            resPtr[resIndex + 2] = 255; 
+                            resPtr[resIndex + 3] = 255; 
                         }
                     }
                 }

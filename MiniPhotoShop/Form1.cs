@@ -977,7 +977,7 @@ namespace MiniPhotoShop
             if (IsSelectionModeActive()) return;
 
             double scaleFactor = GetConstantFromUser(
-                "Dilatasi Citra (Scale Custom). Masukkan Faktor Scale (contoh: 0.05 atau 15.0)"
+                "Dilatasi Citra (Custom Scale).\nMasukkan faktor skala (> 1 untuk perbesar, < 1 untuk perkecil):"
             );
 
             if (double.IsNaN(scaleFactor))
@@ -985,7 +985,17 @@ namespace MiniPhotoShop
                 return;
             }
 
-            ApplyScaling(scaleFactor, "DilatasiCitra");
+            ApplyScaling(scaleFactor, "Dilatasi");
+        }
+
+        private void zoomInToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ApplyScaling(2.0, "ZoomIn");
+        }
+
+        private void zoomOutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ApplyScaling(0.5, "ZoomOut");
         }
 
         private void Form1_Load(object sender, EventArgs e)
