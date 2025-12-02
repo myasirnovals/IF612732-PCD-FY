@@ -110,13 +110,20 @@ namespace MiniPhotoShop.Managers
 
         private TabPage AddNewTab(string tabTitle)
         {
-            TabPage newTabPage = new TabPage(tabTitle) { Padding = new Padding(3) };
+            TabPage newTabPage = new TabPage(tabTitle)
+            {
+
+                Padding = new Padding(3),
+                AutoScroll = true
+
+
+            };
             PictureBox newCanvas = new PictureBox
             {
                 BackColor = Color.White,
                 BorderStyle = BorderStyle.FixedSingle,
-                Dock = DockStyle.Fill,
-                SizeMode = PictureBoxSizeMode.Zoom,
+                Dock = DockStyle.None,
+                SizeMode = PictureBoxSizeMode.AutoSize,
                 AllowDrop = true
             };
 
