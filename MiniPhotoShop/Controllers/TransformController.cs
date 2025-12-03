@@ -1,7 +1,8 @@
-﻿using System.Drawing;
-using MiniPhotoShop.Managers;
+﻿using MiniPhotoShop.Managers;
 using MiniPhotoShop.Models;
 using MiniPhotoShop.Services;
+using MiniPhotoShop.Services.Interfaces;
+using System.Drawing;
 
 namespace MiniPhotoShop.Controllers
 {

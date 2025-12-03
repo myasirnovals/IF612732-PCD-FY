@@ -2,6 +2,7 @@ using System;
 using System.Windows.Forms;
 using MiniPhotoShop.Managers;
 using MiniPhotoShop.Services;
+using MiniPhotoShop.Controllers;
 
 namespace MiniPhotoShop
 {
@@ -13,13 +14,13 @@ namespace MiniPhotoShop
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            IImageProcessingService imageProcessorService = new ImageProcessingService();
-            IImageArithmeticService arithmeticService = new ImageArithmeticService(); 
-            IImageFileService imageFileService = new ImageFileService();
-            IDataExportService dataExportService = new DataExportService();
-            IDialogService dialogService = new DialogService();
+            var imageProcessorService = new ImageProcessingService();
+            var arithmeticService = new ImageArithmeticService();
+            var imageFileService = new ImageFileService();
+            var dataExportService = new DataExportService();
+            var dialogService = new DialogService();
 
-            var documentManager = new DocumentManager(imageProcessorService);
+            var documentManager = new DocumentManager();
             var thumbnailManager = new ThumbnailManager();
 
             var mainForm = new Form1(

@@ -1,17 +1,24 @@
-using System;
-using System.Drawing;
-using System.Windows.Forms;
 using MiniPhotoShop.Controllers;
 using MiniPhotoShop.Filters;
+using MiniPhotoShop.Filters.Adjustments;
+using MiniPhotoShop.Filters.Base;
+using MiniPhotoShop.Filters.ColorsFilters;
 using MiniPhotoShop.Managers;
 using MiniPhotoShop.Models;
 using MiniPhotoShop.Services;
+using MiniPhotoShop.Services.Interfaces;
+using System;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace MiniPhotoShop
 {
     public partial class Form1 : Form
     {
         private readonly MainController _controller;
+        private readonly DocumentController _documentController;
+        private readonly ThumbnailController _thumbnailController;
+
         private readonly DocumentManager _documentManager;
         private readonly ThumbnailManager _thumbnailManager;
         private readonly IImageProcessingService _imageProcessor;
@@ -43,9 +50,16 @@ namespace MiniPhotoShop
             _arithmeticService = arithmeticService;
             _dialogService = dialogService;
 
+            _documentController = new DocumentController(_imageProcessor);
+            _thumbnailController = new ThumbnailController();
+
+            _documentManager.SetController(_documentController);
+
             _controller = new MainController(
                 documentManager,
+                _documentController,
                 thumbnailManager,
+                _thumbnailController,
                 imageFileService,
                 dataExportService,
                 imageProcessor,
@@ -53,71 +67,71 @@ namespace MiniPhotoShop
                 dialogService
             );
 
-            _documentManager.Initialize(tabControlCanvas);
-            _thumbnailManager.Initialize(flowLayoutPanelThumbnails);
+            _documentController.Initialize(tabControlCanvas);
+            _thumbnailController.Initialize(flowLayoutPanelThumbnails);
 
-            _documentManager.ActiveDocumentChanged += DisplayHistogram;
-            _documentManager.CanvasDragEnter += Canvas_DragEnter;
-            _documentManager.CanvasDragDrop += Canvas_DragDrop;
-            _thumbnailManager.ThumbnailClicked += OnThumbnailClicked;
+            _documentController.ActiveDocumentChanged += DisplayHistogram;
+            _documentController.CanvasDragEnter += Canvas_DragEnter;
+            _documentController.CanvasDragDrop += Canvas_DragDrop;
+            _thumbnailController.ThumbnailClicked += OnThumbnailClicked;
         }
 
         private void OnThumbnailClicked(Bitmap image, string name)
         {
-            if (_documentManager.IsSelectionModeActive()) return;
-            _documentManager.OpenDocument(image, name);
+            if (_documentController.GetActiveDocument()?.IsInSelectionMode == true) return;
+            _documentController.OpenDocument(image, name);
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_documentManager.IsSelectionModeActive()) return;
-            _controller.OpenImage();
+            if (_documentController.GetActiveDocument()?.IsInSelectionMode == true) return;
+            _controller.Files.OpenImage();
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_documentManager.IsSelectionModeActive()) return;
-            _controller.SaveImage();
+            if (_documentController.GetActiveDocument()?.IsInSelectionMode == true) return;
+            _controller.Files.SaveImage();
         }
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_documentManager.IsSelectionModeActive()) return;
-            var doc = _documentManager.GetActiveDocument();
+            if (_documentController.GetActiveDocument()?.IsInSelectionMode == true) return;
+            var doc = _documentController.GetActiveDocument();
             if (doc?.CurrentBitmap != null)
             {
                 Clipboard.SetImage(doc.CurrentBitmap);
-                _documentManager.CloseActiveDocument();
+                _documentController.CloseActiveDocument();
             }
         }
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_documentManager.IsSelectionModeActive()) return;
-            var doc = _documentManager.GetActiveDocument();
+            if (_documentController.GetActiveDocument()?.IsInSelectionMode == true) return;
+            var doc = _documentController.GetActiveDocument();
             if (doc?.CurrentBitmap != null) Clipboard.SetImage(doc.CurrentBitmap);
         }
 
         private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_documentManager.IsSelectionModeActive()) return;
+            if (_documentController.GetActiveDocument()?.IsInSelectionMode == true) return;
             if (Clipboard.ContainsImage())
             {
                 Bitmap bmp = new Bitmap(Clipboard.GetImage());
-                _documentManager.OpenDocument(bmp, "Pasted Image");
+                _documentController.OpenDocument(bmp, "Pasted Image");
             }
         }
 
         private void clearToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_documentManager.IsSelectionModeActive()) return;
-            _documentManager.CloseActiveDocument();
+            if (_documentController.GetActiveDocument()?.IsInSelectionMode == true) return;
+            _documentController.CloseActiveDocument();
         }
 
         private void ApplyFilterUI(IImageFilter filter)
         {
-            if (_documentManager.IsSelectionModeActive()) return;
-            _controller.ApplyFilter(filter, tabControlCanvas.SelectedTab);
+            if (_documentController.GetActiveDocument()?.IsInSelectionMode == true) return;
+            _controller.Filters.ApplyFilter(filter, tabControlCanvas.SelectedTab);
             DisplayHistogram();
         }
 
@@ -130,80 +144,77 @@ namespace MiniPhotoShop
 
         private void bwToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_documentManager.IsSelectionModeActive()) return;
+            if (_documentController.GetActiveDocument()?.IsInSelectionMode == true) return;
             _dialogService.ShowAdjustmentDialog("Threshold", 0, 255, 128, 10, "Value",
-                (val) => { _controller.ApplyThreshold(val); },
+                (val) => { _controller.Filters.ApplyThreshold(val); },
                 out int finalVal);
             DisplayHistogram();
         }
 
         private void brightnessToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_documentManager.IsSelectionModeActive()) return;
+            if (_documentController.GetActiveDocument()?.IsInSelectionMode == true) return;
             _dialogService.ShowAdjustmentDialog("Brightness", -255, 255, 0, 10, "Value",
-                (val) => { _controller.ApplyBrightness(val); },
+                (val) => { _controller.Filters.ApplyBrightness(val); },
                 out int finalVal);
             DisplayHistogram();
         }
 
         private void restoreToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _controller.RestoreActiveDocument();
+            _documentController.RestoreActiveDocument();
             DisplayHistogram();
         }
 
         private void imageSelectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _documentManager.ToggleSelectionMode(true);
+            _documentController.ToggleSelectionMode(true);
             MessageBox.Show("Mode Seleksi Aktif. Klik warna pada gambar.");
         }
 
         private void translasiToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_documentManager.IsSelectionModeActive()) return;
+            if (_documentController.GetActiveDocument()?.IsInSelectionMode == true) return;
             _dialogService.ShowAdjustmentDialog("Translasi X", -1000, 1000, 0, 50, "X:", (v) => { }, out int x);
             _dialogService.ShowAdjustmentDialog("Translasi Y", -1000, 1000, 0, 50, "Y:", (v) => { }, out int y);
-            _controller.ApplyTransformation("Translate", x, y);
+            _controller.Transforms.ApplyTransformation("Translate", x, y);
         }
 
         private void distorsiToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_documentManager.IsSelectionModeActive()) return;
+            if (_documentController.GetActiveDocument()?.IsInSelectionMode == true) return;
             _dialogService.ShowAdjustmentDialog("Amp", 0, 100, 20, 5, "Amp:", (v) => { }, out int amp);
             _dialogService.ShowAdjustmentDialog("Freq", 0, 50, 5, 1, "Freq:", (v) => { }, out int freq);
-            _controller.ApplyTransformation("Distort", amp, freq);
+            _controller.Transforms.ApplyTransformation("Distort", amp, freq);
         }
 
         private void rotasiCitraToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_documentManager.IsSelectionModeActive()) return;
+            if (_documentController.GetActiveDocument()?.IsInSelectionMode == true) return;
             _dialogService.ShowAdjustmentDialog("Rotasi", -360, 360, 0, 45, "Angle:", (v) => { }, out int angle);
-            _controller.ApplyTransformation("Rotate", angle, 0);
+            _controller.Transforms.ApplyTransformation("Rotate", angle, 0);
         }
 
         private void dilatasiCitraToolStripMenuItem_Click(object sender, EventArgs e)
         {
             double factor = GetConstantFromUser("Scale Factor");
-            if (!double.IsNaN(factor)) _controller.ApplyTransformation("Scale", factor, 0);
+            if (!double.IsNaN(factor)) _controller.Transforms.ApplyTransformation("Scale", factor, 0);
         }
 
         private void zoomInToolStripMenuItem_Click(object sender, EventArgs e) =>
-            _controller.ApplyTransformation("Scale", 2.0, 0);
+            _controller.Transforms.ApplyTransformation("Scale", 2.0, 0);
 
         private void zoomOutToolStripMenuItem_Click(object sender, EventArgs e) =>
-            _controller.ApplyTransformation("Scale", 0.5, 0);
+            _controller.Transforms.ApplyTransformation("Scale", 0.5, 0);
 
         private void SetArithmeticMode(string mode, string messageName)
         {
-            _controller.CurrentArithmeticOperation = mode;
+            _controller.Arithmetic.CurrentOperation = mode;
             MessageBox.Show($"Mode {messageName} Aktif. Drag gambar dari thumbnail ke kanvas.");
         }
 
         private void tambahToolStripMenuItem_Click(object sender, EventArgs e) => SetArithmeticMode("Add", "Tambah");
-
-        private void kurangToolStripMenuItem_Click(object sender, EventArgs e) =>
-            SetArithmeticMode("Subtract", "Kurang");
-
+        private void kurangToolStripMenuItem_Click(object sender, EventArgs e) => SetArithmeticMode("Subtract", "Kurang");
         private void kaliToolStripMenuItem_Click(object sender, EventArgs e) => SetArithmeticMode("Multiply", "Kali");
         private void bagiToolStripMenuItem_Click(object sender, EventArgs e) => SetArithmeticMode("Divide", "Bagi");
         private void andToolStripMenuItem_Click(object sender, EventArgs e) => SetArithmeticMode("AND", "AND");
@@ -213,28 +224,28 @@ namespace MiniPhotoShop
         private void kaliKonstantaToolStripMenuItem_Click(object sender, EventArgs e)
         {
             double val = GetConstantFromUser("Konstanta Perkalian");
-            if (!double.IsNaN(val)) _controller.ApplyConstantArithmetic("Multiply", val);
+            if (!double.IsNaN(val)) _controller.Arithmetic.ApplyConstant("Multiply", val);
         }
 
         private void bagiKonstantaToolStripMenuItem_Click(object sender, EventArgs e)
         {
             double val = GetConstantFromUser("Konstanta Pembagian");
-            if (!double.IsNaN(val)) _controller.ApplyConstantArithmetic("Divide", val);
+            if (!double.IsNaN(val)) _controller.Arithmetic.ApplyConstant("Divide", val);
         }
 
-        private void tableDataToolStripMenuItem_Click(object sender, EventArgs e) => _controller.ExportHistogramData();
+        private void tableDataToolStripMenuItem_Click(object sender, EventArgs e) => _controller.Files.ExportHistogramData();
 
         private void savePixelDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Simpan sebagai Binary?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                _controller.ExportPixelData(true);
+                _controller.Files.ExportPixelData(true);
             else
-                _controller.ExportPixelData(false);
+                _controller.Files.ExportPixelData(false);
         }
 
         private void Canvas_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.StringFormat) && _controller.CurrentArithmeticOperation != "None")
+            if (e.Data.GetDataPresent(DataFormats.StringFormat) && _controller.Arithmetic.CurrentOperation != "None")
                 e.Effect = DragDropEffects.Copy;
             else
                 e.Effect = DragDropEffects.None;
@@ -242,11 +253,11 @@ namespace MiniPhotoShop
 
         private void Canvas_DragDrop(object sender, DragEventArgs e)
         {
-            if (_documentManager.IsSelectionModeActive() || _controller.CurrentArithmeticOperation == "None") return;
+            if (_documentController.GetActiveDocument()?.IsInSelectionMode == true || _controller.Arithmetic.CurrentOperation == "None") return;
             try
             {
                 string sourceName = (string)e.Data.GetData(DataFormats.StringFormat);
-                _controller.HandleDragDropArithmetic(sourceName, _documentManager.GetActiveDocument());
+                _controller.Arithmetic.HandleDragDrop(sourceName, _documentController.GetActiveDocument());
             }
             catch (Exception ex)
             {
@@ -257,10 +268,12 @@ namespace MiniPhotoShop
         private void DisplayHistogram()
         {
             if (!panelHistogram.Visible) return;
-            ImageDocument doc = _documentManager.GetActiveDocument();
+            ImageDocument doc = _documentController.GetActiveDocument();
             if (doc == null || doc.CurrentBitmap == null) return;
 
             var histo = doc.Histogram;
+            if (histo == null) return;
+
             int max = histo.GrayCounts[0];
             for (int i = 0; i < 256; i++)
                 if (histo.GrayCounts[i] > max)
@@ -306,9 +319,9 @@ namespace MiniPhotoShop
             };
             Label textLabel = new Label() { Left = 20, Top = 20, Text = "Nilai:", Width = 240 };
             NumericUpDown numericInput = new NumericUpDown()
-                { Left = 20, Top = 50, Width = 220, DecimalPlaces = 4, Maximum = 100000, Minimum = 0 };
+            { Left = 20, Top = 50, Width = 220, DecimalPlaces = 4, Maximum = 100000, Minimum = 0 };
             Button confirmation = new Button()
-                { Text = "Ok", Left = 60, Width = 70, Top = 90, DialogResult = DialogResult.OK };
+            { Text = "Ok", Left = 60, Width = 70, Top = 90, DialogResult = DialogResult.OK };
             prompt.Controls.Add(textLabel);
             prompt.Controls.Add(numericInput);
             prompt.Controls.Add(confirmation);

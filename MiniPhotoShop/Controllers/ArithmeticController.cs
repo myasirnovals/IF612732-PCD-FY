@@ -11,16 +11,16 @@ namespace MiniPhotoShop.Controllers
     public class ArithmeticController
     {
         private readonly DocumentManager _docManager;
-        private readonly ThumbnailManager _thumbManager;
+        private readonly ThumbnailController _thumbController;
         private readonly IImageArithmeticService _arithmeticService;
 
         public string CurrentOperation { get; set; } = "None";
 
-        public ArithmeticController(DocumentManager docManager, ThumbnailManager thumbManager,
+        public ArithmeticController(DocumentManager docManager, ThumbnailController thumbController,
             IImageArithmeticService arithmeticService)
         {
             _docManager = docManager;
-            _thumbManager = thumbManager;
+            _thumbController = thumbController;
             _arithmeticService = arithmeticService;
         }
 
@@ -52,7 +52,7 @@ namespace MiniPhotoShop.Controllers
         {
             if (CurrentOperation == "None" || targetDoc == null) return;
 
-            using (Bitmap sourceBmp = _thumbManager.FindThumbnailImageByName(sourceName))
+            using (Bitmap sourceBmp = _thumbController.FindThumbnailImageByName(sourceName))
             {
                 if (sourceBmp == null) return;
 
@@ -98,8 +98,7 @@ namespace MiniPhotoShop.Controllers
                     _docManager.OpenDocument(resultBmp, newName);
                 }
             }
-
-            CurrentOperation = "None"; // Reset setelah drop
+            CurrentOperation = "None";
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿namespace MiniPhotoShop.Filters.Helpers
+﻿using System.Drawing;
+using MiniPhotoShop.Models;
+
+namespace MiniPhotoShop.Filters.Helpers
 {
     public class ColorClassifier
     {

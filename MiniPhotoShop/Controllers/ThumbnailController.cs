@@ -9,7 +9,6 @@ namespace MiniPhotoShop.Controllers
     {
         private FlowLayoutPanel _flowLayoutPanel;
         private ContextMenuStrip _thumbnailContextMenu;
-
         private PictureBox _dragSourceThumb = null;
         private bool _isDragging = false;
 
@@ -99,10 +98,7 @@ namespace MiniPhotoShop.Controllers
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Gagal menghapus thumbnail: {ex.Message}", "Error");
-            }
+            catch (Exception) { }
         }
 
         private void HandleMouseDown(object sender, MouseEventArgs e)
@@ -123,7 +119,6 @@ namespace MiniPhotoShop.Controllers
                 {
                     _dragSourceThumb.DoDragDrop(_dragSourceThumb.Tag.ToString(), DragDropEffects.Copy);
                 }
-
                 _dragSourceThumb = null;
             }
         }
@@ -138,7 +133,6 @@ namespace MiniPhotoShop.Controllers
                     ThumbnailClicked?.Invoke(new Bitmap(clickedThumbnail.Image), clickedThumbnail.Tag.ToString());
                 }
             }
-
             _dragSourceThumb = null;
             _isDragging = false;
         }

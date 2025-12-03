@@ -1,7 +1,6 @@
-﻿using System.Windows.Forms;
-using MiniPhotoShop.Managers;
-using MiniPhotoShop.Models;
+﻿using MiniPhotoShop.Managers;
 using MiniPhotoShop.Services;
+using MiniPhotoShop.Services.Interfaces;
 using MiniPhotoShop.Filters;
 
 namespace MiniPhotoShop.Controllers
@@ -27,11 +26,11 @@ namespace MiniPhotoShop.Controllers
             IDialogService dialogService)
         {
             Documents = docController;
-            Files = new FileController(docManager, thumbManager, fileService, exportService);
-            Filters = new FilterController(docManager);
-            Arithmetic = new ArithmeticController(docManager, thumbManager, arithService);
-            Transforms = new TransformController(docManager, procService);
             Thumbnails = thumbController;
+            Files = new FileController(docController, thumbController, fileService, exportService);
+            Filters = new FilterController(docManager);
+            Arithmetic = new ArithmeticController(docManager, thumbController, arithService);
+            Transforms = new TransformController(docManager, procService);
         }
     }
 }

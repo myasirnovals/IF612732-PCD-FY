@@ -1,4 +1,6 @@
-﻿namespace MiniPhotoShop.Filters.Base
+﻿using System.Drawing;
+
+namespace MiniPhotoShop.Filters.Base
 {
     public interface IImageFilter
     {

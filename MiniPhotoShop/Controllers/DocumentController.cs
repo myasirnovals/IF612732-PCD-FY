@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-using MiniPhotoShop.Filters;
+﻿using MiniPhotoShop.Filters.Adjustments;
+using MiniPhotoShop.Filters.Base;
 using MiniPhotoShop.Filters.ColorsFilters;
 using MiniPhotoShop.Filters.Helpers;
 using MiniPhotoShop.Helpers;
 using MiniPhotoShop.Models;
 using MiniPhotoShop.Services;
+using MiniPhotoShop.Services.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace MiniPhotoShop.Controllers
 {
@@ -18,7 +20,6 @@ namespace MiniPhotoShop.Controllers
         private TabControl _tabControl;
 
         public event Action ActiveDocumentChanged;
-
         public event MouseEventHandler CanvasMouseWheel;
         public event DragEventHandler CanvasDragEnter;
         public event DragEventHandler CanvasDragDrop;
@@ -34,7 +35,6 @@ namespace MiniPhotoShop.Controllers
             _tabControl.SelectedIndexChanged += (s, e) => ActiveDocumentChanged?.Invoke();
             _tabControl.MouseClick += TabControl_MouseClick;
             _tabControl.DrawItem += TabControlCanvas_DrawItem;
-
             _tabControl.TabPages.Clear();
         }
 
@@ -44,13 +44,13 @@ namespace MiniPhotoShop.Controllers
             {
                 return _openDocuments[_tabControl.SelectedTab];
             }
-
             return null;
         }
 
         public void OpenDocument(Bitmap image, string imageName)
         {
             if (image == null) return;
+
             var newDocument = new ImageDocument(image, imageName, _imageProcessor);
 
             TabPage newTab = CreateNewTab(imageName);
@@ -95,35 +95,14 @@ namespace MiniPhotoShop.Controllers
             if (doc != null) doc.IsInSelectionMode = enable;
         }
 
-        public void OpenDocument(Bitmap image, string imageName)
-        {
-            if (image == null) return;
-            
-            var newDocument = new ImageDocument(image, imageName);
-            
-            RefreshDocumentData(newDocument);
-
-            TabPage newTab = CreateNewTab(imageName);
-            _openDocuments.Add(newTab, newDocument);
-            UpdateActiveCanvas();
-
-            ActiveDocumentChanged?.Invoke();
-        }
-
         public void ApplyFilterToActiveDocument(IImageFilter filter)
         {
             var doc = GetActiveDocument();
             if (doc == null) return;
-            
-            Bitmap result = _imageProcessor.CreateBitmapFromPixelArray(doc.OriginalBitmap, filter);
-            
-            if (doc.CurrentBitmap != doc.OriginalBitmap) doc.CurrentBitmap.Dispose();
-            doc.CurrentBitmap = result;
-            
+
+            doc.ApplyFilter(filter);
             doc.IsGrayscale = (filter is GrayscaleFilter);
             doc.IsBlackAndWhite = (filter is ThresholdFilter);
-            
-            RefreshDocumentData(doc);
 
             UpdateActiveCanvas();
         }
@@ -132,24 +111,8 @@ namespace MiniPhotoShop.Controllers
         {
             var doc = GetActiveDocument();
             if (doc == null) return;
-
-            if (doc.CurrentBitmap != doc.OriginalBitmap) doc.CurrentBitmap.Dispose();
-
-            doc.CurrentBitmap = new Bitmap(doc.OriginalBitmap);
-            doc.IsGrayscale = false;
-            doc.IsBlackAndWhite = false;
-            doc.IsInSelectionMode = false;
-            doc.SelectedColorRange = ColorRanges.None;
-
-            RefreshDocumentData(doc);
-
+            doc.Restore();
             UpdateActiveCanvas();
-        }
-
-        private void RefreshDocumentData(ImageDocument doc)
-        {
-            doc.PixelArray = _imageProcessor.CreatePixelArray(doc.CurrentBitmap);
-            doc.Histogram = _imageProcessor.CalculateHistogram(doc.PixelArray);
         }
 
         private void UpdateCanvas(TabPage tab, Image newImage)
@@ -183,7 +146,6 @@ namespace MiniPhotoShop.Controllers
             return page;
         }
 
-
         private void HandleCanvasClick(object sender, EventArgs e)
         {
             ImageDocument doc = GetActiveDocument();
@@ -197,12 +159,11 @@ namespace MiniPhotoShop.Controllers
             if (imgPoint.HasValue)
             {
                 Color clickedColor = doc.OriginalBitmap.GetPixel(imgPoint.Value.X, imgPoint.Value.Y);
-                ColorRanges clickedRange =
-                    ColorClassifier.GetColorRange(clickedColor.R, clickedColor.G, clickedColor.B);
+                ColorRanges clickedRange = ColorClassifier.GetColorRange(clickedColor.R, clickedColor.G, clickedColor.B);
 
                 if (clickedRange == doc.SelectedColorRange)
                 {
-                    doc.Restore();
+                    RestoreActiveDocument();
                 }
                 else
                 {
@@ -238,18 +199,14 @@ namespace MiniPhotoShop.Controllers
                 var tabRect = _tabControl.GetTabRect(e.Index);
                 tabRect.Inflate(-2, -2);
 
-                Rectangle textRect = tabRect;
-
-                TextRenderer.DrawText(e.Graphics, tabPage.Text, tabPage.Font, textRect, tabPage.ForeColor,
+                TextRenderer.DrawText(e.Graphics, tabPage.Text, tabPage.Font, tabRect, tabPage.ForeColor,
                     TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis);
 
                 Rectangle closeButton = new Rectangle(tabRect.Right - 15, tabRect.Top + 4, 12, 12);
                 ControlPaint.DrawCaptionButton(e.Graphics, closeButton, CaptionButton.Close, ButtonState.Normal);
                 e.DrawFocusRectangle();
             }
-            catch (Exception)
-            {
-            }
+            catch { }
         }
     }
 }

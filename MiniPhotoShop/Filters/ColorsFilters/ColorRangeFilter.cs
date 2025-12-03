@@ -1,5 +1,7 @@
-﻿using MiniPhotoShop.Filters.Base;
+﻿using System.Drawing;
+using MiniPhotoShop.Filters.Base;
 using MiniPhotoShop.Filters.Helpers;
+using MiniPhotoShop.Models;
 
 namespace MiniPhotoShop.Filters.ColorsFilters
 {
