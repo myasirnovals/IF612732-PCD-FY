@@ -187,8 +187,11 @@ namespace MiniPhotoShop
             if (!double.IsNaN(factor)) _controller.ApplyTransformation("Scale", factor, 0);
         }
 
-        private void zoomInToolStripMenuItem_Click(object sender, EventArgs e) => _controller.ApplyTransformation("Scale", 2.0, 0);
-        private void zoomOutToolStripMenuItem_Click(object sender, EventArgs e) => _controller.ApplyTransformation("Scale", 0.5, 0);
+        private void zoomInToolStripMenuItem_Click(object sender, EventArgs e) =>
+            _controller.ApplyTransformation("Scale", 2.0, 0);
+
+        private void zoomOutToolStripMenuItem_Click(object sender, EventArgs e) =>
+            _controller.ApplyTransformation("Scale", 0.5, 0);
 
         private void SetArithmeticMode(string mode, string messageName)
         {
@@ -197,7 +200,10 @@ namespace MiniPhotoShop
         }
 
         private void tambahToolStripMenuItem_Click(object sender, EventArgs e) => SetArithmeticMode("Add", "Tambah");
-        private void kurangToolStripMenuItem_Click(object sender, EventArgs e) => SetArithmeticMode("Subtract", "Kurang");
+
+        private void kurangToolStripMenuItem_Click(object sender, EventArgs e) =>
+            SetArithmeticMode("Subtract", "Kurang");
+
         private void kaliToolStripMenuItem_Click(object sender, EventArgs e) => SetArithmeticMode("Multiply", "Kali");
         private void bagiToolStripMenuItem_Click(object sender, EventArgs e) => SetArithmeticMode("Divide", "Bagi");
         private void andToolStripMenuItem_Click(object sender, EventArgs e) => SetArithmeticMode("AND", "AND");
@@ -256,20 +262,26 @@ namespace MiniPhotoShop
 
             var histo = doc.Histogram;
             int max = histo.GrayCounts[0];
-            for (int i = 0; i < 256; i++) if (histo.GrayCounts[i] > max) max = histo.GrayCounts[i];
+            for (int i = 0; i < 256; i++)
+                if (histo.GrayCounts[i] > max)
+                    max = histo.GrayCounts[i];
             if (max == 0) max = 1;
 
             if (pictureBoxGrayHistogram.Image != null) pictureBoxGrayHistogram.Image.Dispose();
-            pictureBoxGrayHistogram.Image = _imageProcessor.DrawHistogram(pictureBoxGrayHistogram.Width, pictureBoxGrayHistogram.Height, histo.GrayCounts, max, Color.Gray);
+            pictureBoxGrayHistogram.Image = _imageProcessor.DrawHistogram(pictureBoxGrayHistogram.Width,
+                pictureBoxGrayHistogram.Height, histo.GrayCounts, max, Color.Gray);
 
             if (pictureBoxRedHistogram.Image != null) pictureBoxRedHistogram.Image.Dispose();
-            pictureBoxRedHistogram.Image = _imageProcessor.DrawHistogram(pictureBoxRedHistogram.Width, pictureBoxRedHistogram.Height, histo.RedCounts, max, Color.Red);
+            pictureBoxRedHistogram.Image = _imageProcessor.DrawHistogram(pictureBoxRedHistogram.Width,
+                pictureBoxRedHistogram.Height, histo.RedCounts, max, Color.Red);
 
             if (pictureBoxGreenHistogram.Image != null) pictureBoxGreenHistogram.Image.Dispose();
-            pictureBoxGreenHistogram.Image = _imageProcessor.DrawHistogram(pictureBoxGreenHistogram.Width, pictureBoxGreenHistogram.Height, histo.GreenCounts, max, Color.Green);
+            pictureBoxGreenHistogram.Image = _imageProcessor.DrawHistogram(pictureBoxGreenHistogram.Width,
+                pictureBoxGreenHistogram.Height, histo.GreenCounts, max, Color.Green);
 
             if (pictureBoxBlueHistogram.Image != null) pictureBoxBlueHistogram.Image.Dispose();
-            pictureBoxBlueHistogram.Image = _imageProcessor.DrawHistogram(pictureBoxBlueHistogram.Width, pictureBoxBlueHistogram.Height, histo.BlueCounts, max, Color.Blue);
+            pictureBoxBlueHistogram.Image = _imageProcessor.DrawHistogram(pictureBoxBlueHistogram.Width,
+                pictureBoxBlueHistogram.Height, histo.BlueCounts, max, Color.Blue);
         }
 
         private void histogramToolStripMenuItem_Click(object sender, EventArgs e)
@@ -278,7 +290,9 @@ namespace MiniPhotoShop
             if (panelHistogram.Visible) DisplayHistogram();
         }
 
-        private void Form1_Load(object sender, EventArgs e) { }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+        }
 
         private double GetConstantFromUser(string title)
         {
@@ -291,9 +305,13 @@ namespace MiniPhotoShop
                 StartPosition = FormStartPosition.CenterParent
             };
             Label textLabel = new Label() { Left = 20, Top = 20, Text = "Nilai:", Width = 240 };
-            NumericUpDown numericInput = new NumericUpDown() { Left = 20, Top = 50, Width = 220, DecimalPlaces = 4, Maximum = 100000, Minimum = 0 };
-            Button confirmation = new Button() { Text = "Ok", Left = 60, Width = 70, Top = 90, DialogResult = DialogResult.OK };
-            prompt.Controls.Add(textLabel); prompt.Controls.Add(numericInput); prompt.Controls.Add(confirmation);
+            NumericUpDown numericInput = new NumericUpDown()
+                { Left = 20, Top = 50, Width = 220, DecimalPlaces = 4, Maximum = 100000, Minimum = 0 };
+            Button confirmation = new Button()
+                { Text = "Ok", Left = 60, Width = 70, Top = 90, DialogResult = DialogResult.OK };
+            prompt.Controls.Add(textLabel);
+            prompt.Controls.Add(numericInput);
+            prompt.Controls.Add(confirmation);
             prompt.AcceptButton = confirmation;
 
             return prompt.ShowDialog() == DialogResult.OK ? (double)numericInput.Value : double.NaN;

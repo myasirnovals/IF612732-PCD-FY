@@ -3,11 +3,6 @@ using MiniPhotoShop.Models;
 
 namespace MiniPhotoShop
 {
-    public interface IImageFilter
-    {
-        Color ProcessPixel(int r, int g, int b, int gray);
-    }
-    
     public interface IImageProcessingService : IPixelService, IHistogramService
     {
         Bitmap TranslateImage(Bitmap source, int xOffset, int yOffset);

@@ -1,0 +1,199 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
+using MiniPhotoShop.Filters;
+using MiniPhotoShop.Filters.ColorsFilters;
+using MiniPhotoShop.Filters.Helpers;
+using MiniPhotoShop.Helpers;
+using MiniPhotoShop.Models;
+using MiniPhotoShop.Services;
+
+namespace MiniPhotoShop.Controllers
+{
+    public class DocumentController
+    {
+        private readonly IImageProcessingService _imageProcessor;
+        private readonly Dictionary<TabPage, ImageDocument> _openDocuments = new Dictionary<TabPage, ImageDocument>();
+        private TabControl _tabControl;
+
+        public event Action ActiveDocumentChanged;
+
+        public event MouseEventHandler CanvasMouseWheel;
+        public event DragEventHandler CanvasDragEnter;
+        public event DragEventHandler CanvasDragDrop;
+
+        public DocumentController(IImageProcessingService imageProcessor)
+        {
+            _imageProcessor = imageProcessor;
+        }
+
+        public void Initialize(TabControl tabControl)
+        {
+            _tabControl = tabControl;
+            _tabControl.SelectedIndexChanged += (s, e) => ActiveDocumentChanged?.Invoke();
+            _tabControl.MouseClick += TabControl_MouseClick;
+            _tabControl.DrawItem += TabControlCanvas_DrawItem;
+
+            _tabControl.TabPages.Clear();
+        }
+
+        public ImageDocument GetActiveDocument()
+        {
+            if (_tabControl?.SelectedTab != null && _openDocuments.ContainsKey(_tabControl.SelectedTab))
+            {
+                return _openDocuments[_tabControl.SelectedTab];
+            }
+
+            return null;
+        }
+
+        public void OpenDocument(Bitmap image, string imageName)
+        {
+            if (image == null) return;
+            var newDocument = new ImageDocument(image, imageName, _imageProcessor);
+
+            TabPage newTab = CreateNewTab(imageName);
+            _openDocuments.Add(newTab, newDocument);
+            UpdateCanvas(newTab, newDocument.CurrentBitmap);
+
+            ActiveDocumentChanged?.Invoke();
+        }
+
+        public void CloseActiveDocument()
+        {
+            if (_tabControl.SelectedTab != null) CloseTab(_tabControl.SelectedTab);
+        }
+
+        private void CloseTab(TabPage tab)
+        {
+            if (tab == null) return;
+            if (_openDocuments.ContainsKey(tab))
+            {
+                // Bersihkan memory
+                _openDocuments[tab].CurrentBitmap?.Dispose();
+                _openDocuments[tab].OriginalBitmap?.Dispose();
+                _openDocuments.Remove(tab);
+            }
+
+            _tabControl.TabPages.Remove(tab);
+            tab.Dispose();
+            ActiveDocumentChanged?.Invoke();
+        }
+
+        public void UpdateActiveCanvas()
+        {
+            ImageDocument doc = GetActiveDocument();
+            if (doc != null && _tabControl.SelectedTab != null)
+            {
+                UpdateCanvas(_tabControl.SelectedTab, doc.CurrentBitmap);
+            }
+        }
+
+        public void ToggleSelectionMode(bool enable)
+        {
+            ImageDocument doc = GetActiveDocument();
+            if (doc != null) doc.IsInSelectionMode = enable;
+        }
+
+        private void UpdateCanvas(TabPage tab, Image newImage)
+        {
+            if (tab?.Controls.Count > 0 && tab.Controls[0] is PictureBox canvas)
+            {
+                canvas.Image = newImage;
+            }
+        }
+
+        private TabPage CreateNewTab(string title)
+        {
+            TabPage page = new TabPage(title) { Padding = new Padding(3), AutoScroll = true };
+            PictureBox canvas = new PictureBox
+            {
+                BackColor = Color.White,
+                BorderStyle = BorderStyle.FixedSingle,
+                Dock = DockStyle.None,
+                SizeMode = PictureBoxSizeMode.AutoSize,
+                AllowDrop = true
+            };
+            
+            canvas.Click += HandleCanvasClick;
+            canvas.DragEnter += (s, e) => CanvasDragEnter?.Invoke(s, e);
+            canvas.DragDrop += (s, e) => CanvasDragDrop?.Invoke(s, e);
+            canvas.MouseWheel += (s, e) => CanvasMouseWheel?.Invoke(s, e);
+
+            page.Controls.Add(canvas);
+            _tabControl.TabPages.Add(page);
+            _tabControl.SelectedTab = page;
+            return page;
+        }
+
+
+        private void HandleCanvasClick(object sender, EventArgs e)
+        {
+            ImageDocument doc = GetActiveDocument();
+            PictureBox canvas = sender as PictureBox;
+            MouseEventArgs mouse = e as MouseEventArgs;
+
+            if (doc == null || canvas == null || mouse == null || !doc.IsInSelectionMode) return;
+
+            Point? imgPoint = CoordinateHelper.ConvertToImageCoordinates(canvas, mouse.Location);
+
+            if (imgPoint.HasValue)
+            {
+                Color clickedColor = doc.OriginalBitmap.GetPixel(imgPoint.Value.X, imgPoint.Value.Y);
+                ColorRanges clickedRange =
+                    ColorClassifier.GetColorRange(clickedColor.R, clickedColor.G, clickedColor.B);
+
+                if (clickedRange == doc.SelectedColorRange)
+                {
+                    doc.Restore();
+                }
+                else
+                {
+                    doc.SelectedColorRange = clickedRange;
+                    doc.ApplyFilter(new ColorRangeFilter(clickedRange));
+                }
+
+                UpdateActiveCanvas();
+                ActiveDocumentChanged?.Invoke();
+            }
+        }
+
+        private void TabControl_MouseClick(object sender, MouseEventArgs e)
+        {
+            for (int i = 0; i < _tabControl.TabPages.Count; i++)
+            {
+                Rectangle tabRect = _tabControl.GetTabRect(i);
+                tabRect.Inflate(-2, -2);
+                Rectangle closeButton = new Rectangle(tabRect.Right - 15, tabRect.Top + 4, 12, 12);
+                if (closeButton.Contains(e.Location))
+                {
+                    CloseTab(_tabControl.TabPages[i]);
+                    break;
+                }
+            }
+        }
+
+        private void TabControlCanvas_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            try
+            {
+                var tabPage = _tabControl.TabPages[e.Index];
+                var tabRect = _tabControl.GetTabRect(e.Index);
+                tabRect.Inflate(-2, -2);
+
+                Rectangle textRect = tabRect;
+
+                TextRenderer.DrawText(e.Graphics, tabPage.Text, tabPage.Font, textRect, tabPage.ForeColor,
+                    TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis);
+
+                Rectangle closeButton = new Rectangle(tabRect.Right - 15, tabRect.Top + 4, 12, 12);
+                ControlPaint.DrawCaptionButton(e.Graphics, closeButton, CaptionButton.Close, ButtonState.Normal);
+                e.DrawFocusRectangle();
+            }
+            catch (Exception)
+            {
+            }
+        }
+    }
+}
