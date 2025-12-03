@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using MiniPhotoShop.Properties; 
+using MiniPhotoShop.Properties;
 
 namespace MiniPhotoShop.Controllers
 {
@@ -9,19 +9,19 @@ namespace MiniPhotoShop.Controllers
     {
         private FlowLayoutPanel _flowLayoutPanel;
         private ContextMenuStrip _thumbnailContextMenu;
-        
+
         private PictureBox _dragSourceThumb = null;
         private bool _isDragging = false;
-        
+
         public event Action<Bitmap, string> ThumbnailClicked;
-        
+
         public void Initialize(FlowLayoutPanel flowLayoutPanel)
         {
             _flowLayoutPanel = flowLayoutPanel;
             InitializeContextMenu();
             LoadDefaultThumbnails();
         }
-        
+
         private void LoadDefaultThumbnails()
         {
             var imageResources = new[]
@@ -53,7 +53,7 @@ namespace MiniPhotoShop.Controllers
                 Cursor = Cursors.Hand,
                 Margin = new Padding(10)
             };
-            
+
             thumb.MouseDown += HandleMouseDown;
             thumb.MouseMove += HandleMouseMove;
             thumb.MouseUp += HandleMouseUp;
@@ -66,11 +66,13 @@ namespace MiniPhotoShop.Controllers
         {
             foreach (Control ctrl in _flowLayoutPanel.Controls)
             {
-                if (ctrl is PictureBox pb && pb.Tag != null && pb.Tag.ToString().Equals(name, StringComparison.OrdinalIgnoreCase))
+                if (ctrl is PictureBox pb && pb.Tag != null &&
+                    pb.Tag.ToString().Equals(name, StringComparison.OrdinalIgnoreCase))
                 {
                     return new Bitmap(pb.Image);
                 }
             }
+
             return null;
         }
 
@@ -121,6 +123,7 @@ namespace MiniPhotoShop.Controllers
                 {
                     _dragSourceThumb.DoDragDrop(_dragSourceThumb.Tag.ToString(), DragDropEffects.Copy);
                 }
+
                 _dragSourceThumb = null;
             }
         }
@@ -135,6 +138,7 @@ namespace MiniPhotoShop.Controllers
                     ThumbnailClicked?.Invoke(new Bitmap(clickedThumbnail.Image), clickedThumbnail.Tag.ToString());
                 }
             }
+
             _dragSourceThumb = null;
             _isDragging = false;
         }

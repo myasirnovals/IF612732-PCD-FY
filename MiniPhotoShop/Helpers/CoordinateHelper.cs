@@ -8,7 +8,7 @@ namespace MiniPhotoShop.Helpers
         public static Point? ConvertToImageCoordinates(PictureBox pb, Point mousePos)
         {
             if (pb.Image == null) return null;
-            
+
             int w_i = pb.Image.Width;
             int h_i = pb.Image.Height;
             int w_c = pb.ClientSize.Width;

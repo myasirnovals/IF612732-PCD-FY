@@ -23,8 +23,7 @@ namespace MiniPhotoShop.Controllers
             ImageDocument doc = _docManager.GetActiveDocument();
             if (doc == null) return;
 
-            // Logika pengecekan tipe filter dipindah ke sini
-            bool isBitwise = (filter is NotFilter); 
+            bool isBitwise = (filter is NotFilter);
             if (IsBitwiseDocument.ContainsKey(activeTab))
                 IsBitwiseDocument[activeTab] = isBitwise;
             else
@@ -36,7 +35,7 @@ namespace MiniPhotoShop.Controllers
 
         public void ApplyThreshold(int threshold)
         {
-            ApplyFilter(new ThresholdFilter(threshold), null); // null jika TabPage tidak krusial untuk threshold
+            ApplyFilter(new ThresholdFilter(threshold), null);
         }
 
         public void ApplyBrightness(int value)

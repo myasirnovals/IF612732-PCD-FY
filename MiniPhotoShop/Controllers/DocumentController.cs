@@ -70,7 +70,6 @@ namespace MiniPhotoShop.Controllers
             if (tab == null) return;
             if (_openDocuments.ContainsKey(tab))
             {
-                // Bersihkan memory
                 _openDocuments[tab].CurrentBitmap?.Dispose();
                 _openDocuments[tab].OriginalBitmap?.Dispose();
                 _openDocuments.Remove(tab);
@@ -96,6 +95,63 @@ namespace MiniPhotoShop.Controllers
             if (doc != null) doc.IsInSelectionMode = enable;
         }
 
+        public void OpenDocument(Bitmap image, string imageName)
+        {
+            if (image == null) return;
+            
+            var newDocument = new ImageDocument(image, imageName);
+            
+            RefreshDocumentData(newDocument);
+
+            TabPage newTab = CreateNewTab(imageName);
+            _openDocuments.Add(newTab, newDocument);
+            UpdateActiveCanvas();
+
+            ActiveDocumentChanged?.Invoke();
+        }
+
+        public void ApplyFilterToActiveDocument(IImageFilter filter)
+        {
+            var doc = GetActiveDocument();
+            if (doc == null) return;
+            
+            Bitmap result = _imageProcessor.CreateBitmapFromPixelArray(doc.OriginalBitmap, filter);
+            
+            if (doc.CurrentBitmap != doc.OriginalBitmap) doc.CurrentBitmap.Dispose();
+            doc.CurrentBitmap = result;
+            
+            doc.IsGrayscale = (filter is GrayscaleFilter);
+            doc.IsBlackAndWhite = (filter is ThresholdFilter);
+            
+            RefreshDocumentData(doc);
+
+            UpdateActiveCanvas();
+        }
+
+        public void RestoreActiveDocument()
+        {
+            var doc = GetActiveDocument();
+            if (doc == null) return;
+
+            if (doc.CurrentBitmap != doc.OriginalBitmap) doc.CurrentBitmap.Dispose();
+
+            doc.CurrentBitmap = new Bitmap(doc.OriginalBitmap);
+            doc.IsGrayscale = false;
+            doc.IsBlackAndWhite = false;
+            doc.IsInSelectionMode = false;
+            doc.SelectedColorRange = ColorRanges.None;
+
+            RefreshDocumentData(doc);
+
+            UpdateActiveCanvas();
+        }
+
+        private void RefreshDocumentData(ImageDocument doc)
+        {
+            doc.PixelArray = _imageProcessor.CreatePixelArray(doc.CurrentBitmap);
+            doc.Histogram = _imageProcessor.CalculateHistogram(doc.PixelArray);
+        }
+
         private void UpdateCanvas(TabPage tab, Image newImage)
         {
             if (tab?.Controls.Count > 0 && tab.Controls[0] is PictureBox canvas)
@@ -115,7 +171,7 @@ namespace MiniPhotoShop.Controllers
                 SizeMode = PictureBoxSizeMode.AutoSize,
                 AllowDrop = true
             };
-            
+
             canvas.Click += HandleCanvasClick;
             canvas.DragEnter += (s, e) => CanvasDragEnter?.Invoke(s, e);
             canvas.DragDrop += (s, e) => CanvasDragDrop?.Invoke(s, e);
