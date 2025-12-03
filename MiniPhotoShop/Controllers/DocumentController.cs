@@ -68,6 +68,13 @@ namespace MiniPhotoShop.Controllers
         private void CloseTab(TabPage tab)
         {
             if (tab == null) return;
+            
+            if (tab.Controls.Count > 0 && tab.Controls[0] is PictureBox pb)
+            {
+                pb.Image = null; 
+                pb.Refresh();    
+            }
+
             if (_openDocuments.ContainsKey(tab))
             {
                 _openDocuments[tab].CurrentBitmap?.Dispose();

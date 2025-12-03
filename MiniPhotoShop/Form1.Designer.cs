@@ -48,9 +48,6 @@ namespace MiniPhotoShop
             this.zoomInToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoomOutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.operasiAritmatikaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.citraBinerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             tambahToolStripMenuItem = new ToolStripMenuItem();
             kurangToolStripMenuItem = new ToolStripMenuItem();
             bagiToolStripMenuItem = new ToolStripMenuItem();

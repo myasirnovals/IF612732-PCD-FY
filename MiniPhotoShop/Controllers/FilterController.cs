@@ -17,30 +17,42 @@ namespace MiniPhotoShop.Controllers
         {
             _docManager = docManager;
         }
-
+        
         public void ApplyFilter(IImageFilter filter, TabPage activeTab)
         {
             ImageDocument doc = _docManager.GetActiveDocument();
             if (doc == null) return;
 
             bool isBitwise = (filter is NotFilter);
-            if (IsBitwiseDocument.ContainsKey(activeTab))
-                IsBitwiseDocument[activeTab] = isBitwise;
-            else
-                IsBitwiseDocument.Add(activeTab, isBitwise);
+            
+            if (activeTab != null) 
+            {
+                if (IsBitwiseDocument.ContainsKey(activeTab))
+                    IsBitwiseDocument[activeTab] = isBitwise;
+                else
+                    IsBitwiseDocument.Add(activeTab, isBitwise);
+            }
 
             doc.ApplyFilter(filter);
             _docManager.UpdateActiveCanvas();
         }
 
-        public void ApplyThreshold(int threshold)
+        public void ApplyThreshold(int threshold, TabPage activeTab)
         {
-            ApplyFilter(new ThresholdFilter(threshold), null);
+            ApplyFilter(new ThresholdFilter(threshold), activeTab); 
         }
 
-        public void ApplyBrightness(int value)
+        public void ApplyBrightness(int value, TabPage activeTab)
         {
-            ApplyFilter(new BrightnessFilter(value), null);
+            ApplyFilter(new BrightnessFilter(value), activeTab);
+        }
+        
+        public void RemoveDocument(TabPage tab)
+        {
+            if (tab != null && IsBitwiseDocument.ContainsKey(tab))
+            {
+                IsBitwiseDocument.Remove(tab);
+            }
         }
 
         public void RestoreActiveDocument()

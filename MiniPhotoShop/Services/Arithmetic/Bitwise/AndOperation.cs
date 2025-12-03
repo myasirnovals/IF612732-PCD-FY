@@ -11,12 +11,27 @@ namespace MiniPhotoShop.Services.Arithmetic.Bitwise
                 byte* rowA = pA + (y * stride);
                 byte* rowB = pB + (y * stride);
                 byte* rowRes = pResult + (y * stride);
+        
                 for (int x = 0; x < width; x++)
                 {
                     int i = x * 4;
-                    rowRes[i] = (byte)(rowA[i] & rowB[i]);
-                    rowRes[i + 1] = (byte)(rowA[i + 1] & rowB[i + 1]);
-                    rowRes[i + 2] = (byte)(rowA[i + 2] & rowB[i + 2]);
+                    
+                    bool hasColorA = (rowA[i] > 0 || rowA[i + 1] > 0 || rowA[i + 2] > 0);
+                    bool hasColorB = (rowB[i] > 0 || rowB[i + 1] > 0 || rowB[i + 2] > 0);
+                    
+                    if (hasColorA && hasColorB)
+                    {
+                        rowRes[i] = (byte)(rowA[i] & rowB[i]);         
+                        rowRes[i + 1] = (byte)(rowA[i + 1] & rowB[i + 1]);
+                        rowRes[i + 2] = (byte)(rowA[i + 2] & rowB[i + 2]);
+                    }
+                    else
+                    {
+                        rowRes[i] = (byte)(rowA[i] | rowB[i]);
+                        rowRes[i + 1] = (byte)(rowA[i + 1] | rowB[i + 1]);
+                        rowRes[i + 2] = (byte)(rowA[i + 2] | rowB[i + 2]);
+                    }
+                    
                     rowRes[i + 3] = 255;
                 }
             }

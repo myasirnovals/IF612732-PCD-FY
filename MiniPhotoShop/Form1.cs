@@ -145,8 +145,11 @@ namespace MiniPhotoShop
         private void bwToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (_documentController.GetActiveDocument()?.IsInSelectionMode == true) return;
+
+            TabPage currentTab = tabControlCanvas.SelectedTab;
+
             _dialogService.ShowAdjustmentDialog("Threshold", 0, 255, 128, 10, "Value",
-                (val) => { _controller.Filters.ApplyThreshold(val); },
+                (val) => { _controller.Filters.ApplyThreshold(val, currentTab); },
                 out int finalVal);
             DisplayHistogram();
         }
@@ -154,8 +157,11 @@ namespace MiniPhotoShop
         private void brightnessToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (_documentController.GetActiveDocument()?.IsInSelectionMode == true) return;
+
+            TabPage currentTab = tabControlCanvas.SelectedTab;
+
             _dialogService.ShowAdjustmentDialog("Brightness", -255, 255, 0, 10, "Value",
-                (val) => { _controller.Filters.ApplyBrightness(val); },
+                (val) => { _controller.Filters.ApplyBrightness(val, currentTab); },
                 out int finalVal);
             DisplayHistogram();
         }
@@ -214,7 +220,10 @@ namespace MiniPhotoShop
         }
 
         private void tambahToolStripMenuItem_Click(object sender, EventArgs e) => SetArithmeticMode("Add", "Tambah");
-        private void kurangToolStripMenuItem_Click(object sender, EventArgs e) => SetArithmeticMode("Subtract", "Kurang");
+
+        private void kurangToolStripMenuItem_Click(object sender, EventArgs e) =>
+            SetArithmeticMode("Subtract", "Kurang");
+
         private void kaliToolStripMenuItem_Click(object sender, EventArgs e) => SetArithmeticMode("Multiply", "Kali");
         private void bagiToolStripMenuItem_Click(object sender, EventArgs e) => SetArithmeticMode("Divide", "Bagi");
         private void andToolStripMenuItem_Click(object sender, EventArgs e) => SetArithmeticMode("AND", "AND");
@@ -233,7 +242,8 @@ namespace MiniPhotoShop
             if (!double.IsNaN(val)) _controller.Arithmetic.ApplyConstant("Divide", val);
         }
 
-        private void tableDataToolStripMenuItem_Click(object sender, EventArgs e) => _controller.Files.ExportHistogramData();
+        private void tableDataToolStripMenuItem_Click(object sender, EventArgs e) =>
+            _controller.Files.ExportHistogramData();
 
         private void savePixelDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -253,7 +263,8 @@ namespace MiniPhotoShop
 
         private void Canvas_DragDrop(object sender, DragEventArgs e)
         {
-            if (_documentController.GetActiveDocument()?.IsInSelectionMode == true || _controller.Arithmetic.CurrentOperation == "None") return;
+            if (_documentController.GetActiveDocument()?.IsInSelectionMode == true ||
+                _controller.Arithmetic.CurrentOperation == "None") return;
             try
             {
                 string sourceName = (string)e.Data.GetData(DataFormats.StringFormat);
@@ -317,11 +328,25 @@ namespace MiniPhotoShop
                 Text = title,
                 StartPosition = FormStartPosition.CenterParent
             };
-            Label textLabel = new Label() { Left = 20, Top = 20, Text = "Nilai:", Width = 240 };
+
+            Label textLabel = new Label()
+                { Left = 20, Top = 20, Text = "Nilai (Gunakan koma/titik untuk desimal):", Width = 240 };
+
             NumericUpDown numericInput = new NumericUpDown()
-            { Left = 20, Top = 50, Width = 220, DecimalPlaces = 4, Maximum = 100000, Minimum = 0 };
+            {
+                Left = 20,
+                Top = 50,
+                Width = 220,
+                DecimalPlaces = 2,
+                Maximum = 100,
+                Minimum = 0.01M,
+                Increment = 0.1M,
+                Value = 1
+            };
+
             Button confirmation = new Button()
-            { Text = "Ok", Left = 60, Width = 70, Top = 90, DialogResult = DialogResult.OK };
+                { Text = "Ok", Left = 60, Width = 70, Top = 90, DialogResult = DialogResult.OK };
+
             prompt.Controls.Add(textLabel);
             prompt.Controls.Add(numericInput);
             prompt.Controls.Add(confirmation);
