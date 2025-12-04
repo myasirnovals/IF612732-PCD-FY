@@ -28,7 +28,7 @@ namespace MiniPhotoShop.Controllers
             Documents = docController;
             Thumbnails = thumbController;
             Files = new FileController(docController, thumbController, fileService, exportService);
-            Filters = new FilterController(docManager);
+            Filters = new FilterController(docManager, procService);
             Arithmetic = new ArithmeticController(docManager, thumbController, arithService);
             Transforms = new TransformController(docManager, procService);
         }

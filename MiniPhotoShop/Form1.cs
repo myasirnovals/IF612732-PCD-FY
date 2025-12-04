@@ -207,6 +207,41 @@ namespace MiniPhotoShop
         private void zoomOutToolStripMenuItem_Click(object sender, EventArgs e) =>
             _controller.Transforms.ApplyTransformation("Scale", 0.5, 0);
 
+        private void identityToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_documentController.GetActiveDocument()?.IsInSelectionMode == true) return;
+            _controller.Filters.ApplyConvolutionFilter("Identity");
+            DisplayHistogram();
+        }
+
+        private void blurToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_documentController.GetActiveDocument()?.IsInSelectionMode == true) return;
+            _controller.Filters.ApplyConvolutionFilter("Blur");
+            DisplayHistogram();
+        }
+
+        private void sharpenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_documentController.GetActiveDocument()?.IsInSelectionMode == true) return;
+            _controller.Filters.ApplyConvolutionFilter("Sharpen");
+            DisplayHistogram();
+        }
+
+        private void edgeDetectionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_documentController.GetActiveDocument()?.IsInSelectionMode == true) return;
+            _controller.Filters.ApplyConvolutionFilter("EdgeDetection");
+            DisplayHistogram();
+        }
+
+        private void embossToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_documentController.GetActiveDocument()?.IsInSelectionMode == true) return;
+            _controller.Filters.ApplyConvolutionFilter("Emboss");
+            DisplayHistogram();
+        }
+
         private void SetArithmeticMode(string mode, string messageName)
         {
             _controller.Arithmetic.CurrentOperation = mode;

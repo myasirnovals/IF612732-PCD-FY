@@ -33,5 +33,8 @@ namespace MiniPhotoShop.Services
 
         public Bitmap DistortImage(Bitmap source, double amplitude, double frequency)
             => new DistortTransform().Process(source, amplitude, frequency);
+
+        public Bitmap ApplyFilterKernel(Bitmap source, double[,] kernel, double factor = 1.0, int bias = 0)
+            => new PixelEngine().ApplyConvolution(source, kernel, factor, bias);
     }
 }

@@ -4,7 +4,6 @@ using MiniPhotoShop.Filters.ColorsFilters;
 using MiniPhotoShop.Filters.Helpers;
 using MiniPhotoShop.Helpers;
 using MiniPhotoShop.Models;
-using MiniPhotoShop.Services;
 using MiniPhotoShop.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -18,6 +17,7 @@ namespace MiniPhotoShop.Controllers
         private readonly IImageProcessingService _imageProcessor;
         private readonly Dictionary<TabPage, ImageDocument> _openDocuments = new Dictionary<TabPage, ImageDocument>();
         private TabControl _tabControl;
+        private EventHandler _selectionChangedHandler;
 
         public event Action ActiveDocumentChanged;
         public event MouseEventHandler CanvasMouseWheel;
@@ -32,7 +32,9 @@ namespace MiniPhotoShop.Controllers
         public void Initialize(TabControl tabControl)
         {
             _tabControl = tabControl;
-            _tabControl.SelectedIndexChanged += (s, e) => ActiveDocumentChanged?.Invoke();
+            _selectionChangedHandler = (s, e) => ActiveDocumentChanged?.Invoke();
+
+            _tabControl.SelectedIndexChanged += _selectionChangedHandler;
             _tabControl.MouseClick += TabControl_MouseClick;
             _tabControl.DrawItem += TabControlCanvas_DrawItem;
             _tabControl.TabPages.Clear();
@@ -51,7 +53,8 @@ namespace MiniPhotoShop.Controllers
         {
             if (image == null) return;
 
-            var newDocument = new ImageDocument(image, imageName, _imageProcessor);
+            Bitmap safeImage = new Bitmap(image);
+            var newDocument = new ImageDocument(safeImage, imageName, _imageProcessor);
 
             TabPage newTab = CreateNewTab(imageName);
             _openDocuments.Add(newTab, newDocument);
@@ -68,22 +71,40 @@ namespace MiniPhotoShop.Controllers
         private void CloseTab(TabPage tab)
         {
             if (tab == null) return;
-            if (_openDocuments.ContainsKey(tab))
-            {
-                _openDocuments[tab].CurrentBitmap?.Dispose();
-                _openDocuments[tab].OriginalBitmap?.Dispose();
-                _openDocuments.Remove(tab);
-            }
 
-            _tabControl.TabPages.Remove(tab);
-            tab.Dispose();
-            ActiveDocumentChanged?.Invoke();
+            _tabControl.SelectedIndexChanged -= _selectionChangedHandler;
+
+            try
+            {
+                if (_openDocuments.ContainsKey(tab))
+                {
+                    var doc = _openDocuments[tab];
+                    doc.CurrentBitmap?.Dispose();
+                    doc.OriginalBitmap?.Dispose();
+                    _openDocuments.Remove(tab);
+                }
+
+                if (_tabControl.TabPages.Contains(tab))
+                {
+                    _tabControl.TabPages.Remove(tab);
+                }
+
+                tab.Dispose();
+            }
+            catch (Exception)
+            {
+            }
+            finally
+            {
+                _tabControl.SelectedIndexChanged += _selectionChangedHandler;
+                ActiveDocumentChanged?.Invoke();
+            }
         }
 
         public void UpdateActiveCanvas()
         {
             ImageDocument doc = GetActiveDocument();
-            if (doc != null && _tabControl.SelectedTab != null)
+            if (doc != null && _tabControl != null && _tabControl.SelectedTab != null)
             {
                 UpdateCanvas(_tabControl.SelectedTab, doc.CurrentBitmap);
             }
@@ -117,9 +138,10 @@ namespace MiniPhotoShop.Controllers
 
         private void UpdateCanvas(TabPage tab, Image newImage)
         {
-            if (tab?.Controls.Count > 0 && tab.Controls[0] is PictureBox canvas)
+            if (tab != null && tab.Controls.Count > 0 && tab.Controls[0] is PictureBox canvas)
             {
                 canvas.Image = newImage;
+                canvas.Refresh();
             }
         }
 
@@ -158,27 +180,31 @@ namespace MiniPhotoShop.Controllers
 
             if (imgPoint.HasValue)
             {
-                Color clickedColor = doc.OriginalBitmap.GetPixel(imgPoint.Value.X, imgPoint.Value.Y);
-                ColorRanges clickedRange = ColorClassifier.GetColorRange(clickedColor.R, clickedColor.G, clickedColor.B);
-
-                if (clickedRange == doc.SelectedColorRange)
+                try
                 {
-                    RestoreActiveDocument();
-                }
-                else
-                {
-                    doc.SelectedColorRange = clickedRange;
-                    doc.ApplyFilter(new ColorRangeFilter(clickedRange));
-                }
+                    Color clickedColor = doc.OriginalBitmap.GetPixel(imgPoint.Value.X, imgPoint.Value.Y);
+                    ColorRanges clickedRange = ColorClassifier.GetColorRange(clickedColor.R, clickedColor.G, clickedColor.B);
 
-                UpdateActiveCanvas();
-                ActiveDocumentChanged?.Invoke();
+                    if (clickedRange == doc.SelectedColorRange)
+                    {
+                        RestoreActiveDocument();
+                    }
+                    else
+                    {
+                        doc.SelectedColorRange = clickedRange;
+                        doc.ApplyFilter(new ColorRangeFilter(clickedRange));
+                    }
+
+                    UpdateActiveCanvas();
+                    ActiveDocumentChanged?.Invoke();
+                }
+                catch { }
             }
         }
 
         private void TabControl_MouseClick(object sender, MouseEventArgs e)
         {
-            for (int i = 0; i < _tabControl.TabPages.Count; i++)
+            for (int i = _tabControl.TabPages.Count - 1; i >= 0; i--)
             {
                 Rectangle tabRect = _tabControl.GetTabRect(i);
                 tabRect.Inflate(-2, -2);
@@ -195,6 +221,8 @@ namespace MiniPhotoShop.Controllers
         {
             try
             {
+                if (e.Index < 0 || e.Index >= _tabControl.TabPages.Count) return;
+
                 var tabPage = _tabControl.TabPages[e.Index];
                 var tabRect = _tabControl.GetTabRect(e.Index);
                 tabRect.Inflate(-2, -2);

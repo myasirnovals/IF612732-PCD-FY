@@ -14,5 +14,6 @@ namespace MiniPhotoShop.Services.Interfaces
         Bitmap RotateImage(Bitmap source, float angle);
         Bitmap ScaleImage(Bitmap source, double scaleFactor);
         Bitmap DistortImage(Bitmap source, double amplitude, double frequency);
+        Bitmap ApplyFilterKernel(Bitmap source, double[,] kernel, double factor = 1.0, int bias = 0);
     }
 }
