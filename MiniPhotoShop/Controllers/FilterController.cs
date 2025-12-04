@@ -29,13 +29,11 @@ namespace MiniPhotoShop.Controllers
                 doc.IsGrayscale = (filter is GrayscaleFilter);
                 doc.IsBlackAndWhite = (filter is ThresholdFilter);
 
-<<<<<<< HEAD
                 if (activeTab?.Controls.Count > 0 && activeTab.Controls[0] is PictureBox canvas)
                 {
                     canvas.Image = doc.CurrentBitmap;
                 }
             }
-=======
             bool isBitwise = (filter is NotFilter);
             
             if (activeTab != null) 
@@ -47,8 +45,7 @@ namespace MiniPhotoShop.Controllers
             }
 
             doc.ApplyFilter(filter);
-            _docManager.UpdateActiveCanvas();
->>>>>>> 4e2997168d6399af8e9ddab98c69ba10dba4b79c
+            _docManager.UpdateActiveCanvas()
         }
 
         public void ApplyThreshold(int threshold, TabPage activeTab)
@@ -56,11 +53,9 @@ namespace MiniPhotoShop.Controllers
             ApplyFilter(new ThresholdFilter(threshold), activeTab); 
         }
 
-<<<<<<< HEAD
         public void ApplyBrightness(int brightness)
         {
             ApplyFilter(new BrightnessFilter(brightness), null);
-=======
         public void ApplyBrightness(int value, TabPage activeTab)
         {
             ApplyFilter(new BrightnessFilter(value), activeTab);
@@ -72,7 +67,6 @@ namespace MiniPhotoShop.Controllers
             {
                 IsBitwiseDocument.Remove(tab);
             }
->>>>>>> 4e2997168d6399af8e9ddab98c69ba10dba4b79c
         }
 
         public void ApplyConvolutionFilter(string filterType)

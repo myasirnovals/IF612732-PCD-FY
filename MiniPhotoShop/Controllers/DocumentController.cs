@@ -71,8 +71,6 @@ namespace MiniPhotoShop.Controllers
         private void CloseTab(TabPage tab)
         {
             if (tab == null) return;
-<<<<<<< HEAD
-=======
             
             if (tab.Controls.Count > 0 && tab.Controls[0] is PictureBox pb)
             {
@@ -86,7 +84,6 @@ namespace MiniPhotoShop.Controllers
                 _openDocuments[tab].OriginalBitmap?.Dispose();
                 _openDocuments.Remove(tab);
             }
->>>>>>> 4e2997168d6399af8e9ddab98c69ba10dba4b79c
 
             _tabControl.SelectedIndexChanged -= _selectionChangedHandler;
 
@@ -167,7 +164,7 @@ namespace MiniPhotoShop.Controllers
             { 
                 Padding = new Padding(3), 
                 AutoScroll = true,
-                AllowDrop = true // TAMBAHKAN INI
+                AllowDrop = true 
             };
             
             page.DragEnter += (s, e) => CanvasDragEnter?.Invoke(s, e);
