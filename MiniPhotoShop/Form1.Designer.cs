@@ -355,24 +355,28 @@ namespace MiniPhotoShop
             tambahToolStripMenuItem.Name = "tambahToolStripMenuItem";
             tambahToolStripMenuItem.Size = new Size(180, 22);
             tambahToolStripMenuItem.Text = "Tambah";
+            tambahToolStripMenuItem.Click += tambahToolStripMenuItem_Click;
             // 
             // kurangToolStripMenuItem
             // 
             kurangToolStripMenuItem.Name = "kurangToolStripMenuItem";
             kurangToolStripMenuItem.Size = new Size(180, 22);
             kurangToolStripMenuItem.Text = "Kurang";
+            kurangToolStripMenuItem.Click += kurangToolStripMenuItem_Click;
             // 
             // bagiToolStripMenuItem
             // 
             bagiToolStripMenuItem.Name = "bagiToolStripMenuItem";
             bagiToolStripMenuItem.Size = new Size(180, 22);
             bagiToolStripMenuItem.Text = "Bagi";
+            bagiToolStripMenuItem.Click += bagiToolStripMenuItem_Click;
             // 
             // kaliToolStripMenuItem
             // 
             kaliToolStripMenuItem.Name = "kaliToolStripMenuItem";
             kaliToolStripMenuItem.Size = new Size(180, 22);
             kaliToolStripMenuItem.Text = "Kali";
+            kaliToolStripMenuItem.Click += kaliToolStripMenuItem_Click;
             // 
             // konstantaToolStripMenuItem
             // 

@@ -132,16 +132,25 @@ namespace MiniPhotoShop.Controllers
 
         private TabPage CreateNewTab(string title)
         {
-            TabPage page = new TabPage(title) { Padding = new Padding(3), AutoScroll = true };
+            TabPage page = new TabPage(title) 
+            { 
+                Padding = new Padding(3), 
+                AutoScroll = true,
+                AllowDrop = true // TAMBAHKAN INI
+            };
+            
+            page.DragEnter += (s, e) => CanvasDragEnter?.Invoke(s, e);
+            page.DragDrop += (s, e) => CanvasDragDrop?.Invoke(s, e);
+
             PictureBox canvas = new PictureBox
             {
                 BackColor = Color.White,
                 BorderStyle = BorderStyle.FixedSingle,
                 Dock = DockStyle.None,
                 SizeMode = PictureBoxSizeMode.AutoSize,
-                AllowDrop = true
+                AllowDrop = true 
             };
-
+            
             canvas.Click += HandleCanvasClick;
             canvas.DragEnter += (s, e) => CanvasDragEnter?.Invoke(s, e);
             canvas.DragDrop += (s, e) => CanvasDragDrop?.Invoke(s, e);
