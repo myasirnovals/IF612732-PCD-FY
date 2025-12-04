@@ -36,5 +36,8 @@ namespace MiniPhotoShop.Services
 
         public Bitmap ApplyFilterKernel(Bitmap source, double[,] kernel, double factor = 1.0, int bias = 0)
             => new PixelEngine().ApplyConvolution(source, kernel, factor, bias);
+
+        public Bitmap ApplyConvolution(Bitmap source, double[,] kernel)
+            => new MiniPhotoShop.Services.Processing.Core.ConvolutionProcessor().Process(source, kernel);
     }
 }

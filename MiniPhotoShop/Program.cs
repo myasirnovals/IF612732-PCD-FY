@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using MiniPhotoShop.Managers;
 using MiniPhotoShop.Services;
 using MiniPhotoShop.Controllers;
+using MiniPhotoShop.Views;
 
 namespace MiniPhotoShop
 {

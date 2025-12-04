@@ -1,5 +1,4 @@
 using MiniPhotoShop.Controllers;
-using MiniPhotoShop.Filters;
 using MiniPhotoShop.Filters.Adjustments;
 using MiniPhotoShop.Filters.Base;
 using MiniPhotoShop.Filters.ColorsFilters;
@@ -7,11 +6,8 @@ using MiniPhotoShop.Managers;
 using MiniPhotoShop.Models;
 using MiniPhotoShop.Services;
 using MiniPhotoShop.Services.Interfaces;
-using System;
-using System.Drawing;
-using System.Windows.Forms;
 
-namespace MiniPhotoShop
+namespace MiniPhotoShop.Views
 {
     public partial class Form1 : Form
     {
@@ -388,6 +384,36 @@ namespace MiniPhotoShop
             prompt.AcceptButton = confirmation;
 
             return prompt.ShowDialog() == DialogResult.OK ? (double)numericInput.Value : double.NaN;
+        }
+
+        private void customKernelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_documentController.GetActiveDocument() == null)
+            {
+                MessageBox.Show("Buka gambar terlebih dahulu.");
+                return;
+            }
+
+            if (_documentController.GetActiveDocument().IsInSelectionMode) return;
+
+            using (var sizeDialog = new KernelSizeDialog())
+            {
+                if (sizeDialog.ShowDialog() == DialogResult.OK)
+                {
+                    int selectedSize = sizeDialog.KernelSize;
+
+                    using (var gridDialog = new KernelGridDialog(selectedSize))
+                    {
+                        if (gridDialog.ShowDialog() == DialogResult.OK)
+                        {
+                            double[,] kernel = gridDialog.KernelValues;
+                            _controller.Filters.ApplyCustomConvolution(kernel);
+
+                            DisplayHistogram();
+                        }
+                    }
+                }
+            }
         }
     }
 }

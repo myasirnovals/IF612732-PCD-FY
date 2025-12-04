@@ -36,6 +36,7 @@ namespace MiniPhotoShop.Controllers
                     canvas.Image = doc.CurrentBitmap;
                 }
             }
+
             bool isBitwise = (filter is NotFilter);
 
             if (activeTab != null)
@@ -109,6 +110,19 @@ namespace MiniPhotoShop.Controllers
             {
                 Bitmap result = _processor.ApplyFilterKernel(doc.CurrentBitmap, kernel, factor, bias);
                 _docManager.OpenDocument(result, doc.Name + "_" + filterType);
+            }
+        }
+
+        public void ApplyCustomConvolution(double[,] kernel)
+        {
+            ImageDocument doc = _docManager.GetActiveDocument();
+            if (doc == null) return;
+
+            Bitmap result = _processor.ApplyConvolution(doc.CurrentBitmap, kernel);
+
+            if (result != null)
+            {
+                _docManager.OpenDocument(result, doc.Name + "_CustomKernel");
             }
         }
     }
