@@ -19,7 +19,7 @@ namespace MiniPhotoShop.Controllers
             _docManager = docManager;
             _processor = processor;
         }
-
+        
         public void ApplyFilter(IImageFilter filter, TabPage activeTab)
         {
             ImageDocument doc = _docManager.GetActiveDocument();
@@ -29,21 +29,50 @@ namespace MiniPhotoShop.Controllers
                 doc.IsGrayscale = (filter is GrayscaleFilter);
                 doc.IsBlackAndWhite = (filter is ThresholdFilter);
 
+<<<<<<< HEAD
                 if (activeTab?.Controls.Count > 0 && activeTab.Controls[0] is PictureBox canvas)
                 {
                     canvas.Image = doc.CurrentBitmap;
                 }
             }
+=======
+            bool isBitwise = (filter is NotFilter);
+            
+            if (activeTab != null) 
+            {
+                if (IsBitwiseDocument.ContainsKey(activeTab))
+                    IsBitwiseDocument[activeTab] = isBitwise;
+                else
+                    IsBitwiseDocument.Add(activeTab, isBitwise);
+            }
+
+            doc.ApplyFilter(filter);
+            _docManager.UpdateActiveCanvas();
+>>>>>>> 4e2997168d6399af8e9ddab98c69ba10dba4b79c
         }
 
-        public void ApplyThreshold(int threshold)
+        public void ApplyThreshold(int threshold, TabPage activeTab)
         {
-            ApplyFilter(new ThresholdFilter(threshold), null);
+            ApplyFilter(new ThresholdFilter(threshold), activeTab); 
         }
 
+<<<<<<< HEAD
         public void ApplyBrightness(int brightness)
         {
             ApplyFilter(new BrightnessFilter(brightness), null);
+=======
+        public void ApplyBrightness(int value, TabPage activeTab)
+        {
+            ApplyFilter(new BrightnessFilter(value), activeTab);
+        }
+        
+        public void RemoveDocument(TabPage tab)
+        {
+            if (tab != null && IsBitwiseDocument.ContainsKey(tab))
+            {
+                IsBitwiseDocument.Remove(tab);
+            }
+>>>>>>> 4e2997168d6399af8e9ddab98c69ba10dba4b79c
         }
 
         public void ApplyConvolutionFilter(string filterType)

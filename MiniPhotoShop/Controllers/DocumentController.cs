@@ -71,6 +71,22 @@ namespace MiniPhotoShop.Controllers
         private void CloseTab(TabPage tab)
         {
             if (tab == null) return;
+<<<<<<< HEAD
+=======
+            
+            if (tab.Controls.Count > 0 && tab.Controls[0] is PictureBox pb)
+            {
+                pb.Image = null; 
+                pb.Refresh();    
+            }
+
+            if (_openDocuments.ContainsKey(tab))
+            {
+                _openDocuments[tab].CurrentBitmap?.Dispose();
+                _openDocuments[tab].OriginalBitmap?.Dispose();
+                _openDocuments.Remove(tab);
+            }
+>>>>>>> 4e2997168d6399af8e9ddab98c69ba10dba4b79c
 
             _tabControl.SelectedIndexChanged -= _selectionChangedHandler;
 
@@ -147,16 +163,25 @@ namespace MiniPhotoShop.Controllers
 
         private TabPage CreateNewTab(string title)
         {
-            TabPage page = new TabPage(title) { Padding = new Padding(3), AutoScroll = true };
+            TabPage page = new TabPage(title) 
+            { 
+                Padding = new Padding(3), 
+                AutoScroll = true,
+                AllowDrop = true // TAMBAHKAN INI
+            };
+            
+            page.DragEnter += (s, e) => CanvasDragEnter?.Invoke(s, e);
+            page.DragDrop += (s, e) => CanvasDragDrop?.Invoke(s, e);
+
             PictureBox canvas = new PictureBox
             {
                 BackColor = Color.White,
                 BorderStyle = BorderStyle.FixedSingle,
                 Dock = DockStyle.None,
                 SizeMode = PictureBoxSizeMode.AutoSize,
-                AllowDrop = true
+                AllowDrop = true 
             };
-
+            
             canvas.Click += HandleCanvasClick;
             canvas.DragEnter += (s, e) => CanvasDragEnter?.Invoke(s, e);
             canvas.DragDrop += (s, e) => CanvasDragDrop?.Invoke(s, e);
