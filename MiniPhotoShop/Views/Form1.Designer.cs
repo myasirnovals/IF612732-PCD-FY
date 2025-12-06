@@ -38,6 +38,7 @@
             sharpenToolStripMenuItem = new ToolStripMenuItem();
             edgeDetectionToolStripMenuItem = new ToolStripMenuItem();
             embossToolStripMenuItem = new ToolStripMenuItem();
+            customToolStripMenuItem = new ToolStripMenuItem();
             bwToolStripMenuItem = new ToolStripMenuItem();
             brightnessToolStripMenuItem = new ToolStripMenuItem();
             imageSelectionToolStripMenuItem = new ToolStripMenuItem();
@@ -79,7 +80,10 @@
             labelRed = new Label();
             pictureBoxRedHistogram = new PictureBox();
             panelMainArea = new Panel();
-            customToolStripMenuItem = new ToolStripMenuItem();
+            sobelToolStripMenuItem = new ToolStripMenuItem();
+            prewitToolStripMenuItem = new ToolStripMenuItem();
+            robertToolStripMenuItem = new ToolStripMenuItem();
+            cannyToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             panelHistogram.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBoxGrayHistogram).BeginInit();
@@ -239,10 +243,10 @@
             // 
             // edgeDetectionToolStripMenuItem
             // 
+            edgeDetectionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { sobelToolStripMenuItem, prewitToolStripMenuItem, robertToolStripMenuItem, cannyToolStripMenuItem });
             edgeDetectionToolStripMenuItem.Name = "edgeDetectionToolStripMenuItem";
             edgeDetectionToolStripMenuItem.Size = new Size(180, 22);
             edgeDetectionToolStripMenuItem.Text = "Edge Detection";
-            edgeDetectionToolStripMenuItem.Click += edgeDetectionToolStripMenuItem_Click;
             // 
             // embossToolStripMenuItem
             // 
@@ -250,6 +254,13 @@
             embossToolStripMenuItem.Size = new Size(180, 22);
             embossToolStripMenuItem.Text = "Emboss";
             embossToolStripMenuItem.Click += embossToolStripMenuItem_Click;
+            // 
+            // customToolStripMenuItem
+            // 
+            customToolStripMenuItem.Name = "customToolStripMenuItem";
+            customToolStripMenuItem.Size = new Size(180, 22);
+            customToolStripMenuItem.Text = "Custom";
+            customToolStripMenuItem.Click += customKernelToolStripMenuItem_Click;
             // 
             // bwToolStripMenuItem
             // 
@@ -573,12 +584,29 @@
             panelMainArea.Size = new Size(839, 576);
             panelMainArea.TabIndex = 4;
             // 
-            // customToolStripMenuItem
+            // sobelToolStripMenuItem
             // 
-            customToolStripMenuItem.Name = "customToolStripMenuItem";
-            customToolStripMenuItem.Size = new Size(180, 22);
-            customToolStripMenuItem.Text = "Custom";
-            customToolStripMenuItem.Click += customKernelToolStripMenuItem_Click;
+            sobelToolStripMenuItem.Name = "sobelToolStripMenuItem";
+            sobelToolStripMenuItem.Size = new Size(180, 22);
+            sobelToolStripMenuItem.Text = "Sobel";
+            // 
+            // prewitToolStripMenuItem
+            // 
+            prewitToolStripMenuItem.Name = "prewitToolStripMenuItem";
+            prewitToolStripMenuItem.Size = new Size(180, 22);
+            prewitToolStripMenuItem.Text = "Prewit";
+            // 
+            // robertToolStripMenuItem
+            // 
+            robertToolStripMenuItem.Name = "robertToolStripMenuItem";
+            robertToolStripMenuItem.Size = new Size(180, 22);
+            robertToolStripMenuItem.Text = "Robert";
+            // 
+            // cannyToolStripMenuItem
+            // 
+            cannyToolStripMenuItem.Name = "cannyToolStripMenuItem";
+            cannyToolStripMenuItem.Size = new Size(180, 22);
+            cannyToolStripMenuItem.Text = "Canny";
             // 
             // Form1
             // 
@@ -671,5 +699,9 @@
         private System.Windows.Forms.ToolStripMenuItem edgeDetectionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem embossToolStripMenuItem;
         private ToolStripMenuItem customToolStripMenuItem;
+        private ToolStripMenuItem sobelToolStripMenuItem;
+        private ToolStripMenuItem prewitToolStripMenuItem;
+        private ToolStripMenuItem robertToolStripMenuItem;
+        private ToolStripMenuItem cannyToolStripMenuItem;
     }
 }
