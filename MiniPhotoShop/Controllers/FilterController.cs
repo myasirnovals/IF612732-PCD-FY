@@ -79,29 +79,49 @@ namespace MiniPhotoShop.Controllers
             var doc = _docManager.GetActiveDocument();
             if (doc == null) return;
 
+            Bitmap sourceBitmap = doc.CurrentBitmap;
+            bool isEdgeDetection = (filterType == "Roberts" || filterType == "Sobel" || filterType == "Canny");
+
+            if (isEdgeDetection)
+            {
+                sourceBitmap = _processor.CreateBitmapFromPixelArray(doc.CurrentBitmap, new GrayscaleFilter());
+            }
+
             if (filterType == "Roberts")
             {
-                Bitmap result = GetMagnitudeBitmap(BaseKernel.RobertsX, BaseKernel.RobertsY, doc);
+                Bitmap result = GetMagnitudeBitmap(BaseKernel.RobertsX, BaseKernel.RobertsY, sourceBitmap);
                 _docManager.OpenDocument(result, doc.Name + "_Roberts");
+                
+                if (sourceBitmap != doc.CurrentBitmap) sourceBitmap.Dispose();
                 return;
             }
 
             if (filterType == "Sobel")
             {
-                Bitmap result = GetMagnitudeBitmap(BaseKernel.SobelX, BaseKernel.SobelY, doc);
+                Bitmap result = GetMagnitudeBitmap(BaseKernel.SobelX, BaseKernel.SobelY, sourceBitmap);
                 _docManager.OpenDocument(result, doc.Name + "_Sobel");
+                
+                if (sourceBitmap != doc.CurrentBitmap) sourceBitmap.Dispose();
                 return;
             }
 
             if (filterType == "Canny")
             {
-                Bitmap magnitude = GetMagnitudeBitmap(BaseKernel.SobelX, BaseKernel.SobelY, doc);
-                if (magnitude != null)
+                using (Bitmap grayImage = _processor.CreateBitmapFromPixelArray(doc.CurrentBitmap, new GrayscaleFilter()))
                 {
-                    Bitmap cannyResult = FilterHelper.ApplyThreshold(magnitude, 80);
-                    _docManager.OpenDocument(cannyResult, doc.Name + "_Canny");
+                    using (Bitmap blurredImage = _processor.ApplyFilterKernel(grayImage, BaseKernel.GaussianBlur, 1.0 / 256.0, 0))
+                    {
+                        using (Bitmap magnitude = GetMagnitudeBitmap(BaseKernel.SobelX, BaseKernel.SobelY, blurredImage))
+                        {
+                            if (magnitude != null)
+                            {
+                                Bitmap cannyResult = FilterHelper.ApplyThreshold(magnitude, 50); 
+                    
+                                _docManager.OpenDocument(cannyResult, doc.Name + "_Canny");
+                            }
+                        }
+                    }
                 }
-
                 return;
             }
 
@@ -146,10 +166,10 @@ namespace MiniPhotoShop.Controllers
             }
         }
 
-        private Bitmap GetMagnitudeBitmap(double[,] kernelX, double[,] kernelY, ImageDocument doc)
+        private Bitmap GetMagnitudeBitmap(double[,] kernelX, double[,] kernelY, Bitmap sourceImage)
         {
-            Bitmap bmpX = _processor.ApplyConvolution(doc.CurrentBitmap, kernelX);
-            Bitmap bmpY = _processor.ApplyConvolution(doc.CurrentBitmap, kernelY);
+            Bitmap bmpX = _processor.ApplyConvolution(sourceImage, kernelX);
+            Bitmap bmpY = _processor.ApplyConvolution(sourceImage, kernelY);
 
             if (bmpX != null && bmpY != null)
             {
