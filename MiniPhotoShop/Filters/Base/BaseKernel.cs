@@ -24,19 +24,40 @@
             { -1, 5, -1 },
             { 0, -1, 0 }
         };
-
-        public static double[,] EdgeDetection => new double[,]
-        {
-            { -1, -1, -1 },
-            { -1, 8, -1 },
-            { -1, -1, -1 }
-        };
-
+        
         public static double[,] Emboss => new double[,]
         {
             { -2, -1, 0 },
             { -1, 1, 1 },
             { 0, 1, 2 }
+        };
+        
+        public static double[,] RobertsX => new double[,]
+        {
+            { 0, 0, 0 },
+            { 0, 1, 0 },
+            { 0, 0, -1 }
+        };
+
+        public static double[,] RobertsY => new double[,]
+        {
+            { 0, 0, 0 },
+            { 0, 0, 1 },
+            { 0, -1, 0 }
+        };
+        
+        public static double[,] SobelX => new double[,]
+        {
+            { -1, 0, 1 },
+            { -2, 0, 2 },
+            { -1, 0, 1 }
+        };
+        
+        public static double[,] SobelY => new double[,]
+        {
+            { -1, -2, -1 },
+            { 0, 0, 0 },
+            { 1, 2, 1 }
         };
     }
 }

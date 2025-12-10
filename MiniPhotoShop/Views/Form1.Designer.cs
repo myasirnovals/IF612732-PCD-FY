@@ -589,6 +589,7 @@
             sobelToolStripMenuItem.Name = "sobelToolStripMenuItem";
             sobelToolStripMenuItem.Size = new Size(180, 22);
             sobelToolStripMenuItem.Text = "Sobel";
+            sobelToolStripMenuItem.Click += sobelToolStripMenuItem_Click;
             // 
             // prewitToolStripMenuItem
             // 
@@ -601,12 +602,14 @@
             robertToolStripMenuItem.Name = "robertToolStripMenuItem";
             robertToolStripMenuItem.Size = new Size(180, 22);
             robertToolStripMenuItem.Text = "Robert";
+            robertToolStripMenuItem.Click += robertsToolStripMenuItem_Click;
             // 
             // cannyToolStripMenuItem
             // 
             cannyToolStripMenuItem.Name = "cannyToolStripMenuItem";
             cannyToolStripMenuItem.Size = new Size(180, 22);
             cannyToolStripMenuItem.Text = "Canny";
+            cannyToolStripMenuItem.Click += cannyToolStripMenuItem_Click;
             // 
             // Form1
             // 

@@ -229,11 +229,25 @@ namespace MiniPhotoShop.Views
             _controller.Filters.ApplyConvolutionFilter("Sharpen");
             DisplayHistogram();
         }
-
-        private void edgeDetectionToolStripMenuItem_Click(object sender, EventArgs e)
+        
+        private void robertsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (_documentController.GetActiveDocument()?.IsInSelectionMode == true) return;
-            _controller.Filters.ApplyConvolutionFilter("EdgeDetection");
+            _controller.Filters.ApplyConvolutionFilter("Roberts");
+            DisplayHistogram();
+        }
+
+        private void sobelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_documentController.GetActiveDocument()?.IsInSelectionMode == true) return;
+            _controller.Filters.ApplyConvolutionFilter("Sobel");
+            DisplayHistogram();
+        }
+        
+        private void cannyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_documentController.GetActiveDocument()?.IsInSelectionMode == true) return;
+            _controller.Filters.ApplyConvolutionFilter("Canny");
             DisplayHistogram();
         }
 

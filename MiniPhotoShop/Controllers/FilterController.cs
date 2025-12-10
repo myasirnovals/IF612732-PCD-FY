@@ -1,4 +1,5 @@
 ﻿using MiniPhotoShop.Filters.Adjustments;
+using MiniPhotoShop.Filters.Helpers;
 using MiniPhotoShop.Filters.Base;
 using MiniPhotoShop.Filters.ColorsFilters;
 using MiniPhotoShop.Managers;
@@ -78,6 +79,32 @@ namespace MiniPhotoShop.Controllers
             var doc = _docManager.GetActiveDocument();
             if (doc == null) return;
 
+            if (filterType == "Roberts")
+            {
+                Bitmap result = GetMagnitudeBitmap(BaseKernel.RobertsX, BaseKernel.RobertsY, doc);
+                _docManager.OpenDocument(result, doc.Name + "_Roberts");
+                return;
+            }
+
+            if (filterType == "Sobel")
+            {
+                Bitmap result = GetMagnitudeBitmap(BaseKernel.SobelX, BaseKernel.SobelY, doc);
+                _docManager.OpenDocument(result, doc.Name + "_Sobel");
+                return;
+            }
+
+            if (filterType == "Canny")
+            {
+                Bitmap magnitude = GetMagnitudeBitmap(BaseKernel.SobelX, BaseKernel.SobelY, doc);
+                if (magnitude != null)
+                {
+                    Bitmap cannyResult = FilterHelper.ApplyThreshold(magnitude, 80);
+                    _docManager.OpenDocument(cannyResult, doc.Name + "_Canny");
+                }
+
+                return;
+            }
+
             double[,] kernel = null;
             double factor = 1.0;
             int bias = 0;
@@ -87,20 +114,13 @@ namespace MiniPhotoShop.Controllers
                 case "Identity":
                     kernel = BaseKernel.Identity;
                     break;
-
                 case "Blur":
                     kernel = BaseKernel.GaussianBlur;
                     factor = 1.0 / 256.0;
                     break;
-
                 case "Sharpen":
                     kernel = BaseKernel.Sharpen;
                     break;
-
-                case "EdgeDetection":
-                    kernel = BaseKernel.EdgeDetection;
-                    break;
-
                 case "Emboss":
                     kernel = BaseKernel.Emboss;
                     break;
@@ -124,6 +144,19 @@ namespace MiniPhotoShop.Controllers
             {
                 _docManager.OpenDocument(result, doc.Name + "_CustomKernel");
             }
+        }
+
+        private Bitmap GetMagnitudeBitmap(double[,] kernelX, double[,] kernelY, ImageDocument doc)
+        {
+            Bitmap bmpX = _processor.ApplyConvolution(doc.CurrentBitmap, kernelX);
+            Bitmap bmpY = _processor.ApplyConvolution(doc.CurrentBitmap, kernelY);
+
+            if (bmpX != null && bmpY != null)
+            {
+                return FilterHelper.CalculateMagnitude(bmpX, bmpY);
+            }
+
+            return null;
         }
     }
 }
