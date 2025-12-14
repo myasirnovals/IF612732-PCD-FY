@@ -229,7 +229,7 @@ namespace MiniPhotoShop.Views
             _controller.Filters.ApplyConvolutionFilter("Sharpen");
             DisplayHistogram();
         }
-        
+
         private void robertsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (_documentController.GetActiveDocument()?.IsInSelectionMode == true) return;
@@ -243,7 +243,7 @@ namespace MiniPhotoShop.Views
             _controller.Filters.ApplyConvolutionFilter("Sobel");
             DisplayHistogram();
         }
-        
+
         private void cannyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (_documentController.GetActiveDocument()?.IsInSelectionMode == true) return;
@@ -375,7 +375,7 @@ namespace MiniPhotoShop.Views
             };
 
             Label textLabel = new Label()
-                { Left = 20, Top = 20, Text = "Nilai (Gunakan koma/titik untuk desimal):", Width = 240 };
+            { Left = 20, Top = 20, Text = "Nilai (Gunakan koma/titik untuk desimal):", Width = 240 };
 
             NumericUpDown numericInput = new NumericUpDown()
             {
@@ -390,7 +390,7 @@ namespace MiniPhotoShop.Views
             };
 
             Button confirmation = new Button()
-                { Text = "Ok", Left = 60, Width = 70, Top = 90, DialogResult = DialogResult.OK };
+            { Text = "Ok", Left = 60, Width = 70, Top = 90, DialogResult = DialogResult.OK };
 
             prompt.Controls.Add(textLabel);
             prompt.Controls.Add(numericInput);
@@ -428,6 +428,11 @@ namespace MiniPhotoShop.Views
                     }
                 }
             }
+        }
+
+        private void lineraStretchEqualizationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -37,6 +37,10 @@
             blurToolStripMenuItem = new ToolStripMenuItem();
             sharpenToolStripMenuItem = new ToolStripMenuItem();
             edgeDetectionToolStripMenuItem = new ToolStripMenuItem();
+            sobelToolStripMenuItem = new ToolStripMenuItem();
+            prewitToolStripMenuItem = new ToolStripMenuItem();
+            robertToolStripMenuItem = new ToolStripMenuItem();
+            cannyToolStripMenuItem = new ToolStripMenuItem();
             embossToolStripMenuItem = new ToolStripMenuItem();
             customToolStripMenuItem = new ToolStripMenuItem();
             bwToolStripMenuItem = new ToolStripMenuItem();
@@ -80,10 +84,10 @@
             labelRed = new Label();
             pictureBoxRedHistogram = new PictureBox();
             panelMainArea = new Panel();
-            sobelToolStripMenuItem = new ToolStripMenuItem();
-            prewitToolStripMenuItem = new ToolStripMenuItem();
-            robertToolStripMenuItem = new ToolStripMenuItem();
-            cannyToolStripMenuItem = new ToolStripMenuItem();
+            histogramCitraToolStripMenuItem = new ToolStripMenuItem();
+            histogramEqualizationToolStripMenuItem = new ToolStripMenuItem();
+            adaptiveHistogramEqualizationToolStripMenuItem = new ToolStripMenuItem();
+            lineraStretchEqualizationToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             panelHistogram.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBoxGrayHistogram).BeginInit();
@@ -168,7 +172,7 @@
             // 
             // filterToolStripMenuItem
             // 
-            filterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { grayscaleToolStripMenuItem, negationToolStripMenuItem, redToolStripMenuItem, greenToolStripMenuItem, blueToolStripMenuItem, toolStripSeparator3, konvolusiToolStripMenuItem, bwToolStripMenuItem, brightnessToolStripMenuItem, imageSelectionToolStripMenuItem, citraBinerToolStripMenuItem, operasiAritmatikaToolStripMenuItem, translasiToolStripMenuItem, rotasiCitraToolStripMenuItem, dilatasiCitraToolStripMenuItem, zoomInToolStripMenuItem, zoomOutToolStripMenuItem, distorsiToolStripMenuItem, toolStripSeparator1, restoreToolStripMenuItem });
+            filterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { grayscaleToolStripMenuItem, negationToolStripMenuItem, redToolStripMenuItem, greenToolStripMenuItem, blueToolStripMenuItem, bwToolStripMenuItem, toolStripSeparator3, konvolusiToolStripMenuItem, histogramCitraToolStripMenuItem, brightnessToolStripMenuItem, imageSelectionToolStripMenuItem, citraBinerToolStripMenuItem, operasiAritmatikaToolStripMenuItem, translasiToolStripMenuItem, rotasiCitraToolStripMenuItem, dilatasiCitraToolStripMenuItem, zoomInToolStripMenuItem, zoomOutToolStripMenuItem, distorsiToolStripMenuItem, toolStripSeparator1, restoreToolStripMenuItem });
             filterToolStripMenuItem.Name = "filterToolStripMenuItem";
             filterToolStripMenuItem.Size = new Size(52, 20);
             filterToolStripMenuItem.Text = "FILTER";
@@ -247,6 +251,33 @@
             edgeDetectionToolStripMenuItem.Name = "edgeDetectionToolStripMenuItem";
             edgeDetectionToolStripMenuItem.Size = new Size(180, 22);
             edgeDetectionToolStripMenuItem.Text = "Edge Detection";
+            // 
+            // sobelToolStripMenuItem
+            // 
+            sobelToolStripMenuItem.Name = "sobelToolStripMenuItem";
+            sobelToolStripMenuItem.Size = new Size(109, 22);
+            sobelToolStripMenuItem.Text = "Sobel";
+            sobelToolStripMenuItem.Click += sobelToolStripMenuItem_Click;
+            // 
+            // prewitToolStripMenuItem
+            // 
+            prewitToolStripMenuItem.Name = "prewitToolStripMenuItem";
+            prewitToolStripMenuItem.Size = new Size(109, 22);
+            prewitToolStripMenuItem.Text = "Prewit";
+            // 
+            // robertToolStripMenuItem
+            // 
+            robertToolStripMenuItem.Name = "robertToolStripMenuItem";
+            robertToolStripMenuItem.Size = new Size(109, 22);
+            robertToolStripMenuItem.Text = "Robert";
+            robertToolStripMenuItem.Click += robertsToolStripMenuItem_Click;
+            // 
+            // cannyToolStripMenuItem
+            // 
+            cannyToolStripMenuItem.Name = "cannyToolStripMenuItem";
+            cannyToolStripMenuItem.Size = new Size(109, 22);
+            cannyToolStripMenuItem.Text = "Canny";
+            cannyToolStripMenuItem.Click += cannyToolStripMenuItem_Click;
             // 
             // embossToolStripMenuItem
             // 
@@ -584,32 +615,31 @@
             panelMainArea.Size = new Size(839, 576);
             panelMainArea.TabIndex = 4;
             // 
-            // sobelToolStripMenuItem
+            // histogramCitraToolStripMenuItem
             // 
-            sobelToolStripMenuItem.Name = "sobelToolStripMenuItem";
-            sobelToolStripMenuItem.Size = new Size(180, 22);
-            sobelToolStripMenuItem.Text = "Sobel";
-            sobelToolStripMenuItem.Click += sobelToolStripMenuItem_Click;
+            histogramCitraToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { histogramEqualizationToolStripMenuItem, adaptiveHistogramEqualizationToolStripMenuItem, lineraStretchEqualizationToolStripMenuItem });
+            histogramCitraToolStripMenuItem.Name = "histogramCitraToolStripMenuItem";
+            histogramCitraToolStripMenuItem.Size = new Size(193, 22);
+            histogramCitraToolStripMenuItem.Text = "Histogram Citra";
             // 
-            // prewitToolStripMenuItem
+            // histogramEqualizationToolStripMenuItem
             // 
-            prewitToolStripMenuItem.Name = "prewitToolStripMenuItem";
-            prewitToolStripMenuItem.Size = new Size(180, 22);
-            prewitToolStripMenuItem.Text = "Prewit";
+            histogramEqualizationToolStripMenuItem.Name = "histogramEqualizationToolStripMenuItem";
+            histogramEqualizationToolStripMenuItem.Size = new Size(247, 22);
+            histogramEqualizationToolStripMenuItem.Text = "Histogram Equalization";
             // 
-            // robertToolStripMenuItem
+            // adaptiveHistogramEqualizationToolStripMenuItem
             // 
-            robertToolStripMenuItem.Name = "robertToolStripMenuItem";
-            robertToolStripMenuItem.Size = new Size(180, 22);
-            robertToolStripMenuItem.Text = "Robert";
-            robertToolStripMenuItem.Click += robertsToolStripMenuItem_Click;
+            adaptiveHistogramEqualizationToolStripMenuItem.Name = "adaptiveHistogramEqualizationToolStripMenuItem";
+            adaptiveHistogramEqualizationToolStripMenuItem.Size = new Size(247, 22);
+            adaptiveHistogramEqualizationToolStripMenuItem.Text = "Adaptive Histogram Equalization";
             // 
-            // cannyToolStripMenuItem
+            // lineraStretchEqualizationToolStripMenuItem
             // 
-            cannyToolStripMenuItem.Name = "cannyToolStripMenuItem";
-            cannyToolStripMenuItem.Size = new Size(180, 22);
-            cannyToolStripMenuItem.Text = "Canny";
-            cannyToolStripMenuItem.Click += cannyToolStripMenuItem_Click;
+            lineraStretchEqualizationToolStripMenuItem.Name = "lineraStretchEqualizationToolStripMenuItem";
+            lineraStretchEqualizationToolStripMenuItem.Size = new Size(247, 22);
+            lineraStretchEqualizationToolStripMenuItem.Text = "Linear Stretch Equalization";
+            lineraStretchEqualizationToolStripMenuItem.Click += lineraStretchEqualizationToolStripMenuItem_Click;
             // 
             // Form1
             // 
@@ -706,5 +736,9 @@
         private ToolStripMenuItem prewitToolStripMenuItem;
         private ToolStripMenuItem robertToolStripMenuItem;
         private ToolStripMenuItem cannyToolStripMenuItem;
+        private ToolStripMenuItem histogramCitraToolStripMenuItem;
+        private ToolStripMenuItem histogramEqualizationToolStripMenuItem;
+        private ToolStripMenuItem adaptiveHistogramEqualizationToolStripMenuItem;
+        private ToolStripMenuItem lineraStretchEqualizationToolStripMenuItem;
     }
 }
