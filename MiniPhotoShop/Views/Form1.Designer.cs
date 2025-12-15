@@ -87,7 +87,7 @@
             histogramCitraToolStripMenuItem = new ToolStripMenuItem();
             histogramEqualizationToolStripMenuItem = new ToolStripMenuItem();
             adaptiveHistogramEqualizationToolStripMenuItem = new ToolStripMenuItem();
-            lineraStretchEqualizationToolStripMenuItem = new ToolStripMenuItem();
+            linearStretchEqualizationToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             panelHistogram.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBoxGrayHistogram).BeginInit();
@@ -617,7 +617,7 @@
             // 
             // histogramCitraToolStripMenuItem
             // 
-            histogramCitraToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { histogramEqualizationToolStripMenuItem, adaptiveHistogramEqualizationToolStripMenuItem, lineraStretchEqualizationToolStripMenuItem });
+            histogramCitraToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { histogramEqualizationToolStripMenuItem, adaptiveHistogramEqualizationToolStripMenuItem, linearStretchEqualizationToolStripMenuItem });
             histogramCitraToolStripMenuItem.Name = "histogramCitraToolStripMenuItem";
             histogramCitraToolStripMenuItem.Size = new Size(193, 22);
             histogramCitraToolStripMenuItem.Text = "Histogram Citra";
@@ -627,19 +627,21 @@
             histogramEqualizationToolStripMenuItem.Name = "histogramEqualizationToolStripMenuItem";
             histogramEqualizationToolStripMenuItem.Size = new Size(247, 22);
             histogramEqualizationToolStripMenuItem.Text = "Histogram Equalization";
+            histogramEqualizationToolStripMenuItem.Click += histogramEqualizationToolStripMenuItem_Click;
             // 
             // adaptiveHistogramEqualizationToolStripMenuItem
             // 
             adaptiveHistogramEqualizationToolStripMenuItem.Name = "adaptiveHistogramEqualizationToolStripMenuItem";
             adaptiveHistogramEqualizationToolStripMenuItem.Size = new Size(247, 22);
             adaptiveHistogramEqualizationToolStripMenuItem.Text = "Adaptive Histogram Equalization";
+            adaptiveHistogramEqualizationToolStripMenuItem.Click += adaptiveHEToolStripMenuItem_Click;
             // 
-            // lineraStretchEqualizationToolStripMenuItem
+            // linearStretchEqualizationToolStripMenuItem
             // 
-            lineraStretchEqualizationToolStripMenuItem.Name = "lineraStretchEqualizationToolStripMenuItem";
-            lineraStretchEqualizationToolStripMenuItem.Size = new Size(247, 22);
-            lineraStretchEqualizationToolStripMenuItem.Text = "Linear Stretch Equalization";
-            lineraStretchEqualizationToolStripMenuItem.Click += lineraStretchEqualizationToolStripMenuItem_Click;
+            linearStretchEqualizationToolStripMenuItem.Name = "linearStretchEqualizationToolStripMenuItem";
+            linearStretchEqualizationToolStripMenuItem.Size = new Size(247, 22);
+            linearStretchEqualizationToolStripMenuItem.Text = "Linear Stretch Equalization";
+            linearStretchEqualizationToolStripMenuItem.Click += linearStretchToolStripMenuItem_Click;
             // 
             // Form1
             // 
@@ -739,6 +741,6 @@
         private ToolStripMenuItem histogramCitraToolStripMenuItem;
         private ToolStripMenuItem histogramEqualizationToolStripMenuItem;
         private ToolStripMenuItem adaptiveHistogramEqualizationToolStripMenuItem;
-        private ToolStripMenuItem lineraStretchEqualizationToolStripMenuItem;
+        private ToolStripMenuItem linearStretchEqualizationToolStripMenuItem;
     }
 }

@@ -5,6 +5,7 @@ using MiniPhotoShop.Filters.ColorsFilters;
 using MiniPhotoShop.Managers;
 using MiniPhotoShop.Models;
 using MiniPhotoShop.Services.Interfaces;
+using MiniPhotoShop.Filters.Adjustments;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -91,7 +92,7 @@ namespace MiniPhotoShop.Controllers
             {
                 Bitmap result = GetMagnitudeBitmap(BaseKernel.RobertsX, BaseKernel.RobertsY, sourceBitmap);
                 _docManager.OpenDocument(result, doc.Name + "_Roberts");
-                
+
                 if (sourceBitmap != doc.CurrentBitmap) sourceBitmap.Dispose();
                 return;
             }
@@ -100,28 +101,32 @@ namespace MiniPhotoShop.Controllers
             {
                 Bitmap result = GetMagnitudeBitmap(BaseKernel.SobelX, BaseKernel.SobelY, sourceBitmap);
                 _docManager.OpenDocument(result, doc.Name + "_Sobel");
-                
+
                 if (sourceBitmap != doc.CurrentBitmap) sourceBitmap.Dispose();
                 return;
             }
 
             if (filterType == "Canny")
             {
-                using (Bitmap grayImage = _processor.CreateBitmapFromPixelArray(doc.CurrentBitmap, new GrayscaleFilter()))
+                using (Bitmap grayImage =
+                       _processor.CreateBitmapFromPixelArray(doc.CurrentBitmap, new GrayscaleFilter()))
                 {
-                    using (Bitmap blurredImage = _processor.ApplyFilterKernel(grayImage, BaseKernel.GaussianBlur, 1.0 / 256.0, 0))
+                    using (Bitmap blurredImage =
+                           _processor.ApplyFilterKernel(grayImage, BaseKernel.GaussianBlur, 1.0 / 256.0, 0))
                     {
-                        using (Bitmap magnitude = GetMagnitudeBitmap(BaseKernel.SobelX, BaseKernel.SobelY, blurredImage))
+                        using (Bitmap magnitude =
+                               GetMagnitudeBitmap(BaseKernel.SobelX, BaseKernel.SobelY, blurredImage))
                         {
                             if (magnitude != null)
                             {
-                                Bitmap cannyResult = FilterHelper.ApplyThreshold(magnitude, 50); 
-                    
+                                Bitmap cannyResult = FilterHelper.ApplyThreshold(magnitude, 50);
+
                                 _docManager.OpenDocument(cannyResult, doc.Name + "_Canny");
                             }
                         }
                     }
                 }
+
                 return;
             }
 
@@ -177,6 +182,49 @@ namespace MiniPhotoShop.Controllers
             }
 
             return null;
+        }
+
+        public void ApplyHistogramEqualization(TabPage activeTab)
+        {
+            var doc = _docManager.GetActiveDocument();
+            if (doc == null) return;
+
+            var filter = new HistogramEqualizationFilter();
+
+            Bitmap result = filter.Apply(doc.CurrentBitmap);
+
+            if (result != null)
+            {
+                _docManager.OpenDocument(result, doc.Name + "_Equalized");
+            }
+        }
+        
+        public void ApplyAdaptiveHistogramEqualization(TabPage activeTab)
+        {
+            var doc = _docManager.GetActiveDocument();
+            if (doc == null) return;
+            
+            var filter = new AdaptiveHistogramEqualizationFilter();
+            Bitmap result = filter.Apply(doc.CurrentBitmap);
+
+            if (result != null)
+            {
+                _docManager.OpenDocument(result, doc.Name + "_AdaptiveEq");
+            }
+        }
+        
+        public void ApplyLinearStretchEqualization(TabPage activeTab)
+        {
+            var doc = _docManager.GetActiveDocument();
+            if (doc == null) return;
+
+            var filter = new LinearStretchFilter();
+            Bitmap result = filter.Apply(doc.CurrentBitmap);
+
+            if (result != null)
+            {
+                _docManager.OpenDocument(result, doc.Name + "_LinearStretch");
+            }
         }
     }
 }
