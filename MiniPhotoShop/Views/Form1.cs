@@ -1,4 +1,4 @@
-using MiniPhotoShop.Controllers;
+    using MiniPhotoShop.Controllers;
 using MiniPhotoShop.Filters.Adjustments;
 using MiniPhotoShop.Filters.Base;
 using MiniPhotoShop.Filters.ColorsFilters;
@@ -474,5 +474,51 @@ namespace MiniPhotoShop.Views
                 DisplayHistogram();
             }
         }
+
+        private void globalStretchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_documentController.GetActiveDocument() == null) return;
+            _controller.Filters.ApplyGlobalContrastStretch();
+        }
+
+        private void localStretchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_documentController.GetActiveDocument() == null) return;
+            _controller.Filters.ApplyLocalContrastStretch();
+        }
+
+        private void pointStretchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_documentController.GetActiveDocument() == null) return;
+            _controller.Filters.ApplyPointContrastStretch();
+        }
+
+        private void mozaikToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_documentController.GetActiveDocument() == null) return;
+            // Menggunakan kernel mozaik yang telah didefinisikan di BaseKernel
+            _controller.Filters.ApplyConvolutionFilter("Mozaik");
+            DisplayHistogram();
+        }
+
+        private void pseudoColorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_documentController.GetActiveDocument() == null) return;
+            // Menerapkan filter Pseudo Color melalui metode ApplyFilter yang sudah ada
+            ApplyFilterUI(new PseudoColorFilter());
+        }
+
+        private void contrastStretchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_documentController.GetActiveDocument() == null) return;
+            _controller.Filters.ApplyContrastStretchPoint();
+            DisplayHistogram();
+        }
+        private void smoothingToolStripMenuItem_Click(object sender, EventArgs e)
+            => _controller.Filters.ApplySmoothing();
+
+        private void penajamanToolStripMenuItem_Click(object sender, EventArgs e)
+            => _controller.Filters.ApplySharpening();
+
     }
 }

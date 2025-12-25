@@ -7,11 +7,19 @@ namespace MiniPhotoShop.Filters.Helpers
     {
         public static ColorRanges GetColorRange(int r, int g, int b)
         {
-            float hue = Color.FromArgb(r, g, b).GetHue();
-            float saturation = Color.FromArgb(r, g, b).GetSaturation();
-            float brightness = Color.FromArgb(r, g, b).GetBrightness();
+            // --- PERBAIKAN: Deteksi Manual Warna Dominan untuk Akurasi Tinggi ---
+            if (r > 150 && g < 100 && b < 100) return ColorRanges.Red;
+            if (g > 150 && r < 100 && b < 100) return ColorRanges.Green;
+            if (b > 150 && r < 100 && g < 100) return ColorRanges.Blue;
 
-            if (saturation < 0.1 || brightness < 0.1 || brightness > 0.59)
+            // Logika Berbasis Hue (Warna Standar)
+            Color color = Color.FromArgb(r, g, b);
+            float hue = color.GetHue();
+            float saturation = color.GetSaturation();
+            float brightness = color.GetBrightness();
+
+            // Koreksi Gray Range (0.59 -> 0.9 agar warna cerah tidak dianggap abu-abu)
+            if (saturation < 0.1 || brightness < 0.1 || brightness > 0.9)
             {
                 return ColorRanges.Gray;
             }

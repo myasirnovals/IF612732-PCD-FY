@@ -13,5 +13,7 @@ namespace MiniPhotoShop.Services
         Bitmap AndImages(Bitmap source, Bitmap target);
         Bitmap OrImages(Bitmap source, Bitmap target);
         Bitmap XorImages(Bitmap source, Bitmap target);
+        // Tambahkan di dalam interface IImageArithmeticService
+        Bitmap ApplyArithmetic(Bitmap img1, Bitmap img2, string mode);
     }
 }

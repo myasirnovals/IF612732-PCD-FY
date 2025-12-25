@@ -88,6 +88,12 @@
             histogramEqualizationToolStripMenuItem = new ToolStripMenuItem();
             adaptiveHistogramEqualizationToolStripMenuItem = new ToolStripMenuItem();
             linearStretchEqualizationToolStripMenuItem = new ToolStripMenuItem();
+            this.mozaikToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pseudoColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contrastStretchingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pointStretchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.localStretchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.globalStretchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             panelHistogram.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBoxGrayHistogram).BeginInit();
@@ -172,7 +178,7 @@
             // 
             // filterToolStripMenuItem
             // 
-            filterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { grayscaleToolStripMenuItem, negationToolStripMenuItem, redToolStripMenuItem, greenToolStripMenuItem, blueToolStripMenuItem, bwToolStripMenuItem, toolStripSeparator3, konvolusiToolStripMenuItem, histogramCitraToolStripMenuItem, brightnessToolStripMenuItem, imageSelectionToolStripMenuItem, citraBinerToolStripMenuItem, operasiAritmatikaToolStripMenuItem, translasiToolStripMenuItem, rotasiCitraToolStripMenuItem, dilatasiCitraToolStripMenuItem, zoomInToolStripMenuItem, zoomOutToolStripMenuItem, distorsiToolStripMenuItem, toolStripSeparator1, restoreToolStripMenuItem });
+            filterToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { grayscaleToolStripMenuItem, negationToolStripMenuItem, redToolStripMenuItem, greenToolStripMenuItem, blueToolStripMenuItem, bwToolStripMenuItem, toolStripSeparator3, konvolusiToolStripMenuItem, histogramCitraToolStripMenuItem, brightnessToolStripMenuItem, imageSelectionToolStripMenuItem, citraBinerToolStripMenuItem, operasiAritmatikaToolStripMenuItem, translasiToolStripMenuItem, rotasiCitraToolStripMenuItem, dilatasiCitraToolStripMenuItem, zoomInToolStripMenuItem, zoomOutToolStripMenuItem, distorsiToolStripMenuItem, toolStripSeparator1, restoreToolStripMenuItem, this.pseudoColorToolStripMenuItem, this.contrastStretchingToolStripMenuItem });
             filterToolStripMenuItem.Name = "filterToolStripMenuItem";
             filterToolStripMenuItem.Size = new Size(52, 20);
             filterToolStripMenuItem.Text = "FILTER";
@@ -292,6 +298,14 @@
             customToolStripMenuItem.Size = new Size(180, 22);
             customToolStripMenuItem.Text = "Custom";
             customToolStripMenuItem.Click += customKernelToolStripMenuItem_Click;
+            //
+            // mozaikToolStripMenuItem
+            //
+            this.mozaikToolStripMenuItem.Name = "mozaikToolStripMenuItem";
+            this.mozaikToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mozaikToolStripMenuItem.Text = "Mozaik";
+            this.mozaikToolStripMenuItem.Click += new System.EventHandler(this.mozaikToolStripMenuItem_Click);
+            this.konvolusiToolStripMenuItem.DropDownItems.Add(this.mozaikToolStripMenuItem);
             // 
             // bwToolStripMenuItem
             // 
@@ -642,6 +656,38 @@
             linearStretchEqualizationToolStripMenuItem.Size = new Size(247, 22);
             linearStretchEqualizationToolStripMenuItem.Text = "Linear Stretch Equalization";
             linearStretchEqualizationToolStripMenuItem.Click += linearStretchToolStripMenuItem_Click;
+            //
+            // pseudoColorToolStripMenuItem
+            //
+            this.pseudoColorToolStripMenuItem.Name = "pseudoColorToolStripMenuItem";
+            this.pseudoColorToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.pseudoColorToolStripMenuItem.Text = "Pewarnaan Semu citra";
+            this.pseudoColorToolStripMenuItem.Click += new System.EventHandler(this.pseudoColorToolStripMenuItem_Click);
+
+            //
+            // contrastStretchingToolStripMenuItem
+            this.contrastStretchingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { this.pointStretchToolStripMenuItem, this.localStretchToolStripMenuItem, this.globalStretchToolStripMenuItem });
+            this.contrastStretchingToolStripMenuItem.Name = "contrastStretchingToolStripMenuItem";
+            this.contrastStretchingToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.contrastStretchingToolStripMenuItem.Text = "Peregangan Kontras";
+            //
+            // pointStretchToolStripMenuItem
+            //
+            this.pointStretchToolStripMenuItem.Name = "pointStretchToolStripMenuItem";
+            this.pointStretchToolStripMenuItem.Text = "Aras Titik (Point)";
+            this.pointStretchToolStripMenuItem.Click += new System.EventHandler(this.pointStretchToolStripMenuItem_Click);
+            //
+            // localStretchToolStripMenuItem
+            //
+            this.localStretchToolStripMenuItem.Name = "localStretchToolStripMenuItem";
+            this.localStretchToolStripMenuItem.Text = "Aras Lokal";
+            this.localStretchToolStripMenuItem.Click += new System.EventHandler(this.localStretchToolStripMenuItem_Click);
+            //
+            // globalStretchToolStripMenuItem
+            //
+            this.globalStretchToolStripMenuItem.Name = "globalStretchToolStripMenuItem";
+            this.globalStretchToolStripMenuItem.Text = "Aras Global";
+            this.globalStretchToolStripMenuItem.Click += new System.EventHandler(this.globalStretchToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -742,5 +788,13 @@
         private ToolStripMenuItem histogramEqualizationToolStripMenuItem;
         private ToolStripMenuItem adaptiveHistogramEqualizationToolStripMenuItem;
         private ToolStripMenuItem linearStretchEqualizationToolStripMenuItem;
+        // --- DEKLARASI BUTTON FITUR BARU ---
+        private System.Windows.Forms.ToolStripMenuItem mozaikToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pseudoColorToolStripMenuItem;
+        private ToolStripMenuItem contrastStretchingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem contrastStretchingToolStripMenuItemm;
+        private System.Windows.Forms.ToolStripMenuItem pointStretchToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem localStretchToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem globalStretchToolStripMenuItem;
     }
 }

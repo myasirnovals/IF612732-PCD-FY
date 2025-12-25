@@ -40,6 +40,7 @@ namespace MiniPhotoShop.Controllers
             _tabControl.TabPages.Clear();
         }
 
+
         public ImageDocument GetActiveDocument()
         {
             if (_tabControl?.SelectedTab != null && _openDocuments.ContainsKey(_tabControl.SelectedTab))
@@ -158,15 +159,16 @@ namespace MiniPhotoShop.Controllers
             }
         }
 
+        // Di dalam DocumentController.cs, update method CreateNewTab
         private TabPage CreateNewTab(string title)
         {
-            TabPage page = new TabPage(title) 
-            { 
-                Padding = new Padding(3), 
-                AutoScroll = true,
-                AllowDrop = true 
+            TabPage page = new TabPage(title)
+            {
+                Padding = new Padding(3),
+                AutoScroll = true, // PERBAIKAN: Memungkinkan scroll jika gambar besar
+                AllowDrop = true   // PERBAIKAN: Memungkinkan fitur drag and drop
             };
-            
+
             page.DragEnter += (s, e) => CanvasDragEnter?.Invoke(s, e);
             page.DragDrop += (s, e) => CanvasDragDrop?.Invoke(s, e);
 
@@ -174,15 +176,10 @@ namespace MiniPhotoShop.Controllers
             {
                 BackColor = Color.White,
                 BorderStyle = BorderStyle.FixedSingle,
-                Dock = DockStyle.None,
+                Dock = DockStyle.None, // Gunakan None agar AutoScroll tab berfungsi
                 SizeMode = PictureBoxSizeMode.AutoSize,
-                AllowDrop = true 
+                AllowDrop = true
             };
-            
-            canvas.Click += HandleCanvasClick;
-            canvas.DragEnter += (s, e) => CanvasDragEnter?.Invoke(s, e);
-            canvas.DragDrop += (s, e) => CanvasDragDrop?.Invoke(s, e);
-            canvas.MouseWheel += (s, e) => CanvasMouseWheel?.Invoke(s, e);
 
             page.Controls.Add(canvas);
             _tabControl.TabPages.Add(page);

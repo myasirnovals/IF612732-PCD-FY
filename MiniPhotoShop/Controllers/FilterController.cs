@@ -5,7 +5,6 @@ using MiniPhotoShop.Filters.ColorsFilters;
 using MiniPhotoShop.Managers;
 using MiniPhotoShop.Models;
 using MiniPhotoShop.Services.Interfaces;
-using MiniPhotoShop.Filters.Adjustments;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -24,6 +23,54 @@ namespace MiniPhotoShop.Controllers
             _processor = processor;
         }
 
+        /// PEREGANGAN KONTRAS GLOBAL: Menggunakan statistik seluruh citra 
+        /// untuk memetakan kembali intensitas warna.
+        public void ApplyGlobalContrastStretch()
+        {
+            var doc = _docManager.GetActiveDocument();
+            if (doc == null) return;
+
+            var filter = new LinearStretchFilter();
+            Bitmap result = filter.Apply(doc.CurrentBitmap);
+
+            if (result != null)
+            {
+                _docManager.OpenDocument(result, doc.Name + "_GlobalStretch");
+            }
+        }
+
+        /// PEREGANGAN KONTRAS LOKAL: Menggunakan Adaptive Histogram Equalization 
+        /// untuk meregangkan kontras berdasarkan area sekitar pixel (blok).
+        public void ApplyLocalContrastStretch()
+        {
+            var doc = _docManager.GetActiveDocument();
+            if (doc == null) return;
+
+            var filter = new AdaptiveHistogramEqualizationFilter();
+            Bitmap result = filter.Apply(doc.CurrentBitmap);
+
+            if (result != null)
+            {
+                _docManager.OpenDocument(result, doc.Name + "_LocalStretch");
+            }
+        }
+
+        /// PEREGANGAN KONTRAS ARAS TITIK: Manipulasi langsung pada intensitas 
+        /// tiap titik pixel menggunakan transformasi linear.
+        public void ApplyPointContrastStretch()
+        {
+            var doc = _docManager.GetActiveDocument();
+            if (doc == null) return;
+
+            // Aras titik menggunakan LinearStretch standar
+            var filter = new LinearStretchFilter();
+            Bitmap result = filter.Apply(doc.CurrentBitmap);
+
+            if (result != null)
+            {
+                _docManager.OpenDocument(result, doc.Name + "_PointStretch");
+            }
+        }
         public void ApplyFilter(IImageFilter filter, TabPage activeTab)
         {
             ImageDocument doc = _docManager.GetActiveDocument();
@@ -225,6 +272,43 @@ namespace MiniPhotoShop.Controllers
             {
                 _docManager.OpenDocument(result, doc.Name + "_LinearStretch");
             }
+        }
+        // Tambahkan metode ini di dalam class FilterController
+        public void ApplySmoothing()
+        {
+            var doc = _docManager.GetActiveDocument();
+            if (doc == null) return;
+            // Menggunakan Gaussian Blur dengan faktor normalisasi 1/256
+            Bitmap result = _processor.ApplyFilterKernel(doc.CurrentBitmap, BaseKernel.GaussianBlur, 1.0 / 256.0, 0);
+            _docManager.OpenDocument(result, doc.Name + "_Smoothed");
+        }
+
+        public void ApplySharpening()
+        {
+            var doc = _docManager.GetActiveDocument();
+            if (doc == null) return;
+            // Menggunakan kernel Sharpen
+            Bitmap result = _processor.ApplyFilterKernel(doc.CurrentBitmap, BaseKernel.Sharpen, 1.0, 0);
+            _docManager.OpenDocument(result, doc.Name + "_Sharpened");
+        }
+
+        public void ApplyContrastStretchPoint()
+        {
+            var doc = _docManager.GetActiveDocument();
+            if (doc == null) return;
+
+            // Logic untuk Peregangan Kontras Global (Point Processing)
+            var filter = new LinearStretchFilter();
+            Bitmap result = filter.Apply(doc.CurrentBitmap);
+
+            _docManager.OpenDocument(result, doc.Name + "_PointStretch");
+        }
+        public void ApplyPseudoColor()
+        {
+            var doc = _docManager.GetActiveDocument();
+            if (doc == null) return;
+            // Menerapkan filter Pseudo Color melalui metode ApplyFilter yang sudah ada
+            ApplyFilter(new PseudoColorFilter(), null); //
         }
     }
 }
