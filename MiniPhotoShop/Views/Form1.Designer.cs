@@ -33,6 +33,8 @@
             blueToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator3 = new ToolStripSeparator();
             konvolusiToolStripMenuItem = new ToolStripMenuItem();
+            smoothingToolStripMenuItem = new ToolStripMenuItem();
+            mozaikToolStripMenuItem = new ToolStripMenuItem();
             identityToolStripMenuItem = new ToolStripMenuItem();
             blurToolStripMenuItem = new ToolStripMenuItem();
             sharpenToolStripMenuItem = new ToolStripMenuItem();
@@ -88,7 +90,6 @@
             histogramEqualizationToolStripMenuItem = new ToolStripMenuItem();
             adaptiveHistogramEqualizationToolStripMenuItem = new ToolStripMenuItem();
             linearStretchEqualizationToolStripMenuItem = new ToolStripMenuItem();
-            this.mozaikToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pseudoColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contrastStretchingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pointStretchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -222,10 +223,7 @@
             // 
             toolStripSeparator3.Name = "toolStripSeparator3";
             toolStripSeparator3.Size = new Size(190, 6);
-            // 
-            // konvolusiToolStripMenuItem
-            // 
-            konvolusiToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { identityToolStripMenuItem, blurToolStripMenuItem, sharpenToolStripMenuItem, edgeDetectionToolStripMenuItem, embossToolStripMenuItem, customToolStripMenuItem });
+            konvolusiToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { identityToolStripMenuItem, blurToolStripMenuItem, smoothingToolStripMenuItem, mozaikToolStripMenuItem, sharpenToolStripMenuItem, edgeDetectionToolStripMenuItem, embossToolStripMenuItem, customToolStripMenuItem });
             konvolusiToolStripMenuItem.Name = "konvolusiToolStripMenuItem";
             konvolusiToolStripMenuItem.Size = new Size(193, 22);
             konvolusiToolStripMenuItem.Text = "Konvolusi (Kernel)";
@@ -243,6 +241,13 @@
             blurToolStripMenuItem.Size = new Size(180, 22);
             blurToolStripMenuItem.Text = "Blur (Gaussian)";
             blurToolStripMenuItem.Click += blurToolStripMenuItem_Click;
+            //
+            // Smoothing Tool Strip Menu Item
+            //
+            this.smoothingToolStripMenuItem.Name = "smoothingToolStripMenuItem";
+            this.smoothingToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.smoothingToolStripMenuItem.Text = "Smoothing";
+            this.smoothingToolStripMenuItem.Click += smoothingToolStripMenuItem_Click;
             // 
             // sharpenToolStripMenuItem
             // 
@@ -304,8 +309,7 @@
             this.mozaikToolStripMenuItem.Name = "mozaikToolStripMenuItem";
             this.mozaikToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.mozaikToolStripMenuItem.Text = "Mozaik";
-            this.mozaikToolStripMenuItem.Click += new System.EventHandler(this.mozaikToolStripMenuItem_Click);
-            this.konvolusiToolStripMenuItem.DropDownItems.Add(this.mozaikToolStripMenuItem);
+            this.mozaikToolStripMenuItem.Click += mozaikToolStripMenuItem_Click;
             // 
             // bwToolStripMenuItem
             // 
@@ -674,19 +678,19 @@
             // pointStretchToolStripMenuItem
             //
             this.pointStretchToolStripMenuItem.Name = "pointStretchToolStripMenuItem";
-            this.pointStretchToolStripMenuItem.Text = "Aras Titik (Point)";
+            this.pointStretchToolStripMenuItem.Text = "Point Stretch";
             this.pointStretchToolStripMenuItem.Click += new System.EventHandler(this.pointStretchToolStripMenuItem_Click);
             //
             // localStretchToolStripMenuItem
             //
             this.localStretchToolStripMenuItem.Name = "localStretchToolStripMenuItem";
-            this.localStretchToolStripMenuItem.Text = "Aras Lokal";
+            this.localStretchToolStripMenuItem.Text = "Local Stretch";
             this.localStretchToolStripMenuItem.Click += new System.EventHandler(this.localStretchToolStripMenuItem_Click);
             //
             // globalStretchToolStripMenuItem
             //
             this.globalStretchToolStripMenuItem.Name = "globalStretchToolStripMenuItem";
-            this.globalStretchToolStripMenuItem.Text = "Aras Global";
+            this.globalStretchToolStripMenuItem.Text = "Global Stretch";
             this.globalStretchToolStripMenuItem.Click += new System.EventHandler(this.globalStretchToolStripMenuItem_Click);
             // 
             // Form1
@@ -789,10 +793,10 @@
         private ToolStripMenuItem adaptiveHistogramEqualizationToolStripMenuItem;
         private ToolStripMenuItem linearStretchEqualizationToolStripMenuItem;
         // --- DEKLARASI BUTTON FITUR BARU ---
+        private System.Windows.Forms.ToolStripMenuItem smoothingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mozaikToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pseudoColorToolStripMenuItem;
-        private ToolStripMenuItem contrastStretchingToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem contrastStretchingToolStripMenuItemm;
+        private System.Windows.Forms.ToolStripMenuItem contrastStretchingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pointStretchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem localStretchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem globalStretchToolStripMenuItem;

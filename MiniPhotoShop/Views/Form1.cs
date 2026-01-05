@@ -27,6 +27,12 @@ namespace MiniPhotoShop.Views
         private readonly IImageFilter _blueFilter = new BlueChannelFilter();
         private readonly IImageFilter _negationFilter = new NegationFilter();
         private readonly IImageFilter _notFilter = new NotFilter();
+        private Rectangle _selectionRect;
+        private Point _startPos;
+        private bool _isSelectingArea = false;
+        private Color _targetColor;
+        private Bitmap? _isolatedBitmap;
+        private bool _isDraggingIsolated = false;
 
         public Form1(
             DocumentManager documentManager,
@@ -61,6 +67,7 @@ namespace MiniPhotoShop.Views
                 imageProcessor,
                 arithmeticService,
                 dialogService
+
             );
 
             _documentController.Initialize(tabControlCanvas);
@@ -170,8 +177,25 @@ namespace MiniPhotoShop.Views
 
         private void imageSelectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            var doc = _documentController.GetActiveDocument();
+            if (doc == null) return;
+
             _documentController.ToggleSelectionMode(true);
-            MessageBox.Show("Mode Seleksi Aktif. Klik warna pada gambar.");
+            PictureBox pb = tabControlCanvas.SelectedTab?.Controls.OfType<PictureBox>().FirstOrDefault();
+
+            if (pb != null)
+            {
+                // Reset event handlers
+                pb.MouseDown -= Pb_ColorSelect_MouseDown;
+                pb.MouseMove -= Pb_ColorSelect_MouseMove;
+
+                // Pasang event handlers
+                pb.MouseDown += Pb_ColorSelect_MouseDown;
+                pb.MouseMove += Pb_ColorSelect_MouseMove;
+
+                pb.Cursor = Cursors.Hand;
+                MessageBox.Show("Mode Isolasi Warna Aktif: Klik pada warna (misal: merah) untuk mengambil objek.");
+            }
         }
 
         private void translasiToolStripMenuItem_Click(object sender, EventArgs e)
@@ -260,8 +284,11 @@ namespace MiniPhotoShop.Views
 
         private void SetArithmeticMode(string mode, string messageName)
         {
+            // Mematikan mode seleksi agar tidak memblokir drop aritmatika
+            _documentController.ToggleSelectionMode(false);
+
             _controller.Arithmetic.CurrentOperation = mode;
-            MessageBox.Show($"Mode {messageName} Aktif. Drag gambar dari thumbnail ke kanvas.");
+            MessageBox.Show($"Mode {messageName} Aktif. Silakan drag gambar dari sidebar ke tengah kanvas.");
         }
 
         private void tambahToolStripMenuItem_Click(object sender, EventArgs e) => SetArithmeticMode("Add", "Tambah");
@@ -300,24 +327,68 @@ namespace MiniPhotoShop.Views
 
         private void Canvas_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.StringFormat) && _controller.Arithmetic.CurrentOperation != "None")
-                e.Effect = DragDropEffects.Copy;
-            else
-                e.Effect = DragDropEffects.None;
-        }
+            // Cek 1: Apakah yang sedang ditarik adalah Thumbnail (untuk Aritmatika)?
+            bool isThumbnail = e.Data.GetDataPresent(DataFormats.StringFormat);
 
+            // Cek 2: Apakah yang sedang ditarik adalah Hasil Isolasi (untuk Simpan/Pindah)?
+            bool isIsolatedImage = e.Data.GetDataPresent(DataFormats.Bitmap);
+
+            // Izinkan drag jika salah satu terpenuhi
+            if (isThumbnail || isIsolatedImage)
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
         private void Canvas_DragDrop(object sender, DragEventArgs e)
         {
-            if (_documentController.GetActiveDocument()?.IsInSelectionMode == true ||
-                _controller.Arithmetic.CurrentOperation == "None") return;
-            try
+            // --- KONDISI 1: ISOLASI WARNA (BITMAP) ---
+            // Tetap mempertahankan opsi dialog sesuai image_3f1f64.jpg
+            if (e.Data.GetDataPresent(DataFormats.Bitmap))
             {
-                string sourceName = (string)e.Data.GetData(DataFormats.StringFormat);
-                _controller.Arithmetic.HandleDragDrop(sourceName, _documentController.GetActiveDocument());
+                Bitmap droppedBmp = (Bitmap)e.Data.GetData(DataFormats.Bitmap);
+                DialogResult result = MessageBox.Show(
+                    "Objek warna terdeteksi! \n\n'Yes' untuk Simpan ke File\n'No' untuk Buka di Tab Baru",
+                    "Opsi Drop", MessageBoxButtons.YesNoCancel);
+
+                if (result == DialogResult.Yes)
+                {
+                    using (SaveFileDialog sfd = new SaveFileDialog() { Filter = "PNG Image|*.png" })
+                    {
+                        if (sfd.ShowDialog() == DialogResult.OK) droppedBmp.Save(sfd.FileName);
+                    }
+                }
+                else if (result == DialogResult.No)
+                {
+                    _documentController.OpenDocument(droppedBmp, "Objek Terisolasi");
+                }
+                return;
             }
-            catch (Exception ex)
+
+            // --- KONDISI 2: ARITMATIKA (STRING DARI SIDEBAR) ---
+            // Digunakan untuk men-drag thumbnail ke tengah gambar yang sudah ada
+            if (e.Data.GetDataPresent(DataFormats.StringFormat))
             {
-                MessageBox.Show($"Error: {ex.Message}");
+                if (_controller.Arithmetic.CurrentOperation != "None")
+                {
+                    try
+                    {
+                        string sourceName = (string)e.Data.GetData(DataFormats.StringFormat);
+                        // Proses penggabungan gambar di tengah kanvas
+                        _controller.Arithmetic.HandleDragDrop(sourceName, _documentController.GetActiveDocument());
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error Aritmatika: {ex.Message}");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Aktifkan mode aritmatika (Tambah/Kurang) terlebih dahulu!");
+                }
             }
         }
 
@@ -519,6 +590,78 @@ namespace MiniPhotoShop.Views
 
         private void penajamanToolStripMenuItem_Click(object sender, EventArgs e)
             => _controller.Filters.ApplySharpening();
+
+        private void Pb_Selection_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                _isSelectingArea = true;
+                _startPos = e.Location;
+                _selectionRect = new Rectangle(e.X, e.Y, 0, 0);
+            }
+        }
+
+        private void Pb_ColorSelect_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                PictureBox pb = (PictureBox)sender;
+                Bitmap currentBmp = (Bitmap)pb.Image;
+
+                // 1. Ambil warna pada koordinat yang diklik
+                // Pastikan koordinat mouse sesuai dengan ukuran gambar asli
+                int realX = e.X * currentBmp.Width / pb.Width;
+                int realY = e.Y * currentBmp.Height / pb.Height;
+                _targetColor = currentBmp.GetPixel(realX, realY);
+
+                // 2. Isolasi Warna: Buat bitmap baru yang hanya berisi warna tersebut
+                _isolatedBitmap = IsolateColor(currentBmp, _targetColor, 50); // 50 adalah toleransi warna
+
+                // Tampilkan hasil isolasi sementara di kanvas (optional)
+                pb.Image = _isolatedBitmap;
+                _isDraggingIsolated = true;
+            }
+        }
+
+        private void Pb_ColorSelect_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left && _isDraggingIsolated && _isolatedBitmap != null)
+            {
+                // 3. Mulai proses Drag & Drop
+                // Kita membungkus bitmap ke dalam DataObject
+                DataObject dragData = new DataObject(DataFormats.Bitmap, _isolatedBitmap);
+                ((Control)sender).DoDragDrop(dragData, DragDropEffects.Copy);
+
+                _isDraggingIsolated = false; // Reset setelah drop dimulai
+            }
+        }
+
+        private Bitmap IsolateColor(Bitmap source, Color target, int tolerance)
+        {
+            Bitmap result = new Bitmap(source.Width, source.Height);
+
+            // Gunakan LockBits jika ingin performa lebih cepat (karena Anda sudah terbiasa dengan unsafe code)
+            for (int y = 0; y < source.Height; y++)
+            {
+                for (int x = 0; x < source.Width; x++)
+                {
+                    Color c = source.GetPixel(x, y);
+
+                    // Hitung selisih warna (Euclidean distance sederhana)
+                    int diffR = Math.Abs(c.R - target.R);
+                    int diffG = Math.Abs(c.G - target.G);
+                    int diffB = Math.Abs(c.B - target.B);
+
+                    if (diffR <= tolerance && diffG <= tolerance && diffB <= tolerance)
+                    {
+                        result.SetPixel(x, y, c); // Tetapkan warna asli jika mirip
+                    }
+                    else
+                        result.SetPixel(x, y, Color.Transparent); // Ubah jadi transparan jika tidak mirip
+                }
+            }
+            return result;
+        }
 
     }
 }

@@ -183,6 +183,10 @@ namespace MiniPhotoShop.Controllers
 
             switch (filterType)
             {
+                case "Mozaik":
+                    kernel = BaseKernel.Mozaik;
+                    factor = 1.0 / 25.0; // Normalisasi untuk kernel 5x5
+                    break;
                 case "Identity":
                     kernel = BaseKernel.Identity;
                     break;
