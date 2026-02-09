@@ -71,6 +71,7 @@ namespace MiniPhotoShop.Controllers
                 _docManager.OpenDocument(result, doc.Name + "_PointStretch");
             }
         }
+
         public void ApplyFilter(IImageFilter filter, TabPage activeTab)
         {
             ImageDocument doc = _docManager.GetActiveDocument();
@@ -249,12 +250,12 @@ namespace MiniPhotoShop.Controllers
                 _docManager.OpenDocument(result, doc.Name + "_Equalized");
             }
         }
-        
+
         public void ApplyAdaptiveHistogramEqualization(TabPage activeTab)
         {
             var doc = _docManager.GetActiveDocument();
             if (doc == null) return;
-            
+
             var filter = new AdaptiveHistogramEqualizationFilter();
             Bitmap result = filter.Apply(doc.CurrentBitmap);
 
@@ -263,7 +264,7 @@ namespace MiniPhotoShop.Controllers
                 _docManager.OpenDocument(result, doc.Name + "_AdaptiveEq");
             }
         }
-        
+
         public void ApplyLinearStretchEqualization(TabPage activeTab)
         {
             var doc = _docManager.GetActiveDocument();
@@ -277,7 +278,7 @@ namespace MiniPhotoShop.Controllers
                 _docManager.OpenDocument(result, doc.Name + "_LinearStretch");
             }
         }
-        // Tambahkan metode ini di dalam class FilterController
+
         public void ApplySmoothing()
         {
             var doc = _docManager.GetActiveDocument();
@@ -307,12 +308,13 @@ namespace MiniPhotoShop.Controllers
 
             _docManager.OpenDocument(result, doc.Name + "_PointStretch");
         }
+
         public void ApplyPseudoColor()
         {
             var doc = _docManager.GetActiveDocument();
             if (doc == null) return;
             // Menerapkan filter Pseudo Color melalui metode ApplyFilter yang sudah ada
-            ApplyFilter(new PseudoColorFilter(), null); //
+            ApplyFilter(new PseudoColorFilter(), null);
         }
     }
 }

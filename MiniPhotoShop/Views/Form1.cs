@@ -640,7 +640,7 @@ namespace MiniPhotoShop.Views
         {
             Bitmap result = new Bitmap(source.Width, source.Height);
 
-            // Gunakan LockBits jika ingin performa lebih cepat (karena Anda sudah terbiasa dengan unsafe code)
+            // Gunakan LockBits jika ingin performa lebih cepat
             for (int y = 0; y < source.Height; y++)
             {
                 for (int x = 0; x < source.Width; x++)
